@@ -194,7 +194,29 @@
         function initChartsLazy() {
             if (chartsInited) return;
             chartsInited = true;
+            
+            // 检查容器是否存在
+            const chart1 = document.getElementById('chart-energy-trend');
+            const chart2 = document.getElementById('chart-energy-pie');
+            const chart3 = document.getElementById('chart-alarm-trend');
+            
+            if (!chart1 && !chart2 && !chart3) {
+                console.log('图表容器不存在，跳过初始化');
+                chartsInited = false;
+                return;
+            }
+            
             initCharts();
+            
+            // 延迟 resize 确保尺寸正确
+            setTimeout(() => {
+                if (chartEnergyTrend) {
+                    chartEnergyTrend.resize();
+                    console.log('能耗趋势图已初始化');
+                }
+                if (chartEnergyPie) chartEnergyPie.resize();
+                if (chartAlarmTrend) chartAlarmTrend.resize();
+            }, 300);
         }
 
         // 监听 sidebar 切换，当切到能耗或报警页时初始化图表
@@ -4014,6 +4036,35 @@ B1配电室温度：38°C（略高，正常<35°C）
         
         // 初始化渲染
         setTimeout(renderAlarmTable, 100);
+
+        // ===== 页面加载时自动初始化图表 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM 已加载，检查当前页面...');
+            
+            // 检查当前显示的页面
+            const currentPage = document.querySelector('.page.active');
+            if (currentPage) {
+                const pageId = currentPage.id;
+                console.log('当前页面:', pageId);
+                
+                if (pageId === 'energy' || pageId === 'alarm') {
+                    setTimeout(function() {
+                        initChartsLazy();
+                    }, 200);
+                }
+            }
+        });
+        
+        // 备用：如果 DOMContentLoaded 已触发，直接检查
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(function() {
+                const currentPage = document.querySelector('.page.active');
+                if (currentPage && (currentPage.id === 'energy' || currentPage.id === 'alarm')) {
+                    console.log('页面已加载，延迟初始化图表');
+                    initChartsLazy();
+                }
+            }, 500);
+        }
 </script>
 </body>
 </html>
