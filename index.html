@@ -438,7 +438,7 @@
         /* ==================== 对话区 ==================== */
         .chat-area {
             flex: 1;
-            min-width: 400px;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             background: var(--bg-secondary);
@@ -695,6 +695,32 @@
 
         .chat-input__field::placeholder {
             color: var(--color-text-disabled);
+        }
+
+        
+        .chat-input__send {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--color-primary);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+        }
+
+        .chat-input__send:hover {
+            background: #00a8e8;
+            transform: scale(1.05);
+        }
+
+        .chat-input__send svg {
+            width: 18px;
+            height: 18px;
         }
 
         .chat-input__actions {
@@ -1500,22 +1526,40 @@
         .alarm-table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
 
         .alarm-table th {
             text-align: left;
-            padding: 12px 16px;
-            font-size: 12px;
+            padding: 10px 10px;
+            font-size: 13px;
             font-weight: 500;
-            color: var(--color-text-disabled);
+            color: var(--color-text-secondary);
             border-bottom: 1px solid var(--color-border);
+            white-space: nowrap;
         }
 
         .alarm-table td {
-            padding: 14px 16px;
+            padding: 12px 10px;
             font-size: 13px;
             color: var(--color-text-primary);
             border-bottom: 1px solid var(--color-border);
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .alarm-table th:nth-child(1) { width: 80px; }
+        .alarm-table th:nth-child(2) { width: auto; }
+        .alarm-table th:nth-child(3) { width: 150px; }
+        .alarm-table th:nth-child(4) { width: 80px; }
+        .alarm-table th:nth-child(5) { width: 80px; }
+        .alarm-table th:nth-child(6) { width: 90px; }
+
+        .alarm-table td:nth-child(2) {
+            white-space: normal;
+            word-break: break-all;
         }
 
         .alarm-table tr:hover td {
@@ -1525,10 +1569,11 @@
         .alarm-level {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
+            gap: 5px;
+            padding: 3px 10px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 13px;
+            white-space: nowrap;
         }
 
         .alarm-level::before {
@@ -1556,9 +1601,12 @@
 
         .alarm-status {
             display: inline-flex;
-            padding: 4px 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 10px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 13px;
+            white-space: nowrap;
         }
 
         .alarm-status--pending {
@@ -1572,15 +1620,13 @@
         }
 
         .alarm-action {
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--color-border);
-            color: var(--color-text-secondary);
-            font-size: 12px;
+            display: inline-block;
+            white-space: nowrap;
+            padding: 5px 16px;
+            border-radius: 4px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all var(--transition-fast);
-            margin-right: 6px;
+            transition: all 0.2s;
         }
 
         .alarm-action:hover {
@@ -2177,29 +2223,15 @@
                     <div class="chat-input">
                         <div class="chat-input__wrapper">
                             <div class="chat-input__box">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                                </svg>
                                 <textarea class="chat-input__field" placeholder="请输入设备名称或描述您的问题..." rows="1" id="input-device"></textarea>
+                            <button class="chat-input__send" onclick="sendMessage('device')" aria-label="发送">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+                                </svg>
+                            </button>
                             </div>
-                            <div class="chat-input__actions">
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
-                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('device')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                                    </svg>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，重要操作请结合实际情况核实</div>
@@ -2425,77 +2457,140 @@
                     <div class="card">
                         <div class="card__header">
                             <div class="card__title">报警事件列表</div>
-                            <div class="card__actions">
-                                <button class="card__btn">筛选</button>
-                                <button class="card__btn">导出</button>
+                        </div>
+                        <!-- 筛选栏 -->
+                        <div class="alarm-search-bar" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);">
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span style="font-size:13px;color:#9ca3af;white-space:nowrap;">报警等级</span>
+                                <select style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:#ccc;padding:5px 10px;font-size:13px;outline:none;">
+                                    <option value="">请选择</option>
+                                    <option value="urgent">紧急</option>
+                                    <option value="warning">警告</option>
+                                    <option value="info">提示</option>
+                                </select>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span style="font-size:13px;color:#9ca3af;white-space:nowrap;">报警时间</span>
+                                <input type="text" value="2026-03-01 ~ 2026-05-19" readonly style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:#ccc;padding:5px 10px;font-size:13px;width:180px;outline:none;">
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span style="font-size:13px;color:#9ca3af;white-space:nowrap;">当前状态</span>
+                                <select style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:#ccc;padding:5px 10px;font-size:13px;outline:none;">
+                                    <option value="">请选择</option>
+                                    <option value="pending">未处理</option>
+                                    <option value="processing">处理中</option>
+                                    <option value="resolved">已关闭</option>
+                                </select>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span style="font-size:13px;color:#9ca3af;white-space:nowrap;">报警描述</span>
+                                <input type="text" placeholder="请输入" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:#ccc;padding:5px 10px;font-size:13px;width:140px;outline:none;">
+                            </div>
+                            <div style="display:flex;gap:8px;margin-left:auto;">
+                                <button style="background:var(--color-primary,#2040b0);color:#fff;border:none;border-radius:4px;padding:6px 20px;font-size:13px;cursor:pointer;">查询</button>
+                                <button style="background:transparent;color:#d97706;border:1px solid #d97706;border-radius:4px;padding:6px 20px;font-size:13px;cursor:pointer;">重置</button>
                             </div>
                         </div>
-                        <div class="alarm-filters">
-                            <button class="alarm-filter alarm-filter--active">全部</button>
-                            <button class="alarm-filter">紧急</button>
-                            <button class="alarm-filter">警告</button>
-                            <button class="alarm-filter">提示</button>
-                            <button class="alarm-filter">未处理</button>
-                        </div>
-                        <table class="alarm-table">
+                        <table class="alarm-table" style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>时间</th>
-                                    <th>报警级别</th>
-                                    <th>报警内容</th>
-                                    <th>状态</th>
+                                    <th>报警等级</th>
+                                    <th>报警描述</th>
+                                    <th>报警时间</th>
+                                    <th>处理状态</th>
+                                    <th>是否已报单</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>05-18 16:52</td>
                                     <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
                                     <td>送风温度超过上限阈值 (当前26.8°C > 24°C)</td>
-                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
-                                    <td>
-                                        <button class="alarm-action alarm-action--primary">转工单</button>
-                                        <button class="alarm-action">关闭</button>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>2026-04-20 07:31:22</td>
+                                    <td><span class="alarm-status alarm-status--pending">未处理</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action alarm-action--primary" style="background:var(--color-primary,#2040b0);color:#fff;border:none;border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">去报单</button></td>
                                 </tr>
                                 <tr>
-                                    <td>05-18 16:30</td>
                                     <td><span class="alarm-level alarm-level--warning">警告</span></td>
                                     <td>CO₂浓度偏高 (当前680ppm > 600ppm)</td>
-                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
-                                    <td>
-                                        <button class="alarm-action alarm-action--primary">转工单</button>
-                                        <button class="alarm-action">关闭</button>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>2026-04-17 08:00:15</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
                                 </tr>
                                 <tr>
-                                    <td>05-18 15:15</td>
                                     <td><span class="alarm-level alarm-level--warning">警告</span></td>
                                     <td>过滤网压差偏高 (125Pa > 100Pa)</td>
-                                    <td><span class="alarm-status alarm-status--processing">处理中</span></td>
-                                    <td>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>2026-04-16 07:32:48</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
                                 </tr>
                                 <tr>
-                                    <td>05-18 11:40</td>
-                                    <td><span class="alarm-level alarm-level--info">提示</span></td>
-                                    <td>累计运行时长即将到达维护周期 (864h/1000h)</td>
-                                    <td><span class="alarm-status alarm-status--resolved">已处理</span></td>
-                                    <td>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td>2026-04-15 07:31:36</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td>2026-04-14 16:45:33</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td>2026-04-14 15:15:42</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td>2026-04-14 15:00:28</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td>2026-04-14 14:46:55</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已关闭</span></td>
+                                    <td>否</td>
+                                    <td><button class="alarm-action" style="background:transparent;color:var(--color-primary,#2040b0);border:1px solid var(--color-primary,#2040b0);border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer;">详情</button></td>
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- 分页控制 -->
+                        <div class="alarm-pagination" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid rgba(255,255,255,0.06);margin-top:0;">
+                            <div class="pagination-info" style="font-size:13px;color:var(--color-text-secondary);">
+                                共 <span id="alarm-total-count">4</span> 条记录，每页显示
+                                <select id="alarm-page-size" onchange="changeAlarmPageSize(this.value)" style="margin:0 6px;padding:5px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:var(--color-text-primary);font-size:13px;cursor:pointer;">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                </select> 条
+                            </div>
+                            <div class="pagination-buttons" style="display:flex;gap:6px;align-items:center;">
+                                <button class="pagination-btn" onclick="goToAlarmPage('prev')" style="padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:var(--color-text-secondary);font-size:13px;cursor:pointer;white-space:nowrap;">上一页</button>
+                                <button class="pagination-btn pagination-btn--active" onclick="goToAlarmPage(1)" style="padding:6px 14px;border-radius:4px;border:1px solid transparent;background:var(--color-primary);color:#fff;font-size:13px;cursor:pointer;">1</button>
+                                <button class="pagination-btn" onclick="goToAlarmPage('next')" style="padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:var(--color-text-secondary);font-size:13px;cursor:pointer;white-space:nowrap;">下一页</button>
+                            </div>
+                        </div>
                     </div>
 
-<!-- 设备运维知识库 -->
+<!-- 设备运维建议 -->
                     <div class="card">
                         <div class="card__header">
-                            <div class="card__title">设备运维知识库</div>
+                            <div class="card__title">设备运维建议</div>
                         </div>
                         <div class="knowledge-section">
                             <div class="knowledge-item knowledge-item--warning">
@@ -2594,29 +2689,15 @@
                     <div class="chat-input">
                         <div class="chat-input__wrapper">
                             <div class="chat-input__box">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                                </svg>
                                 <textarea class="chat-input__field" placeholder="请输入能耗相关问题，例如: 查询本月能耗、设备节能建议、峰谷电优化方案..." rows="1" id="input-energy"></textarea>
+                            <button class="chat-input__send" onclick="sendMessage('energy')" aria-label="发送">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+                                </svg>
+                            </button>
                             </div>
-                            <div class="chat-input__actions">
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
-                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('energy')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                                    </svg>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，节能改造请结合实际情况评估</div>
@@ -2703,7 +2784,7 @@
                                 <button class="card__btn" onclick="switchEnergyRange(this, '6m')">近6个月</button>
                             </div>
                         </div>
-                        <div id="chart-energy-trend" style="width:100%;height:200px;"></div>
+                        <div id="chart-energy-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
                     </div>
 
                     <!-- 分项能耗分析 -->
@@ -2712,7 +2793,7 @@
                             <div class="card__title">分项能耗分析</div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div id="chart-energy-pie" style="width:100%;height:180px;"></div>
+                            <div id="chart-energy-pie" style="width:100%;min-width:300px;height:180px;min-height:180px;"></div>
                             <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
                                 <div style="display: flex; align-items: center; gap: 12px;">
                                     <div style="width: 12px; height: 12px; border-radius: 2px; background: #00D9FF;"></div>
@@ -2922,29 +3003,15 @@
                     <div class="chat-input">
                         <div class="chat-input__wrapper">
                             <div class="chat-input__box">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                                </svg>
                                 <textarea class="chat-input__field" placeholder="请输入场景相关需求，例如: 创建上班模式、调整空调控制逻辑、设置定时任务等..." rows="1" id="input-scene"></textarea>
+                            <button class="chat-input__send" onclick="sendMessage('scene')" aria-label="发送">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+                                </svg>
+                            </button>
                             </div>
-                            <div class="chat-input__actions">
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
-                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('scene')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                                    </svg>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，场景执行前请进行测试验证</div>
@@ -3159,29 +3226,15 @@
                     <div class="chat-input">
                         <div class="chat-input__wrapper">
                             <div class="chat-input__box">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                                </svg>
                                 <textarea class="chat-input__field" placeholder="请输入报警相关问题，例如: 分析报警趋势、查询故障原因、预测潜在风险等..." rows="1" id="input-alarm"></textarea>
+                            <button class="chat-input__send" onclick="sendMessage('alarm')" aria-label="发送">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"/>
+                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+                                </svg>
+                            </button>
                             </div>
-                            <div class="chat-input__actions">
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
-                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
-                                    </svg>
-                                </button>
-                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('alarm')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                                    </svg>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，重要报警请及时核实处理</div>
@@ -3362,7 +3415,7 @@
                         <div class="card__header">
                             <div class="card__title">近7天报警趋势</div>
                         </div>
-                        <div id="chart-alarm-trend" style="width:100%;height:200px;"></div>
+                        <div id="chart-alarm-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
                     </div>
 
                     <!-- 风险分析 -->
@@ -3872,6 +3925,95 @@ B1配电室温度：38°C（略高，正常<35°C）
                 msgContainer.scrollTop = msgContainer.scrollHeight;
             }
         }
+
+        // ===== 报警事件列表分页逻辑 =====
+        const alarmEventsData = [
+            { level: '紧急', levelClass: 'urgent', desc: '送风温度超过上限阈值 (当前26.8°C > 24°C)', time: '2026-05-19 15:30:00', status: '未处理', reported: '否' },
+            { level: '警告', levelClass: 'warning', desc: '回风湿度低于下限阈值 (当前35% < 40%)', time: '2026-05-19 14:22:00', status: '未处理', reported: '否' },
+            { level: '紧急', levelClass: 'urgent', desc: '冷水机组C-01压缩机过载保护触发', time: '2026-05-19 13:15:00', status: '已处理', reported: '是' },
+            { level: '提示', levelClass: 'info', desc: '新风阀开度低于设定值', time: '2026-05-19 11:08:00', status: '已关闭', reported: '否' }
+        ];
+        
+        let alarmPageSize = 10;
+        let alarmCurrentPage = 1;
+        
+        function renderAlarmTable() {
+            const tbody = document.querySelector('#alarm .alarm-table tbody');
+            if (!tbody) return;
+            
+            const start = (alarmCurrentPage - 1) * alarmPageSize;
+            const end = start + alarmPageSize;
+            const pageData = alarmEventsData.slice(start, end);
+            
+            let html = '';
+            pageData.forEach(event => {
+                const actionBtn = event.status === '未处理' 
+                    ? '<button class="alarm-action alarm-action--primary" onclick="createWorkOrder()">去报单</button>'
+                    : '<button class="alarm-action" onclick="showAlarmDetail()">详情</button>';
+                
+                html += '<tr>' +
+                    '<td><span class="alarm-level alarm-level--' + event.levelClass + '">' + event.level + '</span></td>' +
+                    '<td>' + event.desc + '</td>' +
+                    '<td>' + event.time + '</td>' +
+                    '<td><span class="alarm-status alarm-status--' + (event.status === '未处理' ? 'pending' : 'handled') + '">' + event.status + '</span></td>' +
+                    '<td>' + event.reported + '</td>' +
+                    '<td>' + actionBtn + '</td>' +
+                '</tr>';
+            });
+            
+            tbody.innerHTML = html;
+            
+            // 更新分页信息
+            const totalCount = document.getElementById('alarm-total-count');
+            if (totalCount) totalCount.textContent = alarmEventsData.length;
+            
+            // 更新分页按钮状态
+            updatePaginationButtons();
+        }
+        
+        function changeAlarmPageSize(size) {
+            alarmPageSize = parseInt(size);
+            alarmCurrentPage = 1;
+            renderAlarmTable();
+        }
+        
+        function goToAlarmPage(page) {
+            const totalPages = Math.ceil(alarmEventsData.length / alarmPageSize);
+            
+            if (page === 'prev') {
+                alarmCurrentPage = Math.max(1, alarmCurrentPage - 1);
+            } else if (page === 'next') {
+                alarmCurrentPage = Math.min(totalPages, alarmCurrentPage + 1);
+            } else {
+                alarmCurrentPage = parseInt(page);
+            }
+            
+            renderAlarmTable();
+        }
+        
+        function updatePaginationButtons() {
+            const totalPages = Math.ceil(alarmEventsData.length / alarmPageSize);
+            const buttons = document.querySelectorAll('.pagination-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('pagination-btn--active');
+                btn.style.background = 'rgba(255,255,255,0.05)';
+                btn.style.border = '1px solid rgba(255,255,255,0.15)';
+                btn.style.color = 'var(--color-text-secondary)';
+            });
+            
+            // 高亮当前页按钮
+            const activeBtn = document.querySelector('.pagination-btn[onclick="goToAlarmPage(' + alarmCurrentPage + ')"]');
+            if (activeBtn) {
+                activeBtn.classList.add('pagination-btn--active');
+                activeBtn.style.background = 'var(--color-primary)';
+                activeBtn.style.border = '1px solid transparent';
+                activeBtn.style.color = '#fff';
+            }
+        }
+        
+        // 初始化渲染
+        setTimeout(renderAlarmTable, 100);
 </script>
 </body>
 </html>
