@@ -223,7 +223,7 @@
         document.querySelectorAll('.sidebar__item').forEach(function(item) {
             item.addEventListener('click', function() {
                 const pageId = this.getAttribute('data-page');
-                if (pageId === 'energy' || pageId === 'alarm') {
+                if (pageId === 'page-energy' || pageId === 'page-alarm') {
                     setTimeout(function() {
                         initChartsLazy();
                         setTimeout(function() {
@@ -3506,7 +3506,7 @@
                 document.getElementById('page-' + pageId).classList.add('page--active');
 
                 // 图表自适应：切换到能耗/报警页时，延迟初始化 ECharts 并 resize
-                if (pageId === 'energy' || pageId === 'alarm') {
+                if (pageId === 'page-energy' || pageId === 'page-alarm') {
                     setTimeout(function() {
                         initChartsLazy();
                         setTimeout(function() {
@@ -4047,7 +4047,7 @@ B1配电室温度：38°C（略高，正常<35°C）
                 const pageId = currentPage.id;
                 console.log('当前页面:', pageId);
                 
-                if (pageId === 'energy' || pageId === 'alarm') {
+                if (pageId === 'page-energy' || pageId === 'page-alarm') {
                     setTimeout(function() {
                         initChartsLazy();
                     }, 200);
