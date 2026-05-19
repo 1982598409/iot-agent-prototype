@@ -4042,7 +4042,7 @@ B1配电室温度：38°C（略高，正常<35°C）
             console.log('DOM 已加载，检查当前页面...');
             
             // 检查当前显示的页面
-            const currentPage = document.querySelector('.page.active');
+            const currentPage = document.querySelector('.page--active');
             if (currentPage) {
                 const pageId = currentPage.id;
                 console.log('当前页面:', pageId);
@@ -4059,7 +4059,7 @@ B1配电室温度：38°C（略高，正常<35°C）
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             setTimeout(function() {
                 const currentPage = document.querySelector('.page.active');
-                if (currentPage && (currentPage.id === 'energy' || currentPage.id === 'alarm')) {
+                if (currentPage && (currentPage.id === 'page-energy' || currentPage.id === 'page-alarm')) {
                     console.log('页面已加载，延迟初始化图表');
                     initChartsLazy();
                 }
