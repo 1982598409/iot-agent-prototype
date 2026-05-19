@@ -198,8 +198,12 @@
             console.log('=== initChartsLazy 被调用 ===');
             console.log('echarts 是否存在:', typeof echarts !== 'undefined' ? '✓' : '✗ 未定义');
             
+            // 不再跳过，每次都检查容器尺寸，如果尺寸为0则延迟重试
             if (chartsInited) {
-                console.log('图表已初始化过，跳过');
+                console.log('图表已初始化，执行 resize');
+                if (chartEnergyTrend) chartEnergyTrend.resize();
+                if (chartEnergyPie) chartEnergyPie.resize();
+                if (chartAlarmTrend) chartAlarmTrend.resize();
                 return;
             }
             chartsInited = true;
@@ -221,10 +225,21 @@
             setTimeout(() => {
                 if (chartEnergyTrend) {
                     chartEnergyTrend.resize();
+                    // 检查容器尺寸
+                    const box = document.getElementById('chart-energy-trend');
+                    if (box) console.log('能耗趋势图容器尺寸:', box.offsetWidth, 'x', box.offsetHeight);
                     console.log('能耗趋势图已初始化');
                 }
                 if (chartEnergyPie) chartEnergyPie.resize();
                 if (chartAlarmTrend) chartAlarmTrend.resize();
+                
+                // 延迟再 resize 一次，确保渲染完成
+                setTimeout(() => {
+                    if (chartEnergyTrend) chartEnergyTrend.resize();
+                    if (chartEnergyPie) chartEnergyPie.resize();
+                    if (chartAlarmTrend) chartAlarmTrend.resize();
+                    console.log('二次 resize 完成');
+                }, 800);
             }, 300);
         }
 
