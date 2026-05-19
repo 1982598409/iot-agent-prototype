@@ -4091,5 +4091,182 @@ B1配电室温度：38°C（略高，正常<35°C）
             }, 500);
         }
 </script>
+
+    <!-- ===== 图表强制初始化脚本 v2（独立于原有逻辑） ===== -->
+    <script>
+    (function() {
+        var LOG = '[ChartV2]';
+        console.log(LOG, '脚本开始加载');
+        
+        // 等待 echarts 加载完成
+        function waitForEcharts(callback) {
+            if (typeof echarts !== 'undefined') {
+                console.log(LOG, 'echarts 已就绪');
+                callback();
+                return;
+            }
+            console.log(LOG, '等待 echarts 加载...');
+            var count = 0;
+            var timer = setInterval(function() {
+                count++;
+                if (typeof echarts !== 'undefined') {
+                    clearInterval(timer);
+                    console.log(LOG, 'echarts 加载完成(第' + count + '次检查)');
+                    callback();
+                } else if (count > 20) {
+                    clearInterval(timer);
+                    console.error(LOG, 'echarts 加载超时(10秒)');
+                }
+            }, 500);
+        }
+        
+        // 初始化所有图表
+        function initAllCharts() {
+            console.log(LOG, '开始初始化图表...');
+            
+            var containers = [
+                { id: 'chart-energy-trend', name: '能耗趋势图', fn: createEnergyTrend },
+                { id: 'chart-energy-pie', name: '分项能耗饼图', fn: createEnergyPie },
+                { id: 'chart-alarm-trend', name: '报警趋势图', fn: createAlarmTrend }
+            ];
+            
+            var inited = 0;
+            containers.forEach(function(c) {
+                var el = document.getElementById(c.id);
+                if (!el) { console.log(LOG, c.name + ' 容器不存在'); return; }
+                
+                // 检查容器尺寸
+                var w = el.offsetWidth;
+                var h2 = el.offsetHeight;
+                console.log(LOG, c.name + ' 容器尺寸:', w, 'x', h2);
+                
+                try {
+                    c.fn(el);
+                    inited++;
+                    console.log(LOG, c.name + ' ✓ 创建成功');
+                } catch(e) {
+                    console.error(LOG, c.name + ' ✗ 创建失败:', e.message);
+                }
+            });
+            
+            console.log(LOG, '初始化完成，成功:', inited, '/', containers.length);
+        }
+        
+        // 能耗趋势图配置
+        function createEnergyTrend(el) {
+            window.chartEnergyTrend = echarts.init(el);
+            window.chartEnergyTrend.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: 50, right: 20, top: 30, bottom: 30 },
+                xAxis: { type: 'category', data: ['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'] },
+                yAxis: { type: 'value', name: 'kWh' },
+                series: [{
+                    type: 'line',
+                    smooth: true,
+                    data: [9200, 9800, 9400, 10600, 11800, 11200, 9800, 10400, 12000, 11400, 9600, 9200],
+                    areaStyle: { color: 'rgba(24,144,255,0.15)' },
+                    lineStyle: { color: '#1890FF', width: 2 },
+                    itemStyle: { color: '#1890FF' }
+                }]
+            });
+        }
+        
+        // 分项能耗饼图配置
+        function createEnergyPie(el) {
+            window.chartEnergyPie = echarts.init(el);
+            window.chartEnergyPie.setOption({
+                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '50%'],
+                    data: [
+                        { value: 45000, name: '空调系统', itemStyle: { color: '#1890FF' } },
+                        { value: 28000, name: '照明系统', itemStyle: { color: '#52C41A' } },
+                        { value: 18000, name: '动力设备', itemStyle: { color: '#FAAD14' } },
+                        { value: 12000, name: '其他', itemStyle: { color: '#8C8C8C' } }
+                    ],
+                    label: { fontSize: 11, color: '#ccc' },
+                    emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' } }
+                }]
+            });
+        }
+        
+        // 报警趋势图配置
+        function createAlarmTrend(el) {
+            window.chartAlarmTrend = echarts.init(el);
+            window.chartAlarmTrend.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['报警数', '处理数'], textStyle: { color: '#aaa', fontSize: 11 }, top: 5 },
+                grid: { left: 45, right: 20, top: 35, bottom: 25 },
+                xAxis: { type: 'category', data: ['周一','周二','周三','周四','周五','周六','周日'] },
+                yAxis: { type: 'value', minInterval: 1 },
+                series: [
+                    {
+                        name: '报警数', type: 'bar',
+                        data: [8, 9, 14, 18, 16, 22, 28],
+                        itemStyle: { color: '#FF4D4F', borderRadius: [3,3,0,0] }
+                    },
+                    {
+                        name: '处理数', type: 'line', smooth: true,
+                        data: [3, 2, 4, 5, 4, 6, 7],
+                        lineStyle: { color: '#FAAD14', width: 2 },
+                        itemStyle: { color: '#FAAD14' }
+                    }
+                ]
+            });
+        }
+        
+        // 统一 resize 函数
+        function resizeAll() {
+            setTimeout(function() {
+                if (window.chartEnergyTrend) try { window.chartEnergyTrend.resize(); } catch(e){}
+                if (window.chartEnergyPie) try { window.chartEnergyPie.resize(); } catch(e){}
+                if (window.chartAlarmTrend) try { window.chartAlarmTrend.resize(); } catch(e){}
+            }, 100);
+        }
+        
+        // 监听窗口变化
+        window.addEventListener('resize', resizeAll);
+        
+        // 监听侧边栏点击 - 用事件委托
+        document.addEventListener('click', function(e) {
+            var item = e.target.closest ? e.target.closest('.sidebar__item') : null;
+            if (!item) return;
+            var pageId = item.getAttribute('data-page') || '';
+            console.log(LOG, '侧边栏点击:', pageId);
+            if (pageId === 'page-energy' || pageId === 'page-alarm') {
+                console.log(LOG, '检测到目标页面，500ms 后初始化图表');
+                waitForEcharts(function() {
+                    setTimeout(function() {
+                        initAllCharts();
+                        // 二次 resize
+                        setTimeout(resizeAll, 500);
+                        setTimeout(resizeAll, 1200);
+                    }, 300);
+                });
+            }
+        });
+        
+        // 页面加载后也尝试初始化
+        waitForEcharts(function() {
+            setTimeout(function() {
+                // 检查当前页面
+                var activePage = document.querySelector('.page--active') || document.querySelector('.page.active');
+                if (activePage) {
+                    var pid = activePage.id;
+                    console.log(LOG, '当前活跃页面:', pid);
+                    if (pid === 'page-energy' || pid === 'page-alarm') {
+                        initAllCharts();
+                        setTimeout(resizeAll, 500);
+                    }
+                }
+            }, 800);
+        });
+        
+        console.log(LOG, '脚本加载完毕，等待用户操作触发初始化');
+    })();
+    </script>
+
 </body>
 </html>
