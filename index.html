@@ -1,0 +1,3877 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+    <script>
+    // ===== ECharts 图表初始化 =====
+        let chartEnergyTrend, chartEnergyPie, chartAlarmTrend;
+
+        function initCharts() {
+            // 能耗趋势图（面积+折线，12个月）
+            chartEnergyTrend = echarts.init(document.getElementById('chart-energy-trend'));
+            chartEnergyTrend.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#252D3A',
+                    borderColor: 'rgba(255,255,255,0.15)',
+                    textStyle: { color: '#fff', fontSize: 12 },
+                    formatter: function(params) {
+                        let res = '<div style="font-size:12px;color:rgba(255,255,255,0.65);margin-bottom:4px;">' + params[0].name + '</div>';
+                        params.forEach(function(p) {
+                            res += '<div style="display:flex;align-items:center;gap:6px;margin:2px 0;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + p.color + ';"></span><span style="flex:1;">' + p.seriesName + '</span><span style="font-weight:600;">' + p.value + ' kWh</span></div>';
+                        });
+                        return res;
+                    }
+                },
+                grid: { top: 16, right: 20, bottom: 32, left: 60, containLabel: false },
+                xAxis: {
+                    type: 'category',
+                    data: ['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'],
+                    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                    axisTick: { show: false },
+                    axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 },
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)', type: 'dashed' } },
+                    axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 },
+                },
+                series: [{
+                    name: '能耗',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 6,
+                    data: [9200, 9800, 9400, 10600, 11800, 11200, 9800, 10400, 12000, 11400, 9600, 9200],
+                    lineStyle: { color: '#00D9FF', width: 2 },
+                    itemStyle: { color: '#00D9FF', borderWidth: 2, borderColor: '#1E2530' },
+                    areaStyle: {
+                        color: {
+                            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(0,217,255,0.4)' },
+                                { offset: 1, color: 'rgba(0,217,255,0)' }
+                            ]
+                        }
+                    }
+                }]
+            });
+
+            // 分项能耗饼图
+            chartEnergyPie = echarts.init(document.getElementById('chart-energy-pie'));
+            chartEnergyPie.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: '#252D3A',
+                    borderColor: 'rgba(255,255,255,0.15)',
+                    textStyle: { color: '#fff', fontSize: 12 },
+                    formatter: '{b}: {c}kWh ({d}%)'
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['50%', '75%'],
+                    center: ['50%', '50%'],
+                    avoidLabelOverlap: true,
+                    label: { show: false },
+                    data: [
+                        { value: 77136, name: '空调系统', itemStyle: { color: '#00D9FF' } },
+                        { value: 32140, name: '照明系统', itemStyle: { color: '#FAAD14' } },
+                        { value: 19284, name: '办公设备', itemStyle: { color: '#52C41A' } },
+                        { value: 0, name: '其他', itemStyle: { color: '#1890FF' } }
+                    ]
+                }]
+            });
+
+            // 报警趋势图（多线：紧急/警告/提示）
+            chartAlarmTrend = echarts.init(document.getElementById('chart-alarm-trend'));
+            chartAlarmTrend.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#252D3A',
+                    borderColor: 'rgba(255,255,255,0.15)',
+                    textStyle: { color: '#fff', fontSize: 12 },
+                    axisPointer: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+                },
+                legend: {
+                    data: ['紧急', '警告', '提示'],
+                    top: 0, right: 0,
+                    textStyle: { color: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                    itemWidth: 12, itemHeight: 12
+                },
+                grid: { top: 36, right: 20, bottom: 32, left: 60, containLabel: false },
+                xAxis: {
+                    type: 'category',
+                    data: ['4/9','4/10','4/11','4/12','4/13','4/14','4/15'],
+                    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+                    axisTick: { show: false },
+                    axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 },
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)', type: 'dashed' } },
+                    axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 },
+                },
+                series: [
+                    {
+                        name: '紧急',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'circle', symbolSize: 5,
+                        data: [2, 3, 5, 8, 6, 10, 12],
+                        lineStyle: { color: '#FF4D4F', width: 2 },
+                        itemStyle: { color: '#FF4D4F' }
+                    },
+                    {
+                        name: '警告',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'circle', symbolSize: 5,
+                        data: [8, 9, 14, 18, 16, 22, 28],
+                        lineStyle: { color: '#FAAD14', width: 2 },
+                        itemStyle: { color: '#FAAD14' }
+                    },
+                    {
+                        name: '提示',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'circle', symbolSize: 5,
+                        data: [3, 2, 4, 5, 4, 6, 7],
+                        lineStyle: { color: '#1890FF', width: 2 },
+                        itemStyle: { color: '#1890FF' }
+                    }
+                ]
+            });
+        }
+
+        // 能耗时间范围切换
+        function switchEnergyRange(btn, range) {
+            btn.parentElement.querySelectorAll('.card__btn').forEach(b => b.classList.remove('card__btn--active'));
+            btn.classList.add('card__btn--active');
+            if (!chartEnergyTrend) return;
+            const months6 = ['9月','10月','11月','12月','1月','2月'];
+            const data6 = [9800, 10400, 12000, 11400, 9600, 9200];
+            const months12 = ['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+            const data12 = [9200, 9800, 9400, 10600, 11800, 11200, 9800, 10400, 12000, 11400, 9600, 9200];
+            chartEnergyTrend.setOption({
+                xAxis: { data: range === '6m' ? months6 : months12 },
+                series: [{ data: range === '6m' ? data6 : data12 }]
+            });
+        }
+
+        // 页面切换后重新渲染图表
+        const origNavClick = null;
+        document.querySelectorAll('.sidebar__item').forEach(item => {
+            const originalHandler = item.onclick;
+            item.addEventListener('click', function() {
+                if (originalHandler) originalHandler.call(this);
+                setTimeout(() => {
+                    if (chartEnergyTrend) chartEnergyTrend.resize();
+                    if (chartEnergyPie) chartEnergyPie.resize();
+                    if (chartAlarmTrend) chartAlarmTrend.resize();
+                }, 50);
+            });
+        });
+
+        // 窗口大小变化时自适应
+        window.addEventListener('resize', function() {
+            if (chartEnergyTrend) chartEnergyTrend.resize();
+            if (chartEnergyPie) chartEnergyPie.resize();
+            if (chartAlarmTrend) chartAlarmTrend.resize();
+        });
+
+        // 懒初始化：切换到对应页面时才初始化图表（避免 display:none 导致 ECharts 无法获取尺寸）
+        let chartsInited = false;
+        function initChartsLazy() {
+            if (chartsInited) return;
+            chartsInited = true;
+            initCharts();
+        }
+
+        // 监听 sidebar 切换，当切到能耗或报警页时初始化图表
+        document.querySelectorAll('.sidebar__item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                const pageId = this.getAttribute('data-page');
+                if (pageId === 'energy' || pageId === 'alarm') {
+                    setTimeout(function() {
+                        initChartsLazy();
+                        setTimeout(function() {
+                            if (chartEnergyTrend) chartEnergyTrend.resize();
+                            if (chartEnergyPie) chartEnergyPie.resize();
+                            if (chartAlarmTrend) chartAlarmTrend.resize();
+                        }, 100);
+                    }, 150);
+                }
+            });
+        });
+
+    </script>
+    <title>物联智能体 IoT Agent Platform</title>
+    <style>
+        /* ==================== CSS 变量定义 ==================== */
+        :root {
+            /* 主背景色 */
+            --bg-primary: linear-gradient(135deg, #0F1419 0%, #1A1F2E 100%);
+            --bg-secondary: #1E2530;
+            --bg-tertiary: #252D3A;
+            --bg-hover: #2A3544;
+            
+            /* 主色调 - 科技蓝 */
+            --color-primary: #00D9FF;
+            --color-primary-hover: #33E1FF;
+            --color-primary-dark: #1890FF;
+            
+            /* 功能色 */
+            --color-success: #52C41A;
+            --color-warning: #FAAD14;
+            --color-danger: #FF4D4F;
+            --color-info: #1890FF;
+            
+            /* 文字色 */
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: rgba(255, 255, 255, 0.65);
+            --color-text-disabled: rgba(255, 255, 255, 0.35);
+            
+            /* 边框色 */
+            --color-border: rgba(255, 255, 255, 0.1);
+            --color-border-light: rgba(255, 255, 255, 0.15);
+            
+            /* 阴影 */
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 30px rgba(0, 217, 255, 0.15);
+            --shadow-glow: 0 0 20px rgba(0, 217, 255, 0.3);
+            
+            /* 圆角 */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            /* 布局 */
+            --sidebar-width: 220px;
+            --header-height: 60px;
+            
+            /* 动画 */
+            --transition-fast: 0.2s;
+            --transition-normal: 0.3s;
+        }
+
+        /* ==================== 全局样式 ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ==================== 主布局 ==================== */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ==================== 左侧导航栏 ==================== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--color-border);
+        }
+
+        .sidebar__header {
+            padding: 20px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar__logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .sidebar__logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .sidebar__nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar__item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .sidebar__item:hover {
+            background: var(--bg-hover);
+        }
+
+        .sidebar__item--active {
+            background: linear-gradient(90deg, rgba(0, 217, 255, 0.2) 0%, rgba(0, 217, 255, 0.05) 100%);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .sidebar__item--active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: var(--color-primary);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .sidebar__icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-text-secondary);
+            flex-shrink: 0;
+        }
+
+        .sidebar__item--active .sidebar__icon {
+            color: var(--color-primary);
+        }
+
+        .sidebar__content {
+            flex: 1;
+        }
+
+        .sidebar__title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            line-height: 1.3;
+        }
+
+        .sidebar__desc {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+            line-height: 1.3;
+        }
+
+        .sidebar__footer {
+            padding: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .sidebar__admin {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .sidebar__admin:hover {
+            background: var(--bg-hover);
+        }
+
+        .sidebar__avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar__admin-info {
+            flex: 1;
+        }
+
+        .sidebar__admin-name {
+            font-size: 14px;
+            color: var(--color-text-primary);
+        }
+
+        .sidebar__admin-role {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+        }
+
+        /* ==================== 主内容区 ==================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ==================== 对话区 ==================== */
+        .chat-area {
+            flex: 1;
+            min-width: 400px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--color-border);
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .chat-header__title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .chat-header__subtitle {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+        }
+
+        .chat-header__actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: #0F1419;
+            font-weight: 500;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn--secondary {
+            background: var(--bg-tertiary);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn--secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--color-primary);
+        }
+
+        .btn--success {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        .btn--success:hover {
+            background: #73d13d;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ==================== 对话消息区 ==================== */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 3px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message--ai {
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .message--user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+            max-width: 85%;
+        }
+
+        .message__avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message--ai .message__avatar {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: #0F1419;
+        }
+
+        .message--user .message__avatar {
+            background: var(--bg-tertiary);
+            color: var(--color-text-secondary);
+        }
+
+        .message__content {
+            flex: 1;
+        }
+
+        .message__header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .message__name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .message__time {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+        }
+
+        .message__bubble {
+            padding: 14px 18px;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message--ai .message__bubble {
+            background: var(--bg-tertiary);
+            color: var(--color-text-primary);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message--user .message__bubble {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: #0F1419;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message__loading {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .message__loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .message__loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .message__loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* ==================== 输入区 ==================== */
+        .chat-input {
+            padding: 16px 20px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .chat-input__wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input__box {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-fast);
+        }
+
+        .chat-input__box:focus-within {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+        }
+
+        .chat-input__box svg {
+            width: 20px;
+            height: 20px;
+            color: var(--color-text-disabled);
+            flex-shrink: 0;
+        }
+
+        .chat-input__field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--color-text-primary);
+            resize: none;
+            max-height: 120px;
+        }
+
+        .chat-input__field::placeholder {
+            color: var(--color-text-disabled);
+        }
+
+        .chat-input__actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input__btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .chat-input__btn:hover {
+            background: var(--bg-hover);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .chat-input__btn--send {
+            width: 44px;
+            height: 44px;
+            background: var(--color-success);
+            border: none;
+            color: #fff;
+            border-radius: var(--radius-md);
+        }
+
+        .chat-input__btn--send:hover {
+            background: #73d13d;
+            box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);
+        }
+
+        .chat-input__btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .chat-footer {
+            padding: 12px 20px 0;
+            font-size: 12px;
+            color: var(--color-text-disabled);
+            text-align: center;
+        }
+
+        /* ==================== 右侧详情区 ==================== */
+        .detail-area {
+            flex: 2;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .detail-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .detail-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .detail-area::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 3px;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .detail-header__left {
+            flex: 1;
+        }
+
+        .detail-header__title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-header__subtitle {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .detail-header__actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ==================== 卡片组件 ==================== */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover {
+            border-color: var(--color-border-light);
+            box-shadow: var(--shadow-card);
+        }
+
+        .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card__title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .card__actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card__btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card__btn:hover {
+            background: var(--bg-hover);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .card__btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ==================== 3D 可视化区域 ==================== */
+        .visual-3d {
+            position: relative;
+        }
+
+        .visual-3d__controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .visual-3d__view-btn {
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .visual-3d__view-btn:hover {
+            background: var(--bg-hover);
+            color: var(--color-text-primary);
+        }
+
+        .visual-3d__view-btn--active {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .visual-3d__scene {
+            height: 280px;
+            background: linear-gradient(180deg, #0A0E17 0%, #151B28 100%);
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .visual-3d__scene::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .visual-3d__model {
+            position: relative;
+            transform-style: preserve-3d;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .visual-3d__image-container {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .visual-3d__image-container--active {
+            display: flex;
+        }
+
+        .visual-3d__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0, 217, 255, 0.2);
+            transition: transform var(--transition-normal);
+        }
+
+        .visual-3d__image:hover {
+            transform: scale(1.02);
+        }
+
+        .visual-3d__device {
+            width: 160px;
+            height: 120px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .visual-3d__face {
+            position: absolute;
+            border: 2px solid var(--color-primary);
+            background: rgba(0, 217, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--color-primary);
+        }
+
+        .visual-3d__face--front {
+            width: 160px;
+            height: 120px;
+            transform: translateZ(60px);
+        }
+
+        .visual-3d__face--back {
+            width: 160px;
+            height: 120px;
+            transform: translateZ(-60px) rotateY(180deg);
+        }
+
+        .visual-3d__face--left {
+            width: 120px;
+            height: 120px;
+            left: -60px;
+            transform: rotateY(-90deg);
+        }
+
+        .visual-3d__face--right {
+            width: 120px;
+            height: 120px;
+            right: -60px;
+            transform: rotateY(90deg);
+        }
+
+        .visual-3d__face--top {
+            width: 160px;
+            height: 120px;
+            top: -60px;
+            transform: rotateX(90deg);
+        }
+
+        .visual-3d__face--bottom {
+            width: 160px;
+            height: 120px;
+            bottom: -60px;
+            transform: rotateX(-90deg);
+        }
+
+        .visual-3d__status {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .visual-3d__status--normal {
+            background: rgba(82, 196, 26, 0.2);
+            color: var(--color-success);
+        }
+
+        .visual-3d__status--warning {
+            background: rgba(250, 173, 20, 0.2);
+            color: var(--color-warning);
+        }
+
+        .visual-3d__status--danger {
+            background: rgba(255, 77, 79, 0.2);
+            color: var(--color-danger);
+        }
+
+        .visual-3d__status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .visual-3d__label {
+            position: absolute;
+            font-size: 11px;
+            color: var(--color-text-secondary);
+            background: rgba(30, 37, 48, 0.9);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .visual-3d__label--top {
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .visual-3d__actions {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .visual-3d__action {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: rgba(30, 37, 48, 0.9);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .visual-3d__action:hover {
+            background: var(--color-primary);
+            color: #0F1419;
+            border-color: var(--color-primary);
+        }
+
+        .visual-3d__action svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ==================== 参数卡片网格 ==================== */
+        .param-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .param-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-fast);
+        }
+
+        .param-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 12px rgba(0, 217, 255, 0.15);
+        }
+
+        .param-card__label {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+            margin-bottom: 6px;
+        }
+
+        .param-card__value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .param-card__status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .param-card__status--normal {
+            background: rgba(82, 196, 26, 0.15);
+            color: var(--color-success);
+        }
+
+        .param-card__status--warning {
+            background: rgba(250, 173, 20, 0.15);
+            color: var(--color-warning);
+        }
+
+        .param-card__status--danger {
+            background: rgba(255, 77, 79, 0.15);
+            color: var(--color-danger);
+        }
+
+        .param-card__status::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* ==================== 参数列表 ==================== */
+        /* ==================== 参数分类标题 ==================== */
+        .param-category {
+            grid-column: 1 / -1;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-primary);
+            padding: 8px 0 4px 0;
+            margin-top: 4px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .param-category:first-child {
+            margin-top: 0;
+        }
+
+        .param-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .param-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+        }
+
+        .param-item__label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .param-item__value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        /* ==================== 运维知识库 ==================== */
+        .knowledge-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .knowledge-item {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            border-left: 3px solid;
+        }
+
+        .knowledge-item--warning {
+            border-left-color: var(--color-warning);
+        }
+
+        .knowledge-item--danger {
+            border-left-color: var(--color-danger);
+        }
+
+        .knowledge-item--info {
+            border-left-color: var(--color-info);
+        }
+
+        .knowledge-item__title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            margin-bottom: 6px;
+        }
+
+        .knowledge-item__content {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .knowledge-item__time {
+            font-size: 11px;
+            color: var(--color-text-disabled);
+            margin-top: 8px;
+        }
+
+        /* ==================== 数据统计卡片 ==================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-fast);
+        }
+
+        .stat-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+        .stat-card__label {
+            font-size: 13px;
+            color: var(--color-text-disabled);
+            margin-bottom: 8px;
+        }
+
+        .stat-card__value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 6px;
+        }
+
+        .stat-card__value--primary {
+            color: var(--color-primary);
+        }
+
+        .stat-card__change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-card__change--up {
+            color: var(--color-danger);
+        }
+
+        .stat-card__change--down {
+            color: var(--color-success);
+        }
+
+        .stat-card__extra {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+            margin-top: 4px;
+        }
+
+        /* ==================== 图表区域 ==================== */
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 2;
+        }
+
+        .chart-area {
+            fill: url(#chartGradient);
+            opacity: 0.3;
+        }
+
+        .chart-dot {
+            fill: var(--color-primary);
+            stroke: var(--bg-secondary);
+            stroke-width: 2;
+        }
+
+        .chart-label {
+            font-size: 11px;
+            fill: var(--color-text-disabled);
+        }
+
+        .chart-grid {
+            stroke: var(--color-border);
+            stroke-dasharray: 4 4;
+        }
+
+        /* ==================== 模式切换标签 ==================== */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .mode-tab:hover {
+            background: var(--bg-hover);
+            color: var(--color-text-primary);
+        }
+
+        .mode-tab--active {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* ==================== 场景概览 ==================== */
+        .scene-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .scene-info__item {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+
+        .scene-info__label {
+            font-size: 12px;
+            color: var(--color-text-disabled);
+            margin-bottom: 6px;
+        }
+
+        .scene-info__value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .scene-info__value--highlight {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-success);
+        }
+
+        /* ==================== 控制列表 ==================== */
+        .control-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .control-item {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-item__info {
+            flex: 1;
+        }
+
+        .control-item__name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .control-item__desc {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .control-item__toggle {
+            width: 48px;
+            height: 26px;
+            border-radius: 13px;
+            background: var(--color-success);
+            position: relative;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .control-item__toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            top: 2px;
+            right: 2px;
+            transition: all var(--transition-fast);
+        }
+
+        .control-item__toggle--off {
+            background: var(--color-text-disabled);
+        }
+
+        .control-item__toggle--off::after {
+            right: 24px;
+        }
+
+        /* ==================== 报警列表 ==================== */
+        .alarm-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .alarm-filter {
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .alarm-filter:hover {
+            background: var(--bg-hover);
+            color: var(--color-text-primary);
+        }
+
+        .alarm-filter--active {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .alarm-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .alarm-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-text-disabled);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .alarm-table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--color-text-primary);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .alarm-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .alarm-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .alarm-level::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .alarm-level--urgent {
+            background: rgba(255, 77, 79, 0.15);
+            color: var(--color-danger);
+        }
+
+        .alarm-level--warning {
+            background: rgba(250, 173, 20, 0.15);
+            color: var(--color-warning);
+        }
+
+        .alarm-level--info {
+            background: rgba(24, 144, 255, 0.15);
+            color: var(--color-info);
+        }
+
+        .alarm-status {
+            display: inline-flex;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .alarm-status--pending {
+            background: rgba(250, 173, 20, 0.15);
+            color: var(--color-warning);
+        }
+
+        .alarm-status--handled {
+            background: rgba(82, 196, 26, 0.15);
+            color: var(--color-success);
+        }
+
+        .alarm-action {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-right: 6px;
+        }
+
+        .alarm-action:hover {
+            background: var(--color-primary);
+            color: #0F1419;
+            border-color: var(--color-primary);
+        }
+
+        /* ==================== 建议列表 ==================== */
+        .suggestion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .suggestion-item {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .suggestion-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: rgba(0, 217, 255, 0.15);
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .suggestion-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .suggestion-desc {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .suggestion-save {
+            font-size: 12px;
+            color: var(--color-success);
+            margin-top: 8px;
+        }
+
+        /* ==================== 设备控制按钮区 ==================== */
+        .device-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .device-control-btn {
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .device-control-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .device-control-btn--active {
+            background: rgba(0, 217, 255, 0.15);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .device-control-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ==================== 风险分析 ==================== */
+        .risk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .risk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+        }
+
+        .risk-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .risk-device {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .risk-level {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .risk-level--high {
+            background: rgba(255, 77, 79, 0.15);
+            color: var(--color-danger);
+        }
+
+        .risk-level--medium {
+            background: rgba(250, 173, 20, 0.15);
+            color: var(--color-warning);
+        }
+
+        /* ==================== 执行记录 ==================== */
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+        }
+
+        .record-time {
+            color: var(--color-text-secondary);
+        }
+
+        .record-action {
+            color: var(--color-text-primary);
+        }
+
+        .record-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .record-status--success {
+            background: rgba(82, 196, 26, 0.15);
+            color: var(--color-success);
+        }
+
+        .record-status--failed {
+            background: rgba(255, 77, 79, 0.15);
+            color: var(--color-danger);
+        }
+
+        /* ==================== 时间范围选择 ==================== */
+        .time-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .time-range__value {
+            color: var(--color-text-primary);
+            font-weight: 500;
+        }
+
+        /* ==================== 响应式处理 ==================== */
+        @media (max-width: 1600px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .param-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .chat-area {
+                width: 360px;
+            }
+        }
+
+        /* ==================== 隐藏页面 ==================== */
+        .page {
+            display: none;
+        }
+
+        .page--active {
+            display: flex;
+        }
+    
+    /* 历史记录面板 */
+    .history-panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 320px;
+        height: 100%;
+        background: rgba(15, 20, 25, 0.97);
+        border-left: 1px solid rgba(0, 217, 255, 0.15);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        animation: slideInRight 0.25s ease;
+    }
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    .history-panel__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+    }
+    .history-panel__title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #E0E0E0;
+    }
+    .history-panel__close {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 22px;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        transition: color 0.2s;
+    }
+    .history-panel__close:hover {
+        color: #00D9FF;
+    }
+    .history-panel__list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 12px;
+    }
+    .history-item {         padding: 14px 16px;         margin-bottom: 6px;         border-radius: 8px;         background: rgba(0, 217, 255, 0.04);         border: 1px solid rgba(0, 217, 255, 0.08);         cursor: pointer;         transition: all 0.2s;         display: flex;         align-items: center;         gap: 8px;         position: relative;     }
+    .history-item:hover {
+        background: rgba(0, 217, 255, 0.1);
+        border-color: rgba(0, 217, 255, 0.25);
+    }
+    .history-item__title {
+        font-size: 14px;
+        color: #E0E0E0;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .history-item__meta {
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .history-item__content { flex: 1; min-width: 0; }
+        .history-item__delete {
+            flex-shrink: 0; width: 28px; height: 28px; border: none;
+            background: transparent; color: rgba(255,255,255,0.2);
+            cursor: pointer; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; opacity: 0;
+        }
+        .history-item:hover .history-item__delete { opacity: 1; }
+        .history-item__delete:hover { background: rgba(255,77,79,0.15); color: #ff4d4f; }
+    
+            /* Control Item Layout - Three Column */
+            .control-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px;
+                border-bottom: 1px solid var(--color-border);
+            }
+            
+            .control-item__info {
+                flex: 1;
+                min-width: 150px;
+            }
+            
+            .control-item__name {
+                font-size: 14px;
+                color: var(--color-text);
+                font-weight: 500;
+            }
+            
+            .control-item__input {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .control-item__input input[type="number"],
+            .control-item__input select {
+                padding: 6px 12px;
+                border: 1px solid var(--color-border);
+                border-radius: 4px;
+                font-size: 14px;
+                width: 100px;
+            }
+            
+            .control-item__input button {
+                padding: 6px 16px;
+                background: var(--color-primary);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            
+            .control-item__input button:hover {
+                opacity: 0.9;
+            }
+            
+            .control-item__value {
+                flex: 0 0 100px;
+                text-align: right;
+                font-size: 14px;
+                font-weight: 500;
+            }
+            
+            .control-item__toggle {
+                width: 44px;
+                height: 24px;
+                background: #dcdfe6;
+                border-radius: 12px;
+                position: relative;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+            
+            .control-item__toggle::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background: white;
+                border-radius: 50%;
+                top: 2px;
+                left: 2px;
+                transition: transform 0.3s;
+            }
+            
+            .control-item__toggle--on {
+                background: var(--color-primary);
+            }
+            
+            .control-item__toggle--on::after {
+                transform: translateX(20px);
+            }
+
+        
+        /* ==================== 控制项输入区 ==================== */
+        .control-item__input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        
+        .control-confirm-btn {
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            height: 28px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+.control-confirm-btn:hover {
+            opacity: 0.85;
+        }
+
+        .control-confirm-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-item__value {
+            font-size: 13px;
+            font-weight: 500;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .alarm-action--primary {
+            background: var(--color-danger) !important;
+            color: white !important;
+            border-color: var(--color-danger) !important;
+        }
+</style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>物联智能体</span>
+                </div>
+                <div style="font-size: 11px; color: var(--color-text-disabled); margin-top: 4px;">IoT Agent Platform</div>
+            </div>
+
+            <nav class="sidebar__nav">
+                <div class="sidebar__item sidebar__item--active" data-page="device-monitor">
+                    <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="4" width="16" height="16" rx="2"/>
+                        <path d="M9 9h6v6H9z"/>
+                    </svg>
+                    <div class="sidebar__content">
+                        <div class="sidebar__title">设备监测运维</div>
+                        <div class="sidebar__desc">设备诊断与维护</div>
+                    </div>
+                </div>
+
+                <div class="sidebar__item" data-page="energy">
+                    <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    <div class="sidebar__content">
+                        <div class="sidebar__title">能耗智能管控</div>
+                        <div class="sidebar__desc">能耗优化与预测</div>
+                    </div>
+                </div>
+
+                <div class="sidebar__item" data-page="scene">
+                    <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <div class="sidebar__content">
+                        <div class="sidebar__title">场景模式控制</div>
+                        <div class="sidebar__desc">智能场景自动化</div>
+                    </div>
+                </div>
+
+                <div class="sidebar__item" data-page="alarm">
+                    <svg class="sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    <div class="sidebar__content">
+                        <div class="sidebar__title">智能报警分析</div>
+                        <div class="sidebar__desc">风险识别与预警</div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar__footer">
+                <div class="sidebar__admin">
+                    <div class="sidebar__avatar">管</div>
+                    <div class="sidebar__admin-info">
+                        <div class="sidebar__admin-name">管理员</div>
+                        <div class="sidebar__admin-role">系统管理员</div>
+                    </div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-text-disabled);">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- ========== 页面1：设备监测运维智能体 ========== -->
+            <div class="page page--active" id="page-device-monitor">
+                <!-- 对话区 -->
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-header__title">设备监测运维智能体</div>
+                        <div class="chat-header__subtitle">专业的工业设备故障诊断与运维建议专家</div>
+                        <div class="chat-header__actions">
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                新建对话
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('device')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                历史记录
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="chat-messages-device" style="position:relative;">
+                        <!-- 历史记录面板 -->
+                        <div class="history-panel" id="history-panel-device" style="display:none;">
+                            <div class="history-panel__header">
+                                <span class="history-panel__title">历史对话</span>
+                                <button class="history-panel__close" onclick="toggleHistoryPanel('device')">&times;</button>
+                            </div>
+                            <div class="history-panel__list" id="history-list-device"></div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">设备监测运维智能体</span>
+                                    <span class="message__time">今天 14:45</span>
+                                </div>
+                                <div class="message__bubble">
+                                    您好！我是设备监测运维智能体。我可以为您提供设备故障诊断、运维建议、参数分析等服务。请输入设备名称或描述您的问题。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--user">
+                            <div class="message__avatar">我</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">我</span>
+                                    <span class="message__time">今天 14:46</span>
+                                </div>
+                                <div class="message__bubble">
+                                    帮我分析一下西楼一层组合式新风机组（AHU-007）的运行状态，有没有潜在故障？
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">设备监测运维智能体</span>
+                                    <span class="message__time">今天 14:46</span>
+                                </div>
+                                <div class="message__bubble">
+                                    正在查询AHU-007的运行数据，请稍候...
+                                    <div class="message__loading">
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="chat-input__wrapper">
+                            <div class="chat-input__box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                                <textarea class="chat-input__field" placeholder="请输入设备名称或描述您的问题..." rows="1" id="input-device"></textarea>
+                            </div>
+                            <div class="chat-input__actions">
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('device')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-footer">智能体回复仅供参考，重要操作请结合实际情况核实</div>
+                </div>
+
+                <!-- 设备详情区 -->
+                <div class="detail-area" id="detail-device">
+                    <div class="detail-header">
+                        <div class="detail-header__left">
+                            <div class="detail-header__title">
+                                设备详情分析
+                                <span style="font-size: 14px; font-weight: 400; color: var(--color-text-secondary);">|</span>
+                                <span style="font-size: 14px; font-weight: 400;">西楼一层-组合式新风机组</span>
+                            </div>
+                            <div class="detail-header__subtitle">设备ID: AHU-007 · <span style="color:#f5222d;font-weight:600;">⚠ 当前报警中</span></div>
+                        </div>
+                        <div class="detail-header__actions">
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                导出报告
+                            </button>
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 4v6h-6M1 20v-6h6"/>
+                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                </svg>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 设备3D可视化 -->
+                    <div class="card visual-3d">
+                        <div class="card__header">
+                            <div class="card__title">设备3D可视化</div>
+                        </div>
+                        <div class="visual-3d__controls">
+                            <button class="visual-3d__view-btn visual-3d__view-btn--active" onclick="switchDeviceView('front')">主视图</button>
+                            <button class="visual-3d__view-btn" onclick="switchDeviceView('side')">侧视图</button>
+                            <button class="visual-3d__view-btn" onclick="switchDeviceView('section')">剖视图</button>
+                            <button class="visual-3d__view-btn" onclick="switchDeviceView('explode')">爆炸图</button>
+                        </div>
+                        <div class="visual-3d__scene">
+                            <div class="visual-3d__status visual-3d__status--normal">运行正常</div>
+                            <div class="visual-3d__model">
+                                <!-- 主视图 -->
+                                <div class="visual-3d__image-container visual-3d__image-container--active" id="view-front">
+                                    <img src="https://www.coze.cn/s/4oCI54Gk4ZQ/" alt="组合式新风机组-主视图" class="visual-3d__image">
+                                </div>
+                                <!-- 侧视图 -->
+                                <div class="visual-3d__image-container" id="view-side">
+                                    <img src="https://www.coze.cn/s/7L2C2PiQCzg/" alt="组合式新风机组-侧视图" class="visual-3d__image">
+                                </div>
+                                <!-- 剖视图 -->
+                                <div class="visual-3d__image-container" id="view-section">
+                                    <img src="https://www.coze.cn/s/zZh2x0F9RWg/" alt="组合式新风机组-剖视图" class="visual-3d__image">
+                                </div>
+                                <!-- 爆炸图 -->
+                                <div class="visual-3d__image-container" id="view-explode">
+                                    <img src="https://www.coze.cn/s/0bzNPwpS1ok/" alt="组合式新风机组-爆炸图" class="visual-3d__image">
+                                </div>
+                            </div>
+                            <span class="visual-3d__label visual-3d__label--top">设备结构</span>
+                            <div class="visual-3d__actions">
+                                <button class="visual-3d__action" title="放大" onclick="zoomImage(1.2)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                        <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                                    </svg>
+                                </button>
+                                <button class="visual-3d__action" title="缩小" onclick="zoomImage(0.8)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                        <line x1="8" y1="11" x2="14" y2="11"/>
+                                    </svg>
+                                </button>
+                                <button class="visual-3d__action" title="重置" onclick="resetImage()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6M1 20v-6h6"/>
+                                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="visual-3d__action" title="全屏" onclick="fullScreenImage()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 设备参数详情 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">设备参数详情</div>
+                        </div>
+                        <div class="param-grid">
+                            <div class="param-card">
+                                <div class="param-card__label">运行状态</div>
+                                <div class="param-card__value" style="color: #67c23a;">运行中</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">故障状态</div>
+                                <div class="param-card__value" style="color: #f5222d;">报警</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">在线状态</div>
+                                <div class="param-card__value" style="color: #67c23a;">在线</div>
+                            </div>
+                        </div>
+
+                        <div class="param-list">
+                            <!-- 运行参数 -->
+                            <div class="param-category">运行参数</div>
+                            <div class="param-item">
+                                <span class="param-item__label">回风温度</span>
+                                <span class="param-item__value">26.8°C</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">CO₂浓度</span>
+                                <span class="param-item__value">680 ppm</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">湿度</span>
+                                <span class="param-item__value">55%</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">风机转速</span>
+                                <span class="param-item__value">1450 rpm</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">功率</span>
+                                <span class="param-item__value">3.2 kW</span>
+                            </div>
+                            
+                            <!-- 设备状态 -->
+                            <div class="param-category">设备状态</div>
+                            <div class="param-item">
+                                <span class="param-item__label">过滤网压差</span>
+                                <span class="param-item__value">125 Pa</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">累计运行时长</span>
+                                <span class="param-item__value">864 h</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">能耗</span>
+                                <span class="param-item__value">2,420 kWh</span>
+                            </div>
+                            <div class="param-item">
+                                <span class="param-item__label">最后维护</span>
+                                <span class="param-item__value">2026-03-15</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 16px;">
+                            <div class="card__title" style="font-size: 14px; margin-bottom: 12px;">设备控制</div>
+                            <div class="control-list">
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">启停控制<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__toggle"></div>
+                                    <div class="control-item__value" style="color: #67c23a;">运行中</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">新风阀调节<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__input">
+                                        <input type="number" min="0" max="100" value="60" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
+                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
+                                    </div>
+                                    <div class="control-item__value" style="color: #67c23a;">60%</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">控制模式<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__input">
+                                        <input type="number" min="1" max="3" value="2" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
+                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
+                                    </div>
+                                    <div class="control-item__value" style="color: #67c23a;">自动</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">水阀最小开度<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__input">
+                                        <input type="number" min="0" max="100" value="30" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
+                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
+                                    </div>
+                                    <div class="control-item__value" style="color: #67c23a;">30%</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">送风温度设定<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__input">
+                                        <input type="number" min="0" max="50" value="24" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
+                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
+                                    </div>
+                                    <div class="control-item__value" style="color: #67c23a;">24°C</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="control-item__info">
+                                        <div class="control-item__name">季节模式<span style="color:red;">*</span></div>
+                                    </div>
+                                    <div class="control-item__input">
+                                        <input type="number" min="0" max="1" value="0" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
+                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
+                                    </div>
+                                    <div class="control-item__value" style="color: #67c23a;">制冷</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                                        <!-- 报警事件列表 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">报警事件列表</div>
+                            <div class="card__actions">
+                                <button class="card__btn">筛选</button>
+                                <button class="card__btn">导出</button>
+                            </div>
+                        </div>
+                        <div class="alarm-filters">
+                            <button class="alarm-filter alarm-filter--active">全部</button>
+                            <button class="alarm-filter">紧急</button>
+                            <button class="alarm-filter">警告</button>
+                            <button class="alarm-filter">提示</button>
+                            <button class="alarm-filter">未处理</button>
+                        </div>
+                        <table class="alarm-table">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>报警级别</th>
+                                    <th>报警内容</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>05-18 16:52</td>
+                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
+                                    <td>送风温度超过上限阈值 (当前26.8°C > 24°C)</td>
+                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
+                                    <td>
+                                        <button class="alarm-action alarm-action--primary">转工单</button>
+                                        <button class="alarm-action">关闭</button>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>05-18 16:30</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>CO₂浓度偏高 (当前680ppm > 600ppm)</td>
+                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
+                                    <td>
+                                        <button class="alarm-action alarm-action--primary">转工单</button>
+                                        <button class="alarm-action">关闭</button>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>05-18 15:15</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高 (125Pa > 100Pa)</td>
+                                    <td><span class="alarm-status alarm-status--processing">处理中</span></td>
+                                    <td>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>05-18 11:40</td>
+                                    <td><span class="alarm-level alarm-level--info">提示</span></td>
+                                    <td>累计运行时长即将到达维护周期 (864h/1000h)</td>
+                                    <td><span class="alarm-status alarm-status--resolved">已处理</span></td>
+                                    <td>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+<!-- 设备运维知识库 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">设备运维知识库</div>
+                        </div>
+                        <div class="knowledge-section">
+                            <div class="knowledge-item knowledge-item--warning">
+                                <div class="knowledge-item__title">⚠️ 送风温度偏高预警</div>
+                                <div class="knowledge-item__content">当前送风温度24.5°C超过设定阈值24°C，建议检查制冷系统运行状态或调整设定参数。</div>
+                                <div class="knowledge-item__time">预警时间: 2026-04-16 14:30</div>
+                            </div>
+                            <div class="knowledge-item knowledge-item--info">
+                                <div class="knowledge-item__title">📋 建议处理措施</div>
+                                <div class="knowledge-item__content">1. 检查冷水阀开度是否正常；2. 确认冷冻水供水温度；3. 清洁表冷器翅片；4. 检测传感器精度。</div>
+                            </div>
+                            <div class="knowledge-item knowledge-item--info">
+                                <div class="knowledge-item__title">📅 历史维护记录</div>
+                                <div class="knowledge-item__content">2026-03-15: 定期保养，更换过滤网；2026-02-10: 皮带调整；2026-01-05: 年度检修。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 页面2：能耗智能管控智能体 ========== -->
+            <div class="page" id="page-energy">
+                <!-- 对话区 -->
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-header__title">能耗智能管控智能体</div>
+                        <div class="chat-header__subtitle">专业的能耗分析、优化建议与节能方案专家</div>
+                        <div class="chat-header__actions">
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                新建对话
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('energy')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                历史记录
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="chat-messages-energy" style="position:relative;">
+                        <!-- 历史记录面板 -->
+                        <div class="history-panel" id="history-panel-energy" style="display:none;">
+                            <div class="history-panel__header">
+                                <span class="history-panel__title">历史对话</span>
+                                <button class="history-panel__close" onclick="toggleHistoryPanel('energy')">&times;</button>
+                            </div>
+                            <div class="history-panel__list" id="history-list-energy"></div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">能耗智能管控智能体</span>
+                                    <span class="message__time">今天 15:02</span>
+                                </div>
+                                <div class="message__bubble">
+                                    您好！我是能耗智能管控智能体。我可以为您提供能耗分析、节能优化、成本测算、碳排放计算等服务。请输入您要查询的能耗相关问题，我将为您提供专业的分析结果与建议。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--user">
+                            <div class="message__avatar">我</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">我</span>
+                                    <span class="message__time">今天 15:03</span>
+                                </div>
+                                <div class="message__bubble">
+                                    帮我分析一下整个厂区上个月的能耗情况，有没有节能空间？能节省多少成本？
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">能耗智能管控智能体</span>
+                                    <span class="message__time">今天 15:03</span>
+                                </div>
+                                <div class="message__bubble">
+                                    正在分析厂区上月能耗数据，生成优化方案，请稍候...
+                                    <div class="message__loading">
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="chat-input__wrapper">
+                            <div class="chat-input__box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                                <textarea class="chat-input__field" placeholder="请输入能耗相关问题，例如: 查询本月能耗、设备节能建议、峰谷电优化方案..." rows="1" id="input-energy"></textarea>
+                            </div>
+                            <div class="chat-input__actions">
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('energy')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-footer">智能体回复仅供参考，节能改造请结合实际情况评估</div>
+                </div>
+
+                <!-- 能耗分析报告区 -->
+                <div class="detail-area" id="detail-energy">
+                    <div class="detail-header">
+                        <div class="detail-header__left">
+                            <div class="detail-header__title">能耗分析报告</div>
+                            <div class="detail-header__subtitle">全厂区 - 2026年3月能耗分析</div>
+                        </div>
+                        <div class="detail-header__actions">
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                导出报告
+                            </button>
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 4v6h-6M1 20v-6h6"/>
+                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                                </svg>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 能耗概览 -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card__label">总能耗</div>
+                            <div class="stat-card__value">128,560</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                +2.3% 较上月
+                            </div>
+                            <div class="stat-card__extra">上月: 125,670 kWh</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">电费成本</div>
+                            <div class="stat-card__value" style="font-size: 24px;">¥96,420</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                +3.1% 较上月
+                            </div>
+                            <div class="stat-card__extra">上月: ¥93,520</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">碳排放</div>
+                            <div class="stat-card__value" style="font-size: 24px;">96.4 tCO₂</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                +2.3% 较上月
+                            </div>
+                            <div class="stat-card__extra">行业平均: 105 tCO₂</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">预计节能潜力</div>
+                            <div class="stat-card__value stat-card__value--primary">18.2%</div>
+                            <div class="stat-card__change stat-card__change--down">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                                评级: 优秀
+                            </div>
+                            <div class="stat-card__extra">年节省预计: ¥21,500</div>
+                        </div>
+                    </div>
+
+                    <!-- 能耗趋势图 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">能耗趋势分析</div>
+                            <div class="card__actions">
+                                <button class="card__btn card__btn--active" onclick="switchEnergyRange(this, '12m')">近12个月</button>
+                                <button class="card__btn" onclick="switchEnergyRange(this, '6m')">近6个月</button>
+                            </div>
+                        </div>
+                        <div id="chart-energy-trend" style="width:100%;height:200px;"></div>
+                    </div>
+
+                    <!-- 分项能耗分析 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">分项能耗分析</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div id="chart-energy-pie" style="width:100%;height:180px;"></div>
+                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #00D9FF;"></div>
+                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">空调系统</span>
+                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">60%</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #FAAD14;"></div>
+                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">照明系统</span>
+                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">25%</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #52C41A;"></div>
+                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">办公设备</span>
+                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">15%</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #1890FF;"></div>
+                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">其他</span>
+                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">5%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI节能建议 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">AI 节能优化建议</div>
+                        </div>
+                        <div class="suggestion-list">
+                            <div class="suggestion-item">
+                                <div class="suggestion-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                    </svg>
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">优化空调运行策略</div>
+                                    <div class="suggestion-desc">建议将工作时间外的空调温度设定值调高2°C，预计可降低空调能耗15%，年节省约¥8,500。</div>
+                                    <div class="suggestion-save">预计月节省: ¥1,280 | 年节省: ¥15,360</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-item">
+                                <div class="suggestion-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 18V5l12-2v13"/>
+                                        <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                                    </svg>
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">智能照明改造</div>
+                                    <div class="suggestion-desc">加装人体感应传感器，实现人来灯亮、人走灯灭的智能控制，预计降低照明能耗20%。</div>
+                                    <div class="suggestion-save">预计月节省: ¥620 | 年节省: ¥7,440</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 自动调控状态 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">自动调控状态</div>
+                            <span style="font-size: 12px; color: var(--color-success); background: rgba(82, 196, 26, 0.15); padding: 4px 10px; border-radius: 4px;">● 已启用</span>
+                        </div>
+                        <div class="control-list">
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">启停控制<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__toggle"></div>
+                                <div class="control-item__value" style="color: #67c23a;">停止</div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">新风阀调节<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__input">
+                                    <input type="number" min="0" max="100" step="0.01" value="100.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
+                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
+                                </div>
+                                <div class="control-item__value" style="color: #67c23a;">100.00</div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">控制模式<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__input">
+                                    <input type="number" min="1" max="3" step="1" value="1" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
+                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
+                                </div>
+                                <div class="control-item__value" style="color: #67c23a;">停止</div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">水阀最小开度<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__input">
+                                    <input type="number" min="0" max="100" step="0.01" value="20.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
+                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
+                                </div>
+                                <div class="control-item__value" style="color: #67c23a;">20.00</div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">送风温度设定<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__input">
+                                    <input type="number" min="0" max="50" step="0.01" value="25.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
+                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
+                                </div>
+                                <div class="control-item__value" style="color: #67c23a;">25.00</div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">季节模式<span style="color:red;">*</span></div>
+                                </div>
+                                <div class="control-item__input">
+                                    <select style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
+                                        <option value="summer" selected>夏季</option>
+                                        <option value="winter">冬季</option>
+                                    </select>
+                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
+                                </div>
+                                <div class="control-item__value" style="color: #67c23a;">夏季</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 页面3：场景模式控制智能体 ========== -->
+            <div class="page" id="page-scene">
+                <!-- 对话区 -->
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-header__title">场景模式控制智能体</div>
+                        <div class="chat-header__subtitle">专业的智能场景设计、自动化控制与模式优化专家</div>
+                        <div class="chat-header__actions">
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                新建对话
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('scene')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                历史记录
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="chat-messages-scene" style="position:relative;">
+                        <!-- 历史记录面板 -->
+                        <div class="history-panel" id="history-panel-scene" style="display:none;">
+                            <div class="history-panel__header">
+                                <span class="history-panel__title">历史对话</span>
+                                <button class="history-panel__close" onclick="toggleHistoryPanel('scene')">&times;</button>
+                            </div>
+                            <div class="history-panel__list" id="history-list-scene"></div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">场景模式控制智能体</span>
+                                    <span class="message__time">今天 15:15</span>
+                                </div>
+                                <div class="message__bubble">
+                                    您好！我是场景模式控制智能体。我可以帮助您设计智能场景、设置自动化规则、优化控制模式等工作。请输入您要创建或调整的场景需求，我将为您提供专业的场景设计和控制方案。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--user">
+                            <div class="message__avatar">我</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">我</span>
+                                    <span class="message__time">今天 15:16</span>
+                                </div>
+                                <div class="message__bubble">
+                                    帮我设计一个工厂的节假日节能模式，需要包含所有区域的设备控制，要最大程度降低能耗。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">场景模式控制智能体</span>
+                                    <span class="message__time">今天 15:16</span>
+                                </div>
+                                <div class="message__bubble">
+                                    正在设计节假日节能模式场景，生成控制策略，请稍候...
+                                    <div class="message__loading">
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="chat-input__wrapper">
+                            <div class="chat-input__box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                                <textarea class="chat-input__field" placeholder="请输入场景相关需求，例如: 创建上班模式、调整空调控制逻辑、设置定时任务等..." rows="1" id="input-scene"></textarea>
+                            </div>
+                            <div class="chat-input__actions">
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('scene')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-footer">智能体回复仅供参考，场景执行前请进行测试验证</div>
+                </div>
+
+                <!-- 场景模式设计区 -->
+                <div class="detail-area" id="detail-scene">
+                    <div class="detail-header">
+                        <div class="detail-header__left">
+                            <div class="detail-header__title">场景模式设计</div>
+                        </div>
+                        <div class="detail-header__actions">
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                导出配置
+                            </button>
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                立即部署
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 模式切换标签 -->
+                    <div class="mode-tabs">
+                        <button class="mode-tab">工作日模式</button>
+                        <button class="mode-tab">夜间模式</button>
+                        <button class="mode-tab mode-tab--active">节假日模式</button>
+                        <button class="mode-tab">自定义模式</button>
+                    </div>
+
+                    <!-- 场景概览 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">节假日节能模式</div>
+                            <div class="card__actions">
+                                <span style="font-size: 12px; color: var(--color-success); background: rgba(82, 196, 26, 0.15); padding: 4px 10px; border-radius: 4px;">● 已启用</span>
+                                <button class="card__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    编辑
+                                </button>
+                            </div>
+                        </div>
+                        <div class="scene-info">
+                            <div class="scene-info__item">
+                                <div class="scene-info__label">适用范围</div>
+                                <div class="scene-info__value">全写字楼</div>
+                            </div>
+                            <div class="scene-info__item">
+                                <div class="scene-info__label">触发条件</div>
+                                <div class="scene-info__value">法定节假日自动触发</div>
+                            </div>
+                            <div class="scene-info__item">
+                                <div class="scene-info__label">预计节能效果</div>
+                                <div class="scene-info__value scene-info__value--highlight">42.3%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 设备控制列表 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">设备控制策略</div>
+                        </div>
+                        <div class="control-list">
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">照明系统控制</div>
+                                    <div class="control-item__desc">关闭所有非必要照明，保留安全指示灯和应急照明</div>
+                                </div>
+                                <div class="control-item__toggle"></div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">空调系统控制</div>
+                                    <div class="control-item__desc">关闭所有空调主机，仅保留机房精密空调</div>
+                                </div>
+                                <div class="control-item__toggle"></div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">新风系统控制</div>
+                                    <div class="control-item__desc">降低新风换气频率至30%，维持基本空气质量</div>
+                                </div>
+                                <div class="control-item__toggle"></div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">电梯系统控制</div>
+                                    <div class="control-item__desc">仅保留1部电梯运行，其他电梯切换至休眠模式</div>
+                                </div>
+                                <div class="control-item__toggle"></div>
+                            </div>
+                            <div class="control-item">
+                                <div class="control-item__info">
+                                    <div class="control-item__name">办公设备控制</div>
+                                    <div class="control-item__desc">关闭所有非必要办公设备电源</div>
+                                </div>
+                                <div class="control-item__toggle control-item__toggle--off"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 执行记录 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">最近执行记录</div>
+                        </div>
+                        <div class="record-list">
+                            <div class="record-item">
+                                <span class="record-time">2026-04-05 清明节 00:00</span>
+                                <span class="record-action">节假日模式 → 工作日模式</span>
+                                <span class="record-status record-status--success">成功</span>
+                            </div>
+                            <div class="record-item">
+                                <span class="record-time">2026-04-06 清明节 08:00</span>
+                                <span class="record-action">工作日模式 → 节假日模式</span>
+                                <span class="record-status record-status--success">成功</span>
+                            </div>
+                            <div class="record-item">
+                                <span class="record-time">2026-02-12 春节 00:00</span>
+                                <span class="record-action">节假日模式切换</span>
+                                <span class="record-status record-status--success">成功</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 页面4：智能报警分析智能体 ========== -->
+            <div class="page" id="page-alarm">
+                <!-- 对话区 -->
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-header__title">智能报警分析智能体</div>
+                        <div class="chat-header__subtitle">专业的报警分析、风险识别、故障预测与根因诊断专家</div>
+                        <div class="chat-header__actions">
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                新建对话
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('alarm')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                历史记录
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages" id="chat-messages-alarm" style="position:relative;">
+                        <!-- 历史记录面板 -->
+                        <div class="history-panel" id="history-panel-alarm" style="display:none;">
+                            <div class="history-panel__header">
+                                <span class="history-panel__title">历史对话</span>
+                                <button class="history-panel__close" onclick="toggleHistoryPanel('alarm')">&times;</button>
+                            </div>
+                            <div class="history-panel__list" id="history-list-alarm"></div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">智能报警分析智能体</span>
+                                    <span class="message__time">今天 15:30</span>
+                                </div>
+                                <div class="message__bubble">
+                                    您好！我是智能报警分析智能体。我可以帮助您进行报警分析、风险识别、故障预测、根因诊断等工作。请输入您要查询的报警信息或故障问题，我将为您提供专业的分析结果和处理建议。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--user">
+                            <div class="message__avatar">我</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">我</span>
+                                    <span class="message__time">今天 15:31</span>
+                                </div>
+                                <div class="message__bubble">
+                                    帮我分析一下最近一周的报警数据，有什么严重的风险？需要重点关注什么？
+                                </div>
+                            </div>
+                        </div>
+                        <div class="message message--ai">
+                            <div class="message__avatar">AI</div>
+                            <div class="message__content">
+                                <div class="message__header">
+                                    <span class="message__name">智能报警分析智能体</span>
+                                    <span class="message__time">今天 15:31</span>
+                                </div>
+                                <div class="message__bubble">
+                                    正在分析最近一周的报警数据，识别潜在风险，请稍候...
+                                    <div class="message__loading">
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                        <div class="message__loading-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="chat-input__wrapper">
+                            <div class="chat-input__box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                                <textarea class="chat-input__field" placeholder="请输入报警相关问题，例如: 分析报警趋势、查询故障原因、预测潜在风险等..." rows="1" id="input-alarm"></textarea>
+                            </div>
+                            <div class="chat-input__actions">
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+                                    </svg>
+                                </button>
+                                <button class="chat-input__btn chat-input__btn--send" onclick="sendMessage('alarm')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-footer">智能体回复仅供参考，重要报警请及时核实处理</div>
+                </div>
+
+                <!-- 报警分析报告区 -->
+                <div class="detail-area" id="detail-alarm">
+                    <div class="detail-header">
+                        <div class="detail-header__left">
+                            <div class="detail-header__title">报警分析报告</div>
+                            <div class="detail-header__subtitle">统计周期: 2026年4月9日 - 2026年4月16日</div>
+                        </div>
+                        <div class="detail-header__actions">
+                            <button class="btn btn--secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                导出报告
+                            </button>
+                            <button class="btn btn--primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="12" y1="18" x2="12" y2="12"/>
+                                    <line x1="9" y1="15" x2="15" y2="15"/>
+                                </svg>
+                                生成处理工单
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 时间范围选择 -->
+                    <div class="time-range">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span class="time-range__value">2026-04-09</span>
+                        <span>至</span>
+                        <span class="time-range__value">2026-04-16</span>
+                    </div>
+
+                    <!-- 报警概览 -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card__label">总报警数</div>
+                            <div class="stat-card__value">248</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                +12.5% 较上周
+                            </div>
+                            <div class="stat-card__extra">上周: 220次</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">紧急报警</div>
+                            <div class="stat-card__value" style="color: var(--color-danger);">12</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                +50% 较上周
+                            </div>
+                            <div class="stat-card__extra">上周: 8次</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">未处理报警</div>
+                            <div class="stat-card__value" style="color: var(--color-warning);">8</div>
+                            <div class="stat-card__change">
+                                高风险，其中紧急报警: 3次
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">报警准确率</div>
+                            <div class="stat-card__value stat-card__value--primary">92.7%</div>
+                            <div class="stat-card__change stat-card__change--down">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                                -0.3% 较上周
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 报警列表 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">实时报警列表</div>
+                            <div class="card__actions">
+                                <button class="card__btn">筛选</button>
+                                <button class="card__btn">导出</button>
+                            </div>
+                        </div>
+                        <div class="alarm-filters">
+                            <button class="alarm-filter alarm-filter--active">全部</button>
+                            <button class="alarm-filter">紧急</button>
+                            <button class="alarm-filter">警告</button>
+                            <button class="alarm-filter">提示</button>
+                            <button class="alarm-filter">未处理</button>
+                        </div>
+                        <table class="alarm-table">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>设备</th>
+                                    <th>报警级别</th>
+                                    <th>报警内容</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>04-16 14:28</td>
+                                    <td>AHU-007</td>
+                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
+                                    <td>送风温度超过上限</td>
+                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
+                                    <td>
+                                        <button class="alarm-action alarm-action--primary">转工单</button>
+                                        <button class="alarm-action">关闭</button>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>04-16 13:45</td>
+                                    <td>CHILLER-02</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>冷机效率下降</td>
+                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
+                                    <td>
+                                        <button class="alarm-action alarm-action--primary">转工单</button>
+                                        <button class="alarm-action">关闭</button>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>04-16 11:20</td>
+                                    <td>AHU-012</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
+                                    <td>过滤网压差偏高</td>
+                                    <td><span class="alarm-status alarm-status--handled">已处理</span></td>
+                                    <td>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>04-16 09:15</td>
+                                    <td>Power-001</td>
+                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
+                                    <td>电压波动超限</td>
+                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
+                                    <td>
+                                        <button class="alarm-action alarm-action--primary">转工单</button>
+                                        <button class="alarm-action">关闭</button>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>04-15 16:30</td>
+                                    <td>HVAC-003</td>
+                                    <td><span class="alarm-level alarm-level--info">提示</span></td>
+                                    <td>设备定期维护提醒</td>
+                                    <td><span class="alarm-status alarm-status--handled">已处理</span></td>
+                                    <td>
+                                        <button class="alarm-action">详情</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 报警趋势图 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">近7天报警趋势</div>
+                        </div>
+                        <div id="chart-alarm-trend" style="width:100%;height:200px;"></div>
+                    </div>
+
+                    <!-- 风险分析 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">风险分析</div>
+                        </div>
+                        <div class="risk-list">
+                            <div class="risk-item">
+                                <div class="risk-info">
+                                    <span class="risk-device">AHU-007 送风温度异常</span>
+                                    <span class="risk-level risk-level--high">高风险</span>
+                                </div>
+                                <button class="alarm-action">查看详情</button>
+                            </div>
+                            <div class="risk-item">
+                                <div class="risk-info">
+                                    <span class="risk-device">CHILLER-02 效率下降</span>
+                                    <span class="risk-level risk-level--medium">中风险</span>
+                                </div>
+                                <button class="alarm-action">查看详情</button>
+                            </div>
+                            <div class="risk-item">
+                                <div class="risk-info">
+                                    <span class="risk-device">Power-001 电压波动</span>
+                                    <span class="risk-level risk-level--high">高风险</span>
+                                </div>
+                                <button class="alarm-action">查看详情</button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <div class="card__title" style="font-size: 14px; margin-bottom: 12px;">建议预防措施</div>
+                            <div class="suggestion-list">
+                                <div class="suggestion-item">
+                                    <div class="suggestion-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                    </div>
+                                    <div class="suggestion-content">
+                                        <div class="suggestion-title">安排AHU-007定期维护</div>
+                                        <div class="suggestion-desc">建议本周内对送风温度传感器进行校准，并检查制冷系统运行状态。</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 页面导航切换
+        document.querySelectorAll('.sidebar__item').forEach(item => {
+            item.addEventListener('click', function() {
+                const pageId = this.dataset.page;
+                
+                // 切换侧边栏激活状态
+                document.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('sidebar__item--active'));
+                this.classList.add('sidebar__item--active');
+                
+                // 切换页面
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('page--active'));
+                document.getElementById('page-' + pageId).classList.add('page--active');
+
+                // 图表自适应：切换到能耗/报警页时，延迟初始化 ECharts 并 resize
+                if (pageId === 'energy' || pageId === 'alarm') {
+                    setTimeout(function() {
+                        initChartsLazy();
+                        setTimeout(function() {
+                            if (chartEnergyTrend) chartEnergyTrend.resize();
+                            if (chartEnergyPie) chartEnergyPie.resize();
+                            if (chartAlarmTrend) chartAlarmTrend.resize();
+                        }, 150);
+                    }, 250);
+                }
+            });
+        });
+
+        // 发送消息功能
+        function sendMessage(type) {
+            const input = document.getElementById('input-' + type);
+            const messagesContainer = document.getElementById('chat-messages-' + type);
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // 添加用户消息
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message message--user';
+            userMessage.innerHTML = `
+                <div class="message__avatar">我</div>
+                <div class="message__content">
+                    <div class="message__header">
+                        <span class="message__name">我</span>
+                        <span class="message__time">${getCurrentTime()}</span>
+                    </div>
+                    <div class="message__bubble">${message}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(userMessage);
+            
+            // 清空输入框
+            input.value = '';
+            
+            // 滚动到底部
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // 模拟AI回复
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message message--ai';
+                
+                const responses = {
+                    'device': '正在分析AHU-007的运行数据，请稍候...',
+                    'energy': '正在分析厂区能耗数据，生成优化方案，请稍候...',
+                    'scene': '正在设计节假日节能模式场景，生成控制策略，请稍候...',
+                    'alarm': '正在分析报警数据，识别潜在风险，请稍候...'
+                };
+                
+                aiMessage.innerHTML = `
+                    <div class="message__avatar">AI</div>
+                    <div class="message__content">
+                        <div class="message__header">
+                            <span class="message__name">智能体</span>
+                            <span class="message__time">${getCurrentTime()}</span>
+                        </div>
+                        <div class="message__bubble">
+                            ${responses[type]}
+                            <div class="message__loading">
+                                <div class="message__loading-dot"></div>
+                                <div class="message__loading-dot"></div>
+                                <div class="message__loading-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(aiMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1500);
+        }
+
+        // 获取当前时间
+        function getCurrentTime() {
+            const now = new Date();
+            return '今天 ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+
+        // 视图切换按钮
+        document.querySelectorAll('.visual-3d__view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.visual-3d__view-btn').forEach(b => b.classList.remove('visual-3d__view-btn--active'));
+                this.classList.add('visual-3d__view-btn--active');
+            });
+        });
+
+        // 设备视图切换
+        let currentImageScale = 1;
+        
+        function switchDeviceView(viewType) {
+            // 隐藏所有视图容器
+            document.querySelectorAll('.visual-3d__image-container').forEach(container => {
+                container.classList.remove('visual-3d__image-container--active');
+            });
+            
+            // 显示选中的视图
+            const targetView = document.getElementById('view-' + viewType);
+            if (targetView) {
+                targetView.classList.add('visual-3d__image-container--active');
+            }
+            
+            // 重置缩放
+            currentImageScale = 1;
+            updateImageScale();
+        }
+
+        // 图片缩放
+        function zoomImage(scale) {
+            currentImageScale *= scale;
+            currentImageScale = Math.max(0.5, Math.min(3, currentImageScale)); // 限制缩放范围
+            updateImageScale();
+        }
+
+        // 重置图片大小
+        function resetImage() {
+            currentImageScale = 1;
+            updateImageScale();
+        }
+
+        // 更新图片缩放
+        function updateImageScale() {
+            const activeImage = document.querySelector('.visual-3d__image-container--active .visual-3d__image');
+            if (activeImage) {
+                activeImage.style.transform = 'scale(' + currentImageScale + ')';
+            }
+        }
+
+        // 全屏显示图片
+        function fullScreenImage() {
+            const activeImage = document.querySelector('.visual-3d__image-container--active');
+            if (activeImage) {
+                if (activeImage.requestFullscreen) {
+                    activeImage.requestFullscreen();
+                } else if (activeImage.webkitRequestFullscreen) {
+                    activeImage.webkitRequestFullscreen();
+                } else if (activeImage.msRequestFullscreen) {
+                    activeImage.msRequestFullscreen();
+                }
+            }
+        }
+
+        // 模式切换标签
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('mode-tab--active'));
+                this.classList.add('mode-tab--active');
+            });
+        });
+
+        // 报警筛选
+        document.querySelectorAll('.alarm-filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.alarm-filter').forEach(f => f.classList.remove('alarm-filter--active'));
+                this.classList.add('alarm-filter--active');
+            });
+        });
+
+        // 开关控制
+        document.querySelectorAll('.control-item__toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('control-item__toggle--off');
+            });
+        });
+
+        // 回车发送消息
+        document.querySelectorAll('.chat-input__field').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const type = this.id.replace('input-', '');
+                    sendMessage(type);
+                }
+            });
+        });
+
+        // 实时数据更新模拟
+        setInterval(() => {
+            // 随机更新一些数据值
+            const tempElement = document.querySelector('#detail-device .param-card:nth-child(3) .param-card__value');
+            if (tempElement && Math.random() > 0.7) {
+                const temp = (24 + Math.random() * 2).toFixed(1);
+                tempElement.textContent = temp + '°C';
+            }
+        }, 5000);
+    
+        // === 历史记录功能 ===
+        const historyData = {
+            device: [
+                {
+                    id: 1, title: 'AHU-01运行异常诊断', time: '2026-05-14 10:30',                     messages: [
+                        { role: 'user', content: 'AHU-01机组今天运行异常，请帮我诊断一下', time: '10:30' },
+                        { role: 'ai', content: `正在分析AHU-01的运行数据...
+
+根据实时数据：
+• 当前送风温度 26.5°C（偏高，正常22°C左右）
+• 过滤网压差报警
+• 风机频率波动较大
+
+初步判断：过滤网易堵塞，建议检查并清洗。`, time: '10:31' },
+                        { role: 'user', content: '好的，具体怎么清洗？', time: '10:32' },
+                        { role: 'ai', content: `清洗步骤：
+1. 关闭AHU-01电源
+2. 打开检修门
+3. 取出初效过滤器
+4. 用高压水枪冲洗，晾干后装回
+5. 复位压差报警
+
+预计维护时间：30分钟。`, time: '10:33' },
+                    ]
+                },
+                {
+                    id: 2, title: '空调机组温度偏高告警', time: '2026-05-13 16:45',                     messages: [
+                        { role: 'user', content: '3号楼空调温度一直降不下来', time: '16:45' },
+                        { role: 'ai', content: `已查询3号楼空调数据：
+• 室外温度 38°C（高温）
+• 冷却水温偏高
+• 冷机效率下降
+
+建议开启节能模式，降低部分区域冷量。`, time: '16:46' },
+                    ]
+                },
+                { id: 3, title: '电梯B2检修计划咨询', time: '2026-05-12 09:20',                     messages: [
+                        { role: 'user', content: '电梯B2需要做季度检修', time: '09:20' },
+                        { role: 'ai', content: `电梯B2检修计划已生成：
+• 日期：5月15日
+• 项目：17项检查内容
+• 预计时长：2小时
+
+是否需要安排维保人员？`, time: '09:21' },
+                        { role: 'user', content: '确认，安排李师傅', time: '09:22' },
+                        { role: 'ai', content: '已确认，维保工单已创建，分配给李师傅。', time: '09:22' },
+                    ]
+                },
+            ],
+            energy: [
+                {
+                    id: 1, title: '本月能耗异常分析', time: '2026-05-14 09:15',                     messages: [
+                        { role: 'user', content: '5月能耗比上月增长20%，什么原因？', time: '09:15' },
+                        { role: 'ai', content: `分析5月能耗数据：
+• 空调系统能耗占比最大（+15%）
+• 照明能耗正常
+• 电梯运行时间增加
+
+主要原因：高温天气导致空调负荷增大。建议提高冷冻水设定温度，降低能耗约8%。`, time: '09:16' },
+                    ]
+                },
+                {
+                    id: 2, title: '空调系统节能优化方案', time: '2026-05-13 14:30',                     messages: [
+                        { role: 'user', content: '给一套节能方案', time: '14:30' },
+                        { role: 'ai', content: `空调系统节能优化方案：
+
+1. 温度设定优化
+   - 夏季设定26°C，冬季20°C
+
+2. 分区控制
+   - 人少区域自动降低冷量
+
+3. 夜间模式
+   - 22:00后进入节能运行
+
+4. 定期维护
+   - 过滤网每月清洗
+   - 冷凝器每季度清洗
+
+预计年节能费用：12万元。`, time: '14:31' },
+                    ]
+                },
+            ],
+            scene: [
+                {
+                    id: 1, title: '下班模式自动控制配置', time: '2026-05-14 08:00',                     messages: [
+                        { role: 'user', content: '下班后如何自动关闭灯光和空调？', time: '08:00' },
+                        { role: 'ai', content: `下班模式配置：
+
+触发条件：
+• 工作日 18:00 自动执行
+• 或手动语音触发"下班模式"
+
+执行动作：
+• 公共区域灯光渐暗
+• 空调调至节能模式（26°C）
+• 电梯全部归位
+• 门禁设为警戒模式
+
+是否需要配置？`, time: '08:01' },
+                    ]
+                },
+                { id: 2, title: '节假日场景切换问题', time: '2026-05-12 11:20',                     messages: [
+                        { role: 'user', content: '节假日模式不生效', time: '11:20' },
+                        { role: 'ai', content: `检查节假日模式配置：
+
+问题发现：
+• 节假日日历未更新
+• 部分设备未纳入场景
+
+已修复：
+1. 更新节假日日历至6月
+2. 添加遗漏的会议室空调
+
+请重新测试。`, time: '11:21' },
+                    ]
+                },
+            ],
+            alarm: [
+                {
+                    id: 1, title: '消防管道压力异常报警', time: '2026-05-14 07:45',                     messages: [
+                        { role: 'user', content: '3号楼消防管道压力报警', time: '07:45' },
+                        { role: 'ai', content: `【高优先级报警】
+
+消防管道压力：0.35MPa（低于阈值0.4MPa）
+
+可能原因：
+• 管道泄漏
+• 阀门未完全开启
+• 稳压泵故障
+
+建议立即检查3号楼消防泵房。`, time: '07:45' },
+                        { role: 'user', content: '通知相关人员去检查', time: '07:46' },
+                        { role: 'ai', content: `已通知：
+• 安保队长 张师傅
+• 消防维保 李工
+
+预计30分钟内反馈结果。`, time: '07:46' },
+                    ]
+                },
+                {
+                    id: 2, title: '配电室温度持续升高', time: '2026-05-13 22:10',                     messages: [
+                        { role: 'ai', content: `【中优先级报警】
+
+B1配电室温度：38°C（略高，正常<35°C）
+
+已自动开启排气扇。建议安排巡检。`, time: '22:10' },
+                    ]
+                },
+                { id: 3, title: '地下车库CO浓度预警', time: '2026-05-11 15:30',                     messages: [
+                        { role: 'ai', content: `【低优先级报警】
+
+地下车库CO浓度：15ppm（接近阈值20ppm）
+
+已自动调高排风量。`, time: '15:30' },
+                    ]
+                },
+            ],
+        };
+
+        function toggleHistoryPanel(agent) {
+            const panel = document.getElementById('history-panel-' + agent);
+            if (!panel) return;
+            const isVisible = panel.style.display !== 'none';
+            if (isVisible) {
+                panel.style.display = 'none';
+                document.removeEventListener('click', panel._outsideHandler);
+            } else {
+                panel.style.display = 'flex';
+                renderHistoryList(agent);
+                // Click outside to close
+                panel._outsideHandler = function(e) {
+                    if (!panel.contains(e.target)) {
+                        panel.style.display = 'none';
+                        document.removeEventListener('click', panel._outsideHandler);
+                    }
+                };
+                setTimeout(function() { document.addEventListener('click', panel._outsideHandler); }, 10);
+            }
+        }
+
+        function renderHistoryList(agent) {
+            const list = document.getElementById('history-list-' + agent);
+            if (!list) return;
+            const items = historyData[agent] || [];
+            list.innerHTML = items.map(item => `
+                <div class="history-item" onclick="loadConversation('${agent}', ${item.id})">
+                    <div class="history-item__content">
+                        <div class="history-item__title">${item.title}</div>
+                        <div class="history-item__meta">
+                            <span>${item.time}</span>
+                            <span>${item.messages.length}条对话</span>
+                        </div>
+                    </div>
+                    <button class="history-item__delete" onclick="event.stopPropagation(); deleteHistory('${agent}', ${item.id})" title="删除">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteHistory(agent, id) {
+            if (historyData[agent]) {
+                historyData[agent] = historyData[agent].filter(i => i.id !== id);
+            }
+            renderHistoryList(agent);
+            const list = document.getElementById('history-list-' + agent);
+            if (list && (!historyData[agent] || historyData[agent].length === 0)) {
+                list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.3);padding:40px 0;font-size:13px;">暂无历史记录</div>';
+            }
+        }
+
+        function loadConversation(agent, id) {
+            const item = (historyData[agent] || []).find(i => i.id === id);
+            if (!item) return;
+            // 关闭历史面板
+            const panel = document.getElementById('history-panel-' + agent);
+            if (panel) panel.style.display = 'none';
+            // 切换对话内容
+            let msgContainer = document.getElementById('chat-messages-' + agent);
+            if (msgContainer) {
+                // 保留历史面板，重新渲染消息
+                const histPanel = document.getElementById('history-panel-' + agent);
+                msgContainer.innerHTML = '';
+                if (histPanel) msgContainer.appendChild(histPanel);
+                // 渲染历史消息
+                (item.messages || []).forEach(function(msg) {
+                    var div = document.createElement('div');
+                    div.className = 'message message--' + msg.role;
+                    div.innerHTML = '<div class="message__avatar">' + (msg.role === 'user' ? '我' : 'AI') + '</div>' +
+                        '<div class="message__content">' +
+                        '<div class="message__header">' +
+                        '<span class="message__name">' + (msg.role === 'user' ? '我' : '智能体') + '</span>' +
+                        '<span class="message__time">' + msg.time + '</span>' +
+                        '</div>' +
+                        '<div class="message__bubble">' + msg.content + '</div>' +
+                        '</div>';
+                    msgContainer.appendChild(div);
+                });
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }
+
+            // 模拟加载历史对话 - 添加一条消息到聊天区
+            msgContainer = document.getElementById('chat-messages-' + agent);
+            if (msgContainer) {
+                const loadMsg = document.createElement('div');
+                loadMsg.className = 'chat-message chat-message--system';
+                loadMsg.innerHTML = '<div class="message-content">已加载历史对话: ' + item.title + ' (' + item.messages + '条)</div>';
+                msgContainer.appendChild(loadMsg);
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }
+        }
+</script>
+</body>
+</html>
