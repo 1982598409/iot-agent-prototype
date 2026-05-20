@@ -14,7 +14,7 @@
             console.log('echarts 对象:', echarts);
             
             // 能耗趋势图（面积+折线，12个月）
-            chartEnergyTrend = echarts.init(document.getElementById('chart-energy-trend'));
+            chartEnergyTrend = echarts.init(document.getElementById("chart-energy-trend"), null, { renderer: "svg" });
             chartEnergyTrend.setOption({
                 backgroundColor: 'transparent',
                 tooltip: {
@@ -67,7 +67,7 @@
             });
 
             // 分项能耗饼图
-            chartEnergyPie = echarts.init(document.getElementById('chart-energy-pie'));
+            chartEnergyPie = echarts.init(document.getElementById("chart-energy-pie"), null, { renderer: "svg" });
             chartEnergyPie.setOption({
                 backgroundColor: 'transparent',
                 tooltip: {
@@ -93,7 +93,7 @@
             });
 
             // 报警趋势图（多线：紧急/警告/提示）
-            chartAlarmTrend = echarts.init(document.getElementById('chart-alarm-trend'));
+            chartAlarmTrend = echarts.init(document.getElementById("chart-alarm-trend"), null, { renderer: "svg" });
             chartAlarmTrend.setOption({
                 backgroundColor: 'transparent',
                 tooltip: {
