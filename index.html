@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="echarts.min.js"></script>
 
     <script>
     // ===== ECharts 图表初始化 =====
@@ -1966,7 +1966,7 @@
     }
     .history-item__meta {
         font-size: 12px;
-        color: #666;
+        color: rgba(255,255,255,0.7);
         display: flex;
         justify-content: space-between;
     }
@@ -2831,7 +2831,7 @@
                                 <button class="card__btn" onclick="switchEnergyRange(this, '6m')">近6个月</button>
                             </div>
                         </div>
-                        <div id="chart-energy-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;border:3px solid red;background:rgba(255,0,0,0.1);"></div>
+                        <div id="chart-energy-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
                     </div>
 
                     <!-- 分项能耗分析 -->
@@ -2840,7 +2840,7 @@
                             <div class="card__title">分项能耗分析</div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div id="chart-energy-pie" style="width:100%;min-width:300px;height:180px;min-height:180px;border:3px solid blue;background:rgba(0,0,255,0.1);"></div>
+                            <div id="chart-energy-pie" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
                             <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
                                 <div style="display: flex; align-items: center; gap: 12px;">
                                     <div style="width: 12px; height: 12px; border-radius: 2px; background: #00D9FF;"></div>
@@ -4092,181 +4092,212 @@ B1配电室温度：38°C（略高，正常<35°C）
         }
 </script>
 
-    <!-- ===== 图表强制初始化脚本 v2（独立于原有逻辑） ===== -->
-    <script>
-    (function() {
-        var LOG = '[ChartV2]';
-        console.log(LOG, '脚本开始加载');
-        
-        // 等待 echarts 加载完成
-        function waitForEcharts(callback) {
-            if (typeof echarts !== 'undefined') {
-                console.log(LOG, 'echarts 已就绪');
-                callback();
-                return;
-            }
-            console.log(LOG, '等待 echarts 加载...');
-            var count = 0;
-            var timer = setInterval(function() {
-                count++;
-                if (typeof echarts !== 'undefined') {
-                    clearInterval(timer);
-                    console.log(LOG, 'echarts 加载完成(第' + count + '次检查)');
-                    callback();
-                } else if (count > 20) {
-                    clearInterval(timer);
-                    console.error(LOG, 'echarts 加载超时(10秒)');
-                }
-            }, 500);
-        }
-        
-        // 初始化所有图表
-        function initAllCharts() {
-            console.log(LOG, '开始初始化图表...');
-            
-            var containers = [
-                { id: 'chart-energy-trend', name: '能耗趋势图', fn: createEnergyTrend },
-                { id: 'chart-energy-pie', name: '分项能耗饼图', fn: createEnergyPie },
-                { id: 'chart-alarm-trend', name: '报警趋势图', fn: createAlarmTrend }
-            ];
-            
-            var inited = 0;
-            containers.forEach(function(c) {
-                var el = document.getElementById(c.id);
-                if (!el) { console.log(LOG, c.name + ' 容器不存在'); return; }
-                
-                // 检查容器尺寸
-                var w = el.offsetWidth;
-                var h2 = el.offsetHeight;
-                console.log(LOG, c.name + ' 容器尺寸:', w, 'x', h2);
-                
-                try {
-                    c.fn(el);
-                    inited++;
-                    console.log(LOG, c.name + ' ✓ 创建成功');
-                } catch(e) {
-                    console.error(LOG, c.name + ' ✗ 创建失败:', e.message);
-                }
-            });
-            
-            console.log(LOG, '初始化完成，成功:', inited, '/', containers.length);
-        }
-        
-        // 能耗趋势图配置
-        function createEnergyTrend(el) {
-            window.chartEnergyTrend = echarts.init(el);
-            window.chartEnergyTrend.setOption({
-                tooltip: { trigger: 'axis' },
-                grid: { left: 50, right: 20, top: 30, bottom: 30 },
-                xAxis: { type: 'category', data: ['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'] },
-                yAxis: { type: 'value', name: 'kWh' },
-                series: [{
-                    type: 'line',
-                    smooth: true,
-                    data: [9200, 9800, 9400, 10600, 11800, 11200, 9800, 10400, 12000, 11400, 9600, 9200],
-                    areaStyle: { color: 'rgba(24,144,255,0.15)' },
-                    lineStyle: { color: '#1890FF', width: 2 },
-                    itemStyle: { color: '#1890FF' }
-                }]
-            });
-        }
-        
-        // 分项能耗饼图配置
-        function createEnergyPie(el) {
-            window.chartEnergyPie = echarts.init(el);
-            window.chartEnergyPie.setOption({
-                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-                series: [{
-                    type: 'pie',
-                    radius: ['40%', '70%'],
-                    center: ['50%', '50%'],
-                    data: [
-                        { value: 45000, name: '空调系统', itemStyle: { color: '#1890FF' } },
-                        { value: 28000, name: '照明系统', itemStyle: { color: '#52C41A' } },
-                        { value: 18000, name: '动力设备', itemStyle: { color: '#FAAD14' } },
-                        { value: 12000, name: '其他', itemStyle: { color: '#8C8C8C' } }
-                    ],
-                    label: { fontSize: 11, color: '#ccc' },
-                    emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' } }
-                }]
-            });
-        }
-        
-        // 报警趋势图配置
-        function createAlarmTrend(el) {
-            window.chartAlarmTrend = echarts.init(el);
-            window.chartAlarmTrend.setOption({
-                tooltip: { trigger: 'axis' },
-                legend: { data: ['报警数', '处理数'], textStyle: { color: '#aaa', fontSize: 11 }, top: 5 },
-                grid: { left: 45, right: 20, top: 35, bottom: 25 },
-                xAxis: { type: 'category', data: ['周一','周二','周三','周四','周五','周六','周日'] },
-                yAxis: { type: 'value', minInterval: 1 },
-                series: [
-                    {
-                        name: '报警数', type: 'bar',
-                        data: [8, 9, 14, 18, 16, 22, 28],
-                        itemStyle: { color: '#FF4D4F', borderRadius: [3,3,0,0] }
-                    },
-                    {
-                        name: '处理数', type: 'line', smooth: true,
-                        data: [3, 2, 4, 5, 4, 6, 7],
-                        lineStyle: { color: '#FAAD14', width: 2 },
-                        itemStyle: { color: '#FAAD14' }
-                    }
-                ]
-            });
-        }
-        
-        // 统一 resize 函数
-        function resizeAll() {
-            setTimeout(function() {
-                if (window.chartEnergyTrend) try { window.chartEnergyTrend.resize(); } catch(e){}
-                if (window.chartEnergyPie) try { window.chartEnergyPie.resize(); } catch(e){}
-                if (window.chartAlarmTrend) try { window.chartAlarmTrend.resize(); } catch(e){}
-            }, 100);
-        }
-        
-        // 监听窗口变化
-        window.addEventListener('resize', resizeAll);
-        
-        // 监听侧边栏点击 - 用事件委托
-        document.addEventListener('click', function(e) {
-            var item = e.target.closest ? e.target.closest('.sidebar__item') : null;
-            if (!item) return;
-            var pageId = item.getAttribute('data-page') || '';
-            console.log(LOG, '侧边栏点击:', pageId);
-            if (pageId === 'page-energy' || pageId === 'page-alarm') {
-                console.log(LOG, '检测到目标页面，500ms 后初始化图表');
-                waitForEcharts(function() {
-                    setTimeout(function() {
-                        initAllCharts();
-                        // 二次 resize
-                        setTimeout(resizeAll, 500);
-                        setTimeout(resizeAll, 1200);
-                    }, 300);
-                });
-            }
-        });
-        
-        // 页面加载后也尝试初始化
-        waitForEcharts(function() {
-            setTimeout(function() {
-                // 检查当前页面
-                var activePage = document.querySelector('.page--active') || document.querySelector('.page.active');
-                if (activePage) {
-                    var pid = activePage.id;
-                    console.log(LOG, '当前活跃页面:', pid);
-                    if (pid === 'page-energy' || pid === 'page-alarm') {
-                        initAllCharts();
-                        setTimeout(resizeAll, 500);
-                    }
-                }
-            }, 800);
-        });
-        
-        console.log(LOG, '脚本加载完毕，等待用户操作触发初始化');
-    })();
-    </script>
+    
 
+
+
+
+<!-- ===== 图表强制初始化脚本 V4 - 纯 CSS/SVG 图表 ===== -->
+<script>
+(function() {
+    'use strict';
+    
+    const energyData = [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330];
+    const lineColor = '#1890FF';  // 折线主色
+    const energyLabels = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    const pieData = [
+        {name: '空调系统', value: 40, color: '#5B8FF9'},
+        {name: '照明系统', value: 25, color: '#5AD8A6'},
+        {name: '动力设备', value: 20, color: '#F6BD16'},
+        {name: '其他设备', value: 15, color: '#E86452'}
+    ];
+    const alarmData = [5, 8, 12, 6, 9, 15, 11, 7, 13, 10, 8, 6];
+    
+    function log(msg) {
+        console.log('[ChartV4]', msg);
+    }
+    
+    function createLineChart(containerId, data, labels, color) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            log('❌ 容器不存在: ' + containerId);
+            return;
+        }
+        
+        container.innerHTML = '';
+        container.style.background = 'transparent';
+        
+        const max = Math.max(...data);
+        const min = Math.min(...data);
+        const range = max - min || 1;
+        const rect = container.getBoundingClientRect();
+        const width = Math.max(rect.width, 300);
+        const height = Math.max(rect.height, 200);
+        
+        log('创建折线图: ' + containerId + ' (' + Math.round(width) + 'x' + Math.round(height) + ')');
+        
+        const padding = {top: 30, right: 20, bottom: 40, left: 50};
+        const chartW = width - padding.left - padding.right;
+        const chartH = height - padding.top - padding.bottom;
+        
+        let path = '';
+        data.forEach((v, i) => {
+            const x = padding.left + (i / (data.length - 1)) * chartW;
+            const y = padding.top + chartH - ((v - min) / range) * chartH;
+            path += (i === 0 ? 'M' : 'L') + x + ',' + y;
+        });
+        
+        let areaPath = path + 'L' + (padding.left + chartW) + ',' + (padding.top + chartH) + 
+                       'L' + padding.left + ',' + (padding.top + chartH) + 'Z';
+        
+        let gridLines = '';
+        for (let i = 0; i <= 5; i++) {
+            const y = padding.top + (i / 5) * chartH;
+            gridLines += '<line x1="' + padding.left + '" y1="' + y + '" x2="' + (padding.left + chartW) + '" y2="' + y + '" stroke="rgba(200,200,200,0.3)" stroke-width="1"/>';
+        }
+        
+        let xLabels = '';
+        labels.forEach((label, i) => {
+            const x = padding.left + (i / (labels.length - 1)) * chartW;
+            xLabels += '<text x="' + x + '" y="' + (height - 10) + '" text-anchor="middle" font-size="12" fill="#ffffff">' + label + '</text>';
+        });
+        
+        let yLabels = '';
+        for (let i = 0; i <= 5; i++) {
+            const v = Math.round(min + (1 - i / 5) * range);
+            const y = padding.top + (i / 5) * chartH;
+            yLabels += '<text x="' + (padding.left - 10) + '" y="' + (y + 4) + '" text-anchor="end" font-size="12" fill="#ffffff">' + v + '</text>';
+        }
+        
+        let points = '';
+        data.forEach((v, i) => {
+            const x = padding.left + (i / (data.length - 1)) * chartW;
+            const y = padding.top + chartH - ((v - min) / range) * chartH;
+            points += '<circle cx="' + x + '" cy="' + y + '" r="4" fill="' + color + '" stroke="#fff" stroke-width="2"/>';
+        });
+        
+        const svgId = 'grad-' + containerId;
+        const svgHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + width + ' ' + height + '">' +
+            '<defs><linearGradient id="' + svgId + '" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:' + color + ';stop-opacity:0.3"/><stop offset="100%" style="stop-color:' + color + ';stop-opacity:0.05"/></linearGradient></defs>' +
+            gridLines +
+            '<path d="' + areaPath + '" fill="url(#' + svgId + ')"/>' +
+            '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="2"/>' +
+            points +
+            xLabels +
+            yLabels +
+            '</svg>';
+        
+        container.innerHTML = svgHTML;
+        log('✅ 完成: ' + containerId);
+    }
+    
+    function createPieChart(containerId, data) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            log('❌ 容器不存在: ' + containerId);
+            return;
+        }
+        
+        container.innerHTML = '';
+        container.style.background = 'transparent';
+        
+        const rect = container.getBoundingClientRect();
+        const width = Math.max(rect.width, 300);
+        const height = Math.max(rect.height, 200);
+        
+        log('创建饼图: ' + containerId + ' (' + Math.round(width) + 'x' + Math.round(height) + ')');
+        
+        const cx = width / 2 - 60;
+        const cy = height / 2 + 10;
+        const r = Math.min(width - 120, height) / 2 - 20;
+        const innerR = r * 0.5;
+        
+        const total = data.reduce((sum, d) => sum + d.value, 0);
+        let startAngle = -Math.PI / 2;
+        
+        let paths = '';
+        let legend = '';
+        
+        data.forEach((d, i) => {
+            const angle = (d.value / total) * Math.PI * 2;
+            const endAngle = startAngle + angle;
+            
+            const x1 = cx + innerR * Math.cos(startAngle);
+            const y1 = cy + innerR * Math.sin(startAngle);
+            const x2 = cx + r * Math.cos(startAngle);
+            const y2 = cy + r * Math.sin(startAngle);
+            const x3 = cx + r * Math.cos(endAngle);
+            const y3 = cy + r * Math.sin(endAngle);
+            const x4 = cx + innerR * Math.cos(endAngle);
+            const y4 = cy + innerR * Math.sin(endAngle);
+            
+            const largeArc = angle > Math.PI ? 1 : 0;
+            const path = 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2 + 
+                        ' A' + r + ',' + r + ' 0 ' + largeArc + ',1 ' + x3 + ',' + y3 +
+                        ' L' + x4 + ',' + y4 + 
+                        ' A' + innerR + ',' + innerR + ' 0 ' + largeArc + ',0 ' + x1 + ',' + y1 + ' Z';
+            
+            paths += '<path d="' + path + '" fill="' + d.color + '" stroke="#fff" stroke-width="2"/>';
+            
+            const lx = width - 110;
+            const ly = 50 + i * 30;
+            legend += '<rect x="' + lx + '" y="' + (ly - 8) + '" width="12" height="12" fill="' + d.color + '"/>' +
+                     '<text x="' + (lx + 18) + '" y="' + ly + '" font-size="12" fill="#ffffff">' + d.name + '</text>' +
+                     '<text x="' + (lx + 75) + '" y="' + ly + '" font-size="12" fill="#ffffff">' + d.value + '%</text>';
+            
+            startAngle = endAngle;
+        });
+        
+        const centerText = '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="14" fill="#ffffff" font-weight="bold">总能耗</text>' +
+                          '<text x="' + cx + '" y="' + (cy + 20) + '" text-anchor="middle" font-size="12" fill="#ffffff">12,580 kWh</text>';
+        
+        const svgHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + width + ' ' + height + '">' +
+            paths + centerText + legend +
+            '</svg>';
+        
+        container.innerHTML = svgHTML;
+        log('✅ 完成: ' + containerId);
+    }
+    
+    function renderCharts(page) {
+        log('渲染: ' + page);
+        
+        if (page === 'page-energy' || page === 'energy') {
+            setTimeout(() => {
+                createLineChart('chart-energy-trend', energyData, energyLabels, '#1890FF');
+                createPieChart('chart-energy-pie', pieData);
+            }, 200);
+        } else if (page === 'page-alarm' || page === 'alarm') {
+            setTimeout(() => {
+                createLineChart('chart-alarm-trend', alarmData, ['00:00','04:00','08:00','12:00','16:00','20:00','24:00'], '#FF4D4F');
+            }, 200);
+        }
+    }
+    
+    document.addEventListener('click', function(e) {
+        const item = e.target.closest('[data-page]');
+        if (!item) return;
+        renderCharts(item.getAttribute('data-page'));
+    });
+    
+    function init() {
+        log('初始化...');
+        const activePage = document.querySelector('.page--active');
+        if (activePage) {
+            renderCharts(activePage.id);
+        }
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    setTimeout(init, 300);
+    setTimeout(init, 800);
+    
+    log('脚本就绪');
+})();
+</script>
 </body>
 </html>
