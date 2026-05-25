@@ -2115,6 +2115,140 @@
             color: white !important;
             border-color: var(--color-danger) !important;
         }
+
+        /* ==================== 模型选择器 ==================== */
+        .model-switcher {
+            padding: 8px 20px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-top: 1px solid var(--color-border);
+            background: var(--bg-secondary);
+        }
+
+        .model-switcher__btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: var(--radius-md);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .model-switcher__btn:hover {
+            background: var(--bg-hover);
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        .model-switcher__btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .model-switcher__btn .arrow {
+            width: 12px;
+            height: 12px;
+            margin-left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .model-switcher__btn.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* 下拉面板 */
+        .model-dropdown {
+            position: absolute;
+            bottom: calc(100% + 4px);
+            left: 20px;
+            right: 20px;
+            background: #1e1e2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 100;
+            max-height: 320px;
+            overflow-y: auto;
+            display: none;
+            animation: dropdownIn 0.15s ease-out;
+        }
+
+        @keyframes dropdownIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .model-dropdown.show {
+            display: block;
+        }
+
+        .model-dropdown__item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .model-dropdown__item:last-child {
+            border-bottom: none;
+        }
+
+        .model-dropdown__item:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .model-dropdown__item.active {
+            background: rgba(0, 217, 255, 0.08);
+        }
+
+        .model-dropdown__left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .model-dropdown__icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .model-dropdown__name {
+            font-size: 13px;
+            color: var(--color-text-primary);
+        }
+
+        .model-dropdown__meta {
+            font-size: 11px;
+            color: var(--color-text-disabled);
+        }
+
+        .model-dropdown__check {
+            color: var(--color-primary);
+            font-size: 14px;
+        }
+
+        .model-dropdown__status {
+            font-size: 11px;
+            color: #f59e0b;
+            margin-right: 8px;
+        }
 </style>
 </head>
 <body>
@@ -2281,6 +2415,63 @@
                             
                         </div>
                     </div>
+                    
+                        <!-- 模型选择器 -->
+                        <div class="model-switcher" style="position:relative;">
+                            <button class="model-switcher__btn" id="model-btn-device" onclick="toggleModelDropdown('device')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                                <span id="model-label-device">Auto</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-dropdown" id="model-dropdown-device">
+                                <div class="model-dropdown__item active" data-model="Auto" data-agent="device" onclick="selectModel('device', 'Auto', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">A</div>
+                                        <div><div class="model-dropdown__name">Auto</div><div class="model-dropdown__meta">x1.0 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__check">✓</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Hy3-preview" data-agent="device" onclick="selectModel('device', 'Hy3 preview', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4);">H</div>
+                                        <div><div class="model-dropdown__name">Hy3 preview</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="DeepSeek-V4-Pro" data-agent="device" onclick="selectModel('device', 'DeepSeek-V4-Pro', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">D</div>
+                                        <div><div class="model-dropdown__name">DeepSeek-V4-Pro</div><div class="model-dropdown__meta">x2.3 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__status">爆满</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.7" data-agent="device" onclick="selectModel('device', 'MiniMax-M2.7', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.7</div><div class="model-dropdown__meta">x0.7 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.5" data-agent="device" onclick="selectModel('device', 'MiniMax-M2.5', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.5</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Kimi-K2.6" data-agent="device" onclick="selectModel('device', 'Kimi-K2.6', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#1e293b,#334155);">K</div>
+                                        <div><div class="model-dropdown__name">Kimi-K2.6</div><div class="model-dropdown__meta">x1.6 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="custom" data-agent="device" onclick="selectModel('device', '自定义大模型', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:rgba(255,255,255,0.08);">⚙</div>
+                                        <div><div class="model-dropdown__name">自定义大模型</div></div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
                     <div class="chat-footer">智能体回复仅供参考，重要操作请结合实际情况核实</div>
                 </div>
 
@@ -2747,6 +2938,63 @@
                             
                         </div>
                     </div>
+                    
+                        <!-- 模型选择器 -->
+                        <div class="model-switcher" style="position:relative;">
+                            <button class="model-switcher__btn" id="model-btn-energy" onclick="toggleModelDropdown('energy')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                                <span id="model-label-energy">Auto</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-dropdown" id="model-dropdown-energy">
+                                <div class="model-dropdown__item active" data-model="Auto" data-agent="energy" onclick="selectModel('energy', 'Auto', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">A</div>
+                                        <div><div class="model-dropdown__name">Auto</div><div class="model-dropdown__meta">x1.0 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__check">✓</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Hy3-preview" data-agent="energy" onclick="selectModel('energy', 'Hy3 preview', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4);">H</div>
+                                        <div><div class="model-dropdown__name">Hy3 preview</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="DeepSeek-V4-Pro" data-agent="energy" onclick="selectModel('energy', 'DeepSeek-V4-Pro', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">D</div>
+                                        <div><div class="model-dropdown__name">DeepSeek-V4-Pro</div><div class="model-dropdown__meta">x2.3 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__status">爆满</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.7" data-agent="energy" onclick="selectModel('energy', 'MiniMax-M2.7', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.7</div><div class="model-dropdown__meta">x0.7 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.5" data-agent="energy" onclick="selectModel('energy', 'MiniMax-M2.5', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.5</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Kimi-K2.6" data-agent="energy" onclick="selectModel('energy', 'Kimi-K2.6', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#1e293b,#334155);">K</div>
+                                        <div><div class="model-dropdown__name">Kimi-K2.6</div><div class="model-dropdown__meta">x1.6 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="custom" data-agent="energy" onclick="selectModel('energy', '自定义大模型', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:rgba(255,255,255,0.08);">⚙</div>
+                                        <div><div class="model-dropdown__name">自定义大模型</div></div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
                     <div class="chat-footer">智能体回复仅供参考，节能改造请结合实际情况评估</div>
                 </div>
 
@@ -3061,6 +3309,63 @@
                             
                         </div>
                     </div>
+                    
+                        <!-- 模型选择器 -->
+                        <div class="model-switcher" style="position:relative;">
+                            <button class="model-switcher__btn" id="model-btn-scene" onclick="toggleModelDropdown('scene')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                                <span id="model-label-scene">Auto</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-dropdown" id="model-dropdown-scene">
+                                <div class="model-dropdown__item active" data-model="Auto" data-agent="scene" onclick="selectModel('scene', 'Auto', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">A</div>
+                                        <div><div class="model-dropdown__name">Auto</div><div class="model-dropdown__meta">x1.0 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__check">✓</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Hy3-preview" data-agent="scene" onclick="selectModel('scene', 'Hy3 preview', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4);">H</div>
+                                        <div><div class="model-dropdown__name">Hy3 preview</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="DeepSeek-V4-Pro" data-agent="scene" onclick="selectModel('scene', 'DeepSeek-V4-Pro', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">D</div>
+                                        <div><div class="model-dropdown__name">DeepSeek-V4-Pro</div><div class="model-dropdown__meta">x2.3 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__status">爆满</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.7" data-agent="scene" onclick="selectModel('scene', 'MiniMax-M2.7', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.7</div><div class="model-dropdown__meta">x0.7 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.5" data-agent="scene" onclick="selectModel('scene', 'MiniMax-M2.5', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.5</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Kimi-K2.6" data-agent="scene" onclick="selectModel('scene', 'Kimi-K2.6', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#1e293b,#334155);">K</div>
+                                        <div><div class="model-dropdown__name">Kimi-K2.6</div><div class="model-dropdown__meta">x1.6 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="custom" data-agent="scene" onclick="selectModel('scene', '自定义大模型', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:rgba(255,255,255,0.08);">⚙</div>
+                                        <div><div class="model-dropdown__name">自定义大模型</div></div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
                     <div class="chat-footer">智能体回复仅供参考，场景执行前请进行测试验证</div>
                 </div>
 
@@ -3284,6 +3589,63 @@
                             
                         </div>
                     </div>
+                    
+                        <!-- 模型选择器 -->
+                        <div class="model-switcher" style="position:relative;">
+                            <button class="model-switcher__btn" id="model-btn-alarm" onclick="toggleModelDropdown('alarm')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                                <span id="model-label-alarm">Auto</span>
+                                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-dropdown" id="model-dropdown-alarm">
+                                <div class="model-dropdown__item active" data-model="Auto" data-agent="alarm" onclick="selectModel('alarm', 'Auto', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">A</div>
+                                        <div><div class="model-dropdown__name">Auto</div><div class="model-dropdown__meta">x1.0 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__check">✓</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Hy3-preview" data-agent="alarm" onclick="selectModel('alarm', 'Hy3 preview', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4);">H</div>
+                                        <div><div class="model-dropdown__name">Hy3 preview</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="DeepSeek-V4-Pro" data-agent="alarm" onclick="selectModel('alarm', 'DeepSeek-V4-Pro', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">D</div>
+                                        <div><div class="model-dropdown__name">DeepSeek-V4-Pro</div><div class="model-dropdown__meta">x2.3 积分</div></div>
+                                    </div>
+                                    <span class="model-dropdown__status">爆满</span>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.7" data-agent="alarm" onclick="selectModel('alarm', 'MiniMax-M2.7', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.7</div><div class="model-dropdown__meta">x0.7 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="MiniMax-M2.5" data-agent="alarm" onclick="selectModel('alarm', 'MiniMax-M2.5', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#ef4444,#f97316);">M</div>
+                                        <div><div class="model-dropdown__name">MiniMax-M2.5</div><div class="model-dropdown__meta">x0.5 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="Kimi-K2.6" data-agent="alarm" onclick="selectModel('alarm', 'Kimi-K2.6', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:linear-gradient(135deg,#1e293b,#334155);">K</div>
+                                        <div><div class="model-dropdown__name">Kimi-K2.6</div><div class="model-dropdown__meta">x1.6 积分</div></div>
+                                    </div>
+                                </div>
+                                <div class="model-dropdown__item" data-model="custom" data-agent="alarm" onclick="selectModel('alarm', '自定义大模型', this)">
+                                    <div class="model-dropdown__left">
+                                        <div class="model-dropdown__icon" style="background:rgba(255,255,255,0.08);">⚙</div>
+                                        <div><div class="model-dropdown__name">自定义大模型</div></div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
                     <div class="chat-footer">智能体回复仅供参考，重要报警请及时核实处理</div>
                 </div>
 
@@ -3972,6 +4334,67 @@ B1配电室温度：38°C（略高，正常<35°C）
                 msgContainer.scrollTop = msgContainer.scrollHeight;
             }
         }
+
+        // ===== 模型选择器功能 =====
+        function toggleModelDropdown(agent) {
+            const dropdown = document.getElementById('model-dropdown-' + agent);
+            const btn = document.getElementById('model-btn-' + agent);
+            if (!dropdown || !btn) return;
+            
+            // 关闭其他智能体的下拉
+            ['device', 'energy', 'scene', 'alarm'].forEach(a => {
+                if (a !== agent) {
+                    const d = document.getElementById('model-dropdown-' + a);
+                    const b = document.getElementById('model-btn-' + a);
+                    if (d) d.classList.remove('show');
+                    if (b) b.classList.remove('open');
+                }
+            });
+            
+            dropdown.classList.toggle('show');
+            btn.classList.toggle('open');
+        }
+
+        function selectModel(agent, modelName, el) {
+            // 更新按钮显示
+            const label = document.getElementById('model-label-' + agent);
+            if (label) label.textContent = modelName.split(' ')[0]; // 只显示简称
+            
+            // 更新选中状态
+            const dropdown = document.getElementById('model-dropdown-' + agent);
+            if (dropdown) {
+                dropdown.querySelectorAll('.model-dropdown__item').forEach(item => {
+                    item.classList.remove('active');
+                    const check = item.querySelector('.model-dropdown__check');
+                    if (check) check.remove();
+                });
+            }
+            el.classList.add('active');
+            
+            // 添加勾选标记
+            if (!el.querySelector('.model-dropdown__check')) {
+                el.insertAdjacentHTML('beforeend', '<span class="model-dropdown__check">✓</span>');
+            }
+            
+            // 关闭下拉
+            const btn = document.getElementById('model-btn-' + agent);
+            if (dropdown) dropdown.classList.remove('show');
+            if (btn) btn.classList.remove('open');
+            
+            console.log(`[${agent}] 已切换模型: ${modelName}`);
+        }
+
+        // 点击外部关闭下拉
+        document.addEventListener('click', function(e) {
+            ['device', 'energy', 'scene', 'alarm'].forEach(agent => {
+                const dropdown = document.getElementById('model-dropdown-' + agent);
+                const btn = document.getElementById('model-btn-' + agent);
+                if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                    btn.classList.remove('open');
+                }
+            });
+        });
 
         // ===== 报警事件列表分页逻辑 =====
         const alarmEventsData = [
