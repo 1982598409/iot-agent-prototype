@@ -2583,110 +2583,135 @@
                             </div>
                         </div>
 
-                        <div class="param-list">
+                        
+                        <div class="param-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:8px;">
                             <!-- 运行参数 -->
-                            <div class="param-category">运行参数</div>
-                            <div class="param-item">
-                                <span class="param-item__label">回风温度</span>
-                                <span class="param-item__value">26.8°C</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">CO₂浓度</span>
-                                <span class="param-item__value">680 ppm</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">湿度</span>
-                                <span class="param-item__value">55%</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">风机转速</span>
-                                <span class="param-item__value">1450 rpm</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">功率</span>
-                                <span class="param-item__value">3.2 kW</span>
-                            </div>
-                            
-                            <!-- 设备状态 -->
-                            <div class="param-category">设备状态</div>
-                            <div class="param-item">
-                                <span class="param-item__label">过滤网压差</span>
-                                <span class="param-item__value">125 Pa</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">累计运行时长</span>
-                                <span class="param-item__value">864 h</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">能耗</span>
-                                <span class="param-item__value">2,420 kWh</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">最后维护</span>
-                                <span class="param-item__value">2026-03-15</span>
-                            </div>
-                        </div>
+                            <div style="grid-column:1/-1;font-size:11px;color:#00d4ff;font-weight:600;padding:4px 0 2px 6px;border-left:3px solid #00d4ff;margin-top:4px;">运行参数</div>
 
-                        <div style="margin-top: 16px;">
-                            <div class="card__title" style="font-size: 14px; margin-bottom: 12px;">设备控制</div>
-                            <div class="control-list">
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">启停控制<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__toggle"></div>
-                                    <div class="control-item__value" style="color: #67c23a;">运行中</div>
+                            <!-- 启停控制 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">启停控制<span style="color:red;">*</span></span>
+                                <label class="switch" style="transform:scale(0.85);transform-origin:left;margin:2px 0;"><input type="checkbox" checked><span class="slider"></span></label>
+                                <span style="font-size:12px;color:#67c23a;">运行中</span>
+                            </div>
+
+                            <!-- 回风温度 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">回风温度<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="16" max="30" value="24" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">新风阀调节<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="100" value="60" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">60%</div>
+                                <span style="font-size:12px;color:#fff;">26.8°C</span>
+                            </div>
+
+                            <!-- CO₂浓度 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">CO₂浓度</span>
+                                <span style="font-size:12px;color:#fff;">680 ppm</span>
+                            </div>
+
+                            <!-- 湿度 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">湿度</span>
+                                <span style="font-size:12px;color:#fff;">55%</span>
+                            </div>
+
+                            <!-- 风机转速 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">风机转速<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="500" max="2000" value="1450" style="width:55px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">控制模式<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="1" max="3" value="2" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">自动</div>
+                                <span style="font-size:12px;color:#fff;">1450 rpm</span>
+                            </div>
+
+                            <!-- 功率 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">功率</span>
+                                <span style="font-size:12px;color:#fff;">3.2 kW</span>
+                            </div>
+
+                            <!-- 设备状态 -->
+                            <div style="grid-column:1/-1;font-size:11px;color:#00d4ff;font-weight:600;padding:4px 0 2px 6px;border-left:3px solid #00d4ff;margin-top:4px;">设备状态</div>
+
+                            <!-- 过滤网压差 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">过滤网压差<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="50" max="200" value="125" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">水阀最小开度<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="100" value="30" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">30%</div>
+                                <span style="font-size:12px;color:#fff;">125 Pa</span>
+                            </div>
+
+                            <!-- 新风阀调节 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">新风阀调节<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="0" max="100" value="60" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">送风温度设定<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="50" value="24" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">24°C</div>
+                                <span style="font-size:12px;color:#67c23a;">60%</span>
+                            </div>
+
+                            <!-- 控制模式 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">控制模式<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="1" max="3" value="2" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">季节模式<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="1" value="0" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">制冷</div>
+                                <span style="font-size:12px;color:#67c23a;">自动</span>
+                            </div>
+
+                            <!-- 水阀最小开度 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">水阀最小开度<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="0" max="100" value="30" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
                                 </div>
+                                <span style="font-size:12px;color:#67c23a;">30%</span>
+                            </div>
+
+                            <!-- 送风温度设定 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">送风温度设定<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="0" max="50" value="24" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
+                                </div>
+                                <span style="font-size:12px;color:#67c23a;">24°C</span>
+                            </div>
+
+                            <!-- 季节模式 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">季节模式<span style="color:red;">*</span></span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <input type="number" min="0" max="1" value="0" style="width:50px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:3px 6px;font-size:12px;text-align:center;">
+                                    <button class="control-confirm-btn" style="padding:3px 8px;font-size:11px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;cursor:pointer;">设</button>
+                                </div>
+                                <span style="font-size:12px;color:#67c23a;">制冷</span>
+                            </div>
+
+                            <!-- 累计运行时长 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">累计运行时长</span>
+                                <span style="font-size:12px;color:#fff;">864 h</span>
+                            </div>
+
+                            <!-- 能耗 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">能耗</span>
+                                <span style="font-size:12px;color:#fff;">2,420 kWh</span>
+                            </div>
+
+                            <!-- 最后维护 -->
+                            <div style="display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+                                <span style="font-size:11px;color:rgba(255,255,255,0.6);">最后维护</span>
+                                <span style="font-size:12px;color:#fff;">2026-03-15</span>
                             </div>
                         </div>
                     </div>
