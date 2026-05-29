@@ -261,8 +261,8 @@
         });
 
     </script>
-    <title>物联智能体 IoT Agent Platform</title
-    <!-- v20260519-1813 -->>
+    <title>物联智能体 IoT Agent Platform</title>
+    <!-- v20260519-1813 -->
     <style>
         /* ==================== CSS 变量定义 ==================== */
         :root {
@@ -814,6 +814,20 @@
             height: 18px;
         }
 
+        /* 模型选择器 */
+        .model-selector { position: relative; display: inline-flex; align-items: center; }
+        .model-selector__btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--color-border); background: var(--bg-tertiary); color: var(--color-text-secondary); font-size: 12px; cursor: pointer; transition: all var(--transition-fast); font-family: inherit; }
+        .model-selector__btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: rgba(0, 217, 255, 0.05); }
+        .model-selector__btn svg { width: 14px; height: 14px; }
+        .model-selector__btn.open svg:last-child { transform: rotate(180deg); }
+        .model-selector__dropdown { display: none; position: absolute; bottom: 100%; left: 0; margin-bottom: 6px; background: var(--bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200; min-width: 180px; overflow: hidden; }
+        .model-selector__dropdown.show { display: block; }
+        .model-selector__option { padding: 10px 16px; font-size: 13px; color: var(--color-text-primary); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .model-selector__option:hover { background: var(--bg-hover); }
+        .model-selector__option--active { color: var(--color-primary); background: rgba(0, 217, 255, 0.08); }
+        .model-selector__option--active::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); flex-shrink: 0; }
+        .model-selector__option-desc { font-size: 11px; color: var(--color-text-disabled); margin-left: auto; }
+
         .chat-footer {
             padding: 12px 20px 0;
             font-size: 12px;
@@ -1179,9 +1193,14 @@
         .param-card {
             background: var(--bg-tertiary);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 14px 16px;
             border: 1px solid var(--color-border);
             transition: all var(--transition-fast);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: 12px;
+            row-gap: 4px;
         }
 
         .param-card:hover {
@@ -1190,16 +1209,66 @@
         }
 
         .param-card__label {
-            font-size: 12px;
-            color: var(--color-text-disabled);
-            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
         }
 
         .param-card__value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--color-text-primary);
-            margin-bottom: 4px;
+        }
+
+        .param-card__ctrl-label {
+            font-size: 11px;
+            color: var(--color-text-disabled);
+            text-align: right;
+            align-self: end;
+        }
+
+        .param-card__ctrl {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .param-card__ctrl input[type="number"] {
+            width: 60px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 4px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 12px;
+            text-align: center;
+            outline: none;
+            -moz-appearance: textfield;
+        }
+
+        .param-card__ctrl input[type="number"]::-webkit-inner-spin-button,
+        .param-card__ctrl input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .param-card__ctrl input[type="number"]:focus {
+            border-color: var(--color-primary);
+        }
+
+        .param-card__ctrl select {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 4px;
+            color: #ccc;
+            padding: 4px 8px;
+            font-size: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .param-card__ctrl select:focus {
+            border-color: var(--color-primary);
         }
 
         .param-card__status {
@@ -2198,7 +2267,7 @@
                 <div class="chat-area">
                     <div class="chat-header">
                         <div class="chat-header__title">设备监测运维智能体</div>
-                <div class="chat-header__subtitle">专业的工业设备故障诊断与运维建议专家</div>
+
                         <div class="chat-header__actions">
                             <button class="btn btn--primary">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2281,7 +2350,16 @@
                             
                         </div>
                     </div>
-                    <div class="chat-footer">智能体回复仅供参考，重要操作请结合实际情况核实</div>
+                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;">
+                        <div class="model-selector">
+                            <button class="model-selector__btn" id="model-btn-device" onclick="toggleModelDropdown('device')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                <span id="model-label-device">DeepSeek-V4</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-selector__dropdown" id="model-dropdown-device"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 设备详情区 -->
@@ -2295,28 +2373,10 @@
                             </div>
                             <div class="detail-header__subtitle">设备ID: AHU-007 · <span style="color:#f5222d;font-weight:600;">⚠ 当前报警中</span></div>
                         </div>
-                        <div class="detail-header__actions">
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                </svg>
-                                导出报告
-                            </button>
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M23 4v6h-6M1 20v-6h6"/>
-                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                                </svg>
-                                刷新
-                            </button>
-                        </div>
                     </div>
 
                     <!-- 设备3D可视化 -->
                     <div class="card visual-3d">
-                        <div class="card__header">
-                            <div class="card__title">设备3D可视化</div>
-                        </div>
                         <div class="visual-3d__controls">
                             <button class="visual-3d__view-btn visual-3d__view-btn--active" onclick="switchDeviceView('front')">主视图</button>
                             <button class="visual-3d__view-btn" onclick="switchDeviceView('side')">侧视图</button>
@@ -2380,126 +2440,126 @@
                         <div class="param-grid">
                             <div class="param-card">
                                 <div class="param-card__label">运行状态</div>
-                                <div class="param-card__value" style="color: #67c23a;">运行中</div>
+                                <div class="param-card__value" style="color:#67c23a;">运行中</div>
                             </div>
                             <div class="param-card">
                                 <div class="param-card__label">故障状态</div>
-                                <div class="param-card__value" style="color: #f5222d;">报警</div>
+                                <div class="param-card__value" style="color:#f5222d;">报警</div>
                             </div>
                             <div class="param-card">
                                 <div class="param-card__label">在线状态</div>
-                                <div class="param-card__value" style="color: #67c23a;">在线</div>
+                                <div class="param-card__value" style="color:#67c23a;">在线</div>
                             </div>
-                        </div>
-
-                        <div class="param-list">
-                            <!-- 运行参数 -->
                             <div class="param-category">运行参数</div>
-                            <div class="param-item">
-                                <span class="param-item__label">回风温度</span>
-                                <span class="param-item__value">26.8°C</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">CO₂浓度</span>
-                                <span class="param-item__value">680 ppm</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">湿度</span>
-                                <span class="param-item__value">55%</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">风机转速</span>
-                                <span class="param-item__value">1450 rpm</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">功率</span>
-                                <span class="param-item__value">3.2 kW</span>
-                            </div>
-                            
-                            <!-- 设备状态 -->
-                            <div class="param-category">设备状态</div>
-                            <div class="param-item">
-                                <span class="param-item__label">过滤网压差</span>
-                                <span class="param-item__value">125 Pa</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">累计运行时长</span>
-                                <span class="param-item__value">864 h</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">能耗</span>
-                                <span class="param-item__value">2,420 kWh</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-item__label">最后维护</span>
-                                <span class="param-item__value">2026-03-15</span>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 16px;">
-                            <div class="card__title" style="font-size: 14px; margin-bottom: 12px;">设备控制</div>
-                            <div class="control-list">
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">启停控制<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__toggle"></div>
-                                    <div class="control-item__value" style="color: #67c23a;">运行中</div>
+                            <div class="param-card">
+                                <div class="param-card__label">回风温度</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value">26.8°C</div>
+                                <div class="param-card__ctrl">
+                                    <input type="number" value="26.8" step="0.1">
+                                    <button class="control-confirm-btn">确定</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">新风阀调节<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="100" value="60" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">60%</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">CO₂浓度</div>
+                                <div class="param-card__value">680 ppm</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">湿度</div>
+                                <div class="param-card__value">55%</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">风机转速</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value">1450 rpm</div>
+                                <div class="param-card__ctrl">
+                                    <input type="number" value="1450">
+                                    <button class="control-confirm-btn">确定</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">控制模式<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="1" max="3" value="2" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">自动</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">功率</div>
+                                <div class="param-card__value">3.2 kW</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">过滤网压差</div>
+                                <div class="param-card__value">125 Pa</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">累计运行时长</div>
+                                <div class="param-card__value">864 h</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">能耗</div>
+                                <div class="param-card__value">2,420 kWh</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">最后维护</div>
+                                <div class="param-card__value">2026-03-15</div>
+                            </div>
+                            <div class="param-category">设备控制</div>
+                            <div class="param-card">
+                                <div class="param-card__label">启停控制</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">运行中</div>
+                                <div class="param-card__ctrl">
+                                    <div class="control-item__toggle control-item__toggle--on" onclick="var t=this;t.classList.toggle('control-item__toggle--off');var v=t.closest('.param-card').querySelector('.param-card__value');v.textContent=t.classList.contains('control-item__toggle--off')?'已停止':'运行中';v.style.color=t.classList.contains('control-item__toggle--off')?'#f5222d':'#67c23a';"></div>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">水阀最小开度<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="100" value="30" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">30%</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">新风阀调节</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">60%</div>
+                                <div class="param-card__ctrl">
+                                    <input type="number" min="0" max="100" value="60">
+                                    <button class="control-confirm-btn">确定</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">送风温度设定<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="50" value="24" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">24°C</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">控制模式</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">自动</div>
+                                <div class="param-card__ctrl">
+                                    <select>
+                                        <option value="0">停止</option>
+                                        <option value="1">手动</option>
+                                        <option value="2" selected>自动</option>
+                                    </select>
+                                    <button class="control-confirm-btn">确定</button>
                                 </div>
-                                <div class="control-item">
-                                    <div class="control-item__info">
-                                        <div class="control-item__name">季节模式<span style="color:red;">*</span></div>
-                                    </div>
-                                    <div class="control-item__input">
-                                        <input type="number" min="0" max="1" value="0" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:#fff;padding:4px 8px;font-size:12px;text-align:center;">
-                                        <button class="control-confirm-btn" style="background:var(--color-primary);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;">确定</button>
-                                    </div>
-                                    <div class="control-item__value" style="color: #67c23a;">制冷</div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">水阀最小开度</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">30%</div>
+                                <div class="param-card__ctrl">
+                                    <input type="number" min="0" max="100" value="30">
+                                    <button class="control-confirm-btn">确定</button>
+                                </div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">送风温度设定</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">24°C</div>
+                                <div class="param-card__ctrl">
+                                    <input type="number" min="0" max="50" value="24">
+                                    <button class="control-confirm-btn">确定</button>
+                                </div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">季节模式</div>
+                                <span class="param-card__ctrl-label">控制</span>
+                                <div class="param-card__value" style="color:#67c23a;">制冷</div>
+                                <div class="param-card__ctrl">
+                                    <select>
+                                        <option value="cool" selected>制冷</option>
+                                        <option value="heat">制热</option>
+                                    </select>
+                                    <button class="control-confirm-btn">确定</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                                         <!-- 报警事件列表 -->
                     <div class="card">
                         <div class="card__header">
@@ -2635,7 +2695,7 @@
                     </div>
 
 <!-- 设备运维建议 -->
-                    <div class="card">
+                    <div class="card" style="opacity:0.45;filter:grayscale(100%);pointer-events:none;">
                         <div class="card__header">
                             <div class="card__title">设备运维建议</div>
                         </div>
@@ -2745,6 +2805,16 @@
                             </button>
                             </div>
                             
+                        </div>
+                    </div>
+                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;">
+                        <div class="model-selector">
+                            <button class="model-selector__btn" id="model-btn-energy" onclick="toggleModelDropdown('energy')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                <span id="model-label-energy">DeepSeek-V4</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-selector__dropdown" id="model-dropdown-energy"></div>
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，节能改造请结合实际情况评估</div>
@@ -3061,6 +3131,16 @@
                             
                         </div>
                     </div>
+                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;">
+                        <div class="model-selector">
+                            <button class="model-selector__btn" id="model-btn-scene" onclick="toggleModelDropdown('scene')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                <span id="model-label-scene">DeepSeek-V4</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-selector__dropdown" id="model-dropdown-scene"></div>
+                        </div>
+                    </div>
                     <div class="chat-footer">智能体回复仅供参考，场景执行前请进行测试验证</div>
                 </div>
 
@@ -3282,6 +3362,16 @@
                             </button>
                             </div>
                             
+                        </div>
+                    </div>
+                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;">
+                        <div class="model-selector">
+                            <button class="model-selector__btn" id="model-btn-alarm" onclick="toggleModelDropdown('alarm')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                <span id="model-label-alarm">DeepSeek-V4</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="model-selector__dropdown" id="model-dropdown-alarm"></div>
                         </div>
                     </div>
                     <div class="chat-footer">智能体回复仅供参考，重要报警请及时核实处理</div>
@@ -3720,6 +3810,56 @@
             }
         }, 5000);
     
+        // === 模型切换功能 ===
+        const MODEL_LIST = [
+            { id: 'deepseek-v4', name: 'DeepSeek-V4', desc: '默认' },
+            { id: 'claude-opus', name: 'Claude Opus 4.7', desc: '深度推理' },
+            { id: 'claude-sonnet', name: 'Claude Sonnet 4.6', desc: '均衡' },
+            { id: 'gpt-4o', name: 'GPT-4o', desc: '多模态' },
+            { id: 'qwen-max', name: 'Qwen-Max', desc: '中文优化' },
+        ];
+        let activeModel = 'deepseek-v4';
+
+        function renderModelDropdown(agent) {
+            var dropdown = document.getElementById('model-dropdown-' + agent);
+            if (!dropdown) return;
+            dropdown.innerHTML = MODEL_LIST.map(function(m) {
+                return '<div class="model-selector__option' + (m.id === activeModel ? ' model-selector__option--active' : '') + '" onclick="selectModel(\'' + agent + '\', \'' + m.id + '\')">' +
+                    '<span>' + m.name + '</span><span class="model-selector__option-desc">' + m.desc + '</span></div>';
+            }).join('');
+        }
+
+        function toggleModelDropdown(agent) {
+            var dropdown = document.getElementById('model-dropdown-' + agent);
+            var btn = document.getElementById('model-btn-' + agent);
+            if (!dropdown || !btn) return;
+            var isOpen = dropdown.classList.contains('show');
+            document.querySelectorAll('.model-selector__dropdown').forEach(function(d) { d.classList.remove('show'); });
+            document.querySelectorAll('.model-selector__btn').forEach(function(b) { b.classList.remove('open'); });
+            if (!isOpen) {
+                renderModelDropdown(agent);
+                dropdown.classList.add('show');
+                btn.classList.add('open');
+                setTimeout(function() {
+                    document.addEventListener('click', function handler(e) {
+                        if (!e.target.closest('.model-selector')) {
+                            dropdown.classList.remove('show');
+                            btn.classList.remove('open');
+                            document.removeEventListener('click', handler);
+                        }
+                    });
+                }, 10);
+            }
+        }
+
+        function selectModel(agent, modelId) {
+            activeModel = modelId;
+            var model = MODEL_LIST.find(function(m) { return m.id === modelId; });
+            document.querySelectorAll('[id^="model-label-"]').forEach(function(el) { el.textContent = model ? model.name : modelId; });
+            document.querySelectorAll('.model-selector__dropdown').forEach(function(d) { d.classList.remove('show'); });
+            document.querySelectorAll('.model-selector__btn').forEach(function(b) { b.classList.remove('open'); });
+        }
+
         // === 历史记录功能 ===
         const historyData = {
             device: [
@@ -3985,7 +4125,7 @@ B1配电室温度：38°C（略高，正常<35°C）
         let alarmCurrentPage = 1;
         
         function renderAlarmTable() {
-            const tbody = document.querySelector('#alarm .alarm-table tbody');
+            const tbody = document.querySelector('#page-device-monitor .alarm-table tbody');
             if (!tbody) return;
             
             const start = (alarmCurrentPage - 1) * alarmPageSize;
