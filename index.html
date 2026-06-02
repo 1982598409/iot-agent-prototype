@@ -84,10 +84,10 @@
                     avoidLabelOverlap: true,
                     label: { show: false },
                     data: [
-                        { value: 77136, name: '空调系统', itemStyle: { color: '#00D9FF' } },
-                        { value: 32140, name: '照明系统', itemStyle: { color: '#FAAD14' } },
-                        { value: 19284, name: '办公设备', itemStyle: { color: '#52C41A' } },
-                        { value: 0, name: '其他', itemStyle: { color: '#1890FF' } }
+                        { value: 61709, name: '空调系统', itemStyle: { color: '#00D9FF' } },
+                        { value: 28283, name: '照明系统', itemStyle: { color: '#FAAD14' } },
+                        { value: 23141, name: '动力设备', itemStyle: { color: '#52C41A' } },
+                        { value: 15427, name: '其他设备', itemStyle: { color: '#1890FF' } }
                     ]
                 }]
             });
@@ -1665,13 +1665,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .alarm-table td:last-child { white-space: normal; overflow: visible; text-overflow: clip; }
 
-        .alarm-table th:nth-child(1) { width: 80px; }
-        .alarm-table th:nth-child(2) { width: auto; }
-        .alarm-table th:nth-child(3) { width: 150px; }
-        .alarm-table th:nth-child(4) { width: 80px; }
-        .alarm-table th:nth-child(5) { width: 80px; }
-        .alarm-table th:nth-child(6) { width: 90px; }
+        .alarm-table th:nth-child(1) { width: 70px; }
+        .alarm-table th:nth-child(2) { width: 130px; }
+        .alarm-table th:nth-child(3) { width: 100px; }
+        .alarm-table th:nth-child(4) { width: auto; }
+        .alarm-table th:nth-child(5) { width: 100px; }
+        .alarm-table th:nth-child(6) { width: 210px; }
 
         .alarm-table td:nth-child(2) {
             white-space: normal;
@@ -1738,18 +1739,18 @@
         .alarm-action {
             display: inline-block;
             white-space: nowrap;
-            padding: 5px 16px;
+            padding: 4px 10px;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: var(--color-text-secondary);
         }
-
-        .alarm-action:hover {
-            background: var(--color-primary);
-            color: #0F1419;
-            border-color: var(--color-primary);
-        }
+        .alarm-action:hover { background: rgba(0,217,255,0.1); color: var(--color-primary); border-color: var(--color-primary); }
+        .alarm-action--primary { background: rgba(255,77,79,0.15); color: #FF4D4F; border-color: rgba(255,77,79,0.25); }
+        .alarm-action--primary:hover { background: rgba(255,77,79,0.3); }
 
         /* ==================== 建议列表 ==================== */
         .suggestion-list {
@@ -1962,6 +1963,83 @@
                 width: 360px;
             }
         }
+
+        /* ==================== 弹窗 ==================== */
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 680px;
+            max-height: 85vh;
+            overflow: hidden;
+        }
+        .modal-hd {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            padding: 4px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--color-danger); }
+        .modal-bd { padding: 20px; }
+        .modal-foot {
+            padding: 12px 20px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .version-list-item:hover { background: rgba(0,217,255,0.06) !important; }
+        #version-detail::-webkit-scrollbar { width: 4px; }
+        #version-detail::-webkit-scrollbar-track { background: transparent; }
+        #version-detail::-webkit-scrollbar-thumb { background: rgba(0,217,255,0.15); border-radius: 2px; }
+        #version-detail::-webkit-scrollbar-thumb:hover { background: rgba(0,217,255,0.3); }
+
+        .scene-calendar { padding: 8px 16px 16px; }
+        .scene-calendar__header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--color-text-disabled); margin-bottom: 4px; padding: 4px 0; }
+        .scene-calendar__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .scene-calendar__day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 4px; color: var(--color-text-secondary); background: rgba(255,255,255,0.02); }
+        .scene-calendar__day.--empty { background: transparent; }
+        .scene-calendar__day.--marked { font-weight: 600; }
+        .scene-calendar__day.--today { border: 1px solid var(--color-primary); font-weight: 700; }
+        .plan-list { display: flex; flex-direction: column; }
+        .plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .plan-item:last-child { border-bottom: none; }
+        .plan-item__color { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .plan-item__info { flex: 1; min-width: 0; }
+        .plan-item__name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+        .plan-item__desc { font-size: 11px; color: var(--color-text-muted); }
+        .period-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; background: rgba(255,77,79,0.15); color: var(--color-danger); border: 1px solid rgba(255,77,79,0.25); cursor: pointer; }
+        .period-badge:hover { background: rgba(255,77,79,0.3); }
+        .period-badge--active { background: rgba(255,77,79,0.25); border-color: rgba(255,77,79,0.4); }
+        .query-tpl { padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--color-text-secondary); white-space: nowrap; }
+        .query-tpl:hover { border-color: var(--color-primary); color: var(--color-primary); }
+        .query-tpl--active { background: rgba(0,217,255,0.1); border-color: var(--color-primary); color: var(--color-primary); }
 
         /* ==================== 隐藏页面 ==================== */
         .page {
@@ -2187,6 +2265,33 @@
 </style>
 </head>
 <body>
+    <!-- PRD文档弹窗 -->
+    <div class="modal-mask" id="prd-modal" style="display:none;" onclick="this.style.display='none'">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width:900px;max-height:90vh;">
+            <div class="modal-hd">
+                <div class="modal-title">产品设计文档 (PRD)</div>
+                <button class="modal-close" onclick="document.getElementById('prd-modal').style.display='none'">✕</button>
+            </div>
+            <div class="modal-bd" style="padding:20px 24px;max-height:70vh;overflow-y:auto;font-size:13px;line-height:1.8;color:var(--color-text-secondary);">
+                <div id="prd-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 版本说明弹窗 -->
+    <div class="modal-mask" id="version-modal" style="display:none;" onclick="this.style.display='none'">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width:680px;">
+            <div class="modal-hd">
+                <div class="modal-title">版本说明</div>
+                <button class="modal-close" onclick="document.getElementById('version-modal').style.display='none'">✕</button>
+            </div>
+            <div class="modal-bd" style="display:flex;gap:20px;padding:0;min-height:360px;">
+                <div id="version-list" style="width:160px;border-right:1px solid var(--color-border);padding:16px 0;flex-shrink:0;"></div>
+                <div id="version-detail" style="flex:1;padding:20px 20px 20px 0;overflow-y:auto;max-height:65vh;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1)_transparent;"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- 左侧导航栏 -->
         <aside class="sidebar">
@@ -2280,6 +2385,10 @@
                                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 历史记录
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleVersionModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                版本说明
                             </button>
                         </div>
                     </div>
@@ -2724,7 +2833,7 @@
                 <div class="chat-area">
                     <div class="chat-header">
                         <div class="chat-header__title">能耗智能管控智能体</div>
-                        <div class="chat-header__subtitle">专业的能耗分析、优化建议与节能方案专家</div>
+
                         <div class="chat-header__actions">
                             <button class="btn btn--primary">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2737,6 +2846,10 @@
                                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 历史记录
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleVersionModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                版本说明
                             </button>
                         </div>
                     </div>
@@ -2817,7 +2930,7 @@
                             <div class="model-selector__dropdown" id="model-dropdown-energy"></div>
                         </div>
                     </div>
-                    <div class="chat-footer">智能体回复仅供参考，节能改造请结合实际情况评估</div>
+
                 </div>
 
                 <!-- 能耗分析报告区 -->
@@ -2825,463 +2938,270 @@
                     <div class="detail-header">
                         <div class="detail-header__left">
                             <div class="detail-header__title">能耗分析报告</div>
-                            <div class="detail-header__subtitle">全厂区 - 2026年3月能耗分析</div>
+                            <div class="detail-header__subtitle">全厂区 · 2026年度</div>
                         </div>
-                        <div class="detail-header__actions">
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                </svg>
-                                导出报告
-                            </button>
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M23 4v6h-6M1 20v-6h6"/>
-                                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                                </svg>
-                                刷新
-                            </button>
-                        </div>
+                    </div>
+
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-size:11px;color:var(--color-text-disabled);flex-shrink:0;">查询模板:</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'day')">今日用电</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'month')">本月能耗</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'quarter')">本季用电</span>
+                        <span class="query-tpl query-tpl--active" onclick="applyTemplate(event,'year')">年度报告</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'compare')">同比对比</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'alarm')">管控偏差</span>
+                        <span style="color:var(--color-border);margin:0 4px;">|</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'ac-day')">今日空调用电</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'light-year')">照明年度分析</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'power-month')">动力设备月报</span>
                     </div>
 
                     <!-- 能耗概览 -->
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-card__label">总能耗</div>
-                            <div class="stat-card__value">128,560</div>
+                            <div class="stat-card__label">总用电量</div>
+                            <div class="stat-card__value">1,542,720</div>
+                            <div class="stat-card__extra">kWh</div>
                             <div class="stat-card__change stat-card__change--up">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="18 15 12 9 6 15"/>
-                                </svg>
-                                +2.3% 较上月
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                                +2.3% 同比
                             </div>
-                            <div class="stat-card__extra">上月: 125,670 kWh</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card__label">电费成本</div>
-                            <div class="stat-card__value" style="font-size: 24px;">¥96,420</div>
+                            <div class="stat-card__value">¥1,157,040</div>
+                            <div class="stat-card__extra">元</div>
                             <div class="stat-card__change stat-card__change--up">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="18 15 12 9 6 15"/>
-                                </svg>
-                                +3.1% 较上月
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                                +3.1% 同比
                             </div>
-                            <div class="stat-card__extra">上月: ¥93,520</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card__label">碳排放</div>
-                            <div class="stat-card__value" style="font-size: 24px;">96.4 tCO₂</div>
-                            <div class="stat-card__change stat-card__change--up">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="18 15 12 9 6 15"/>
-                                </svg>
-                                +2.3% 较上月
-                            </div>
-                            <div class="stat-card__extra">行业平均: 105 tCO₂</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card__label">预计节能潜力</div>
-                            <div class="stat-card__value stat-card__value--primary">18.2%</div>
+                            <div class="stat-card__label">总用水量</div>
+                            <div class="stat-card__value">22,272</div>
+                            <div class="stat-card__extra">m³</div>
                             <div class="stat-card__change stat-card__change--down">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 12 15 18 9"/>
-                                </svg>
-                                评级: 优秀
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                                -1.8% 同比
                             </div>
-                            <div class="stat-card__extra">年节省预计: ¥21,500</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">公区用电占比</div>
+                            <div class="stat-card__value stat-card__value--primary">42.6%</div>
+                            <div class="stat-card__extra">公区: 657,360 kWh</div>
+                            <div class="stat-card__change stat-card__change--up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                                +0.8% 较上年
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 能耗趋势图 -->
+                    <!-- 用电趋势 + 分项占比 -->
                     <div class="card">
                         <div class="card__header">
-                            <div class="card__title">能耗趋势分析</div>
+                            <div class="card__title">用电趋势分析</div>
                             <div class="card__actions">
-                                <button class="card__btn card__btn--active" onclick="switchEnergyRange(this, '12m')">近12个月</button>
-                                <button class="card__btn" onclick="switchEnergyRange(this, '6m')">近6个月</button>
+                                <span class="period-badge" id="period-badge-day" onclick="switchEnergyPeriod('day')">日</span>
+                                <span class="period-badge" id="period-badge-month" onclick="switchEnergyPeriod('month')">月</span>
+                                <span class="period-badge" id="period-badge-quarter" onclick="switchEnergyPeriod('quarter')">季</span>
+                                <span class="period-badge period-badge--active" id="period-badge-year" onclick="switchEnergyPeriod('year')">年</span>
                             </div>
                         </div>
-                        <div id="chart-energy-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
+                        <div id="chart-energy-trend" style="width:100%;height:180px;"></div>
                     </div>
 
-                    <!-- 分项能耗分析 -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">分项能耗分析</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                        <!-- 分项占比 -->
+                        <div class="card">
+                            <div class="card__header">
+                                <div class="card__title">分项能耗占比</div>
+                            </div>
+                            <div id="chart-energy-pie" style="width:100%;height:200px;min-width:0;"></div>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div id="chart-energy-pie" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
-                            <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #00D9FF;"></div>
-                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">空调系统</span>
-                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">60%</span>
+
+                        <!-- 同期对比 -->
+                        <div class="card">
+                            <div class="card__header">
+                                <div class="card__title">同期对比</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:6px;">
+                                    <span style="font-size:13px;color:var(--color-text-secondary);">本年度用电</span>
+                                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">1,542,720 kWh</span>
+                                    <span style="font-size:12px;color:#f5222d;">+2.3%</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #FAAD14;"></div>
-                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">照明系统</span>
-                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">25%</span>
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:6px;">
+                                    <span style="font-size:13px;color:var(--color-text-secondary);">上年度用电</span>
+                                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">1,508,040 kWh</span>
+                                    <span style="font-size:12px;color:var(--color-text-disabled);">基准</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #52C41A;"></div>
-                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">办公设备</span>
-                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">15%</span>
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:6px;">
+                                    <span style="font-size:13px;color:var(--color-text-secondary);">本年度用水</span>
+                                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">22,272 m³</span>
+                                    <span style="font-size:12px;color:#67c23a;">-1.8%</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 12px; height: 12px; border-radius: 2px; background: #1890FF;"></div>
-                                    <span style="flex: 1; font-size: 13px; color: var(--color-text-secondary);">其他</span>
-                                    <span style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">5%</span>
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:6px;">
+                                    <span style="font-size:13px;color:var(--color-text-secondary);">单位面积能耗</span>
+                                    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">12.8 kWh/m²</span>
+                                    <span style="font-size:12px;color:#67c23a;">-0.5%</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:6px;">
+                                    <span style="font-size:13px;color:var(--color-text-secondary);">年度管控偏差</span>
+                                    <span style="font-size:14px;font-weight:600;color:#f5222d;">-4.8%</span>
+                                    <span style="font-size:12px;color:#f5222d;">超出管控</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- AI节能建议 -->
+                    <!-- 能耗管控 -->
                     <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">能耗管控指标</div>
+                            <span style="font-size: 12px; color: var(--color-success); background: rgba(82, 196, 26, 0.15); padding: 4px 10px; border-radius: 4px;">● 管控中</span>
+                        </div>
+                        <div class="param-grid">
+                            <div class="param-card">
+                                <div class="param-card__label">本月管控值</div>
+                                <div class="param-card__value">135,000 kWh</div>
+                                <span class="param-card__ctrl-label">调整</span>
+                                <div class="param-card__ctrl">
+                                    <input type="number" value="135000">
+                                    <button class="control-confirm-btn">确定</button>
+                                </div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">年度管控值</div>
+                                <div class="param-card__value">1,620,000 kWh</div>
+                                <span class="param-card__ctrl-label">调整</span>
+                                <div class="param-card__ctrl">
+                                    <input type="number" value="1620000">
+                                    <button class="control-confirm-btn">确定</button>
+                                </div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">峰平谷配置</div>
+                                <div class="param-card__value">夏季峰谷</div>
+                                <span class="param-card__ctrl-label">调整</span>
+                                <div class="param-card__ctrl">
+                                    <select>
+                                        <option value="summer-peak" selected>夏季峰谷</option>
+                                        <option value="winter-peak">冬季峰谷</option>
+                                        <option value="flat">平段</option>
+                                    </select>
+                                    <button class="control-confirm-btn">确定</button>
+                                </div>
+                            </div>
+                            <div class="param-card">
+                                <div class="param-card__label">实际偏差</div>
+                                <div class="param-card__value" style="color:#f5222d;">-4.8%</div>
+                                <div class="param-card__status param-card__status--warning">超出管控</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="opacity:0.45;filter:grayscale(100%);pointer-events:none;">
                         <div class="card__header">
                             <div class="card__title">AI 节能优化建议</div>
                         </div>
                         <div class="suggestion-list">
                             <div class="suggestion-item">
                                 <div class="suggestion-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                                    </svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                                 </div>
                                 <div class="suggestion-content">
                                     <div class="suggestion-title">优化空调运行策略</div>
-                                    <div class="suggestion-desc">建议将工作时间外的空调温度设定值调高2°C，预计可降低空调能耗15%，年节省约¥8,500。</div>
+                                    <div class="suggestion-desc">空调系统占比48%，建议将非工作时段温度设定调高2°C，预计可降低空调能耗15%。</div>
                                     <div class="suggestion-save">预计月节省: ¥1,280 | 年节省: ¥15,360</div>
                                 </div>
                             </div>
                             <div class="suggestion-item">
                                 <div class="suggestion-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M9 18V5l12-2v13"/>
-                                        <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-                                    </svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                                 </div>
                                 <div class="suggestion-content">
                                     <div class="suggestion-title">智能照明改造</div>
-                                    <div class="suggestion-desc">加装人体感应传感器，实现人来灯亮、人走灯灭的智能控制，预计降低照明能耗20%。</div>
+                                    <div class="suggestion-desc">照明系统占比22%，建议公区加装感应控制，实现按需照明，预计降低照明能耗20%。</div>
                                     <div class="suggestion-save">预计月节省: ¥620 | 年节省: ¥7,440</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- 自动调控状态 -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">自动调控状态</div>
-                            <span style="font-size: 12px; color: var(--color-success); background: rgba(82, 196, 26, 0.15); padding: 4px 10px; border-radius: 4px;">● 已启用</span>
-                        </div>
-                        <div class="control-list">
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">启停控制<span style="color:red;">*</span></div>
+                            <div class="suggestion-item">
+                                <div class="suggestion-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                                 </div>
-                                <div class="control-item__toggle"></div>
-                                <div class="control-item__value" style="color: #67c23a;">停止</div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">新风阀调节<span style="color:red;">*</span></div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">峰平谷用电优化</div>
+                                    <div class="suggestion-desc">建议将部分可转移负荷从峰时段调整至谷时段，利用峰谷电价差降低用电成本。</div>
+                                    <div class="suggestion-save">预计月节省: ¥890 | 年节省: ¥10,680</div>
                                 </div>
-                                <div class="control-item__input">
-                                    <input type="number" min="0" max="100" step="0.01" value="100.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
-                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
-                                </div>
-                                <div class="control-item__value" style="color: #67c23a;">100.00</div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">控制模式<span style="color:red;">*</span></div>
-                                </div>
-                                <div class="control-item__input">
-                                    <input type="number" min="1" max="3" step="1" value="1" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
-                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
-                                </div>
-                                <div class="control-item__value" style="color: #67c23a;">停止</div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">水阀最小开度<span style="color:red;">*</span></div>
-                                </div>
-                                <div class="control-item__input">
-                                    <input type="number" min="0" max="100" step="0.01" value="20.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
-                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
-                                </div>
-                                <div class="control-item__value" style="color: #67c23a;">20.00</div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">送风温度设定<span style="color:red;">*</span></div>
-                                </div>
-                                <div class="control-item__input">
-                                    <input type="number" min="0" max="50" step="0.01" value="25.00" style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
-                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
-                                </div>
-                                <div class="control-item__value" style="color: #67c23a;">25.00</div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">季节模式<span style="color:red;">*</span></div>
-                                </div>
-                                <div class="control-item__input">
-                                    <select style="width: 80px; padding: 4px 8px; border: 1px solid #dcdfe6; border-radius: 4px;">
-                                        <option value="summer" selected>夏季</option>
-                                        <option value="winter">冬季</option>
-                                    </select>
-                                    <button class="btn btn--small btn--primary" style="margin-left: 8px;">确定</button>
-                                </div>
-                                <div class="control-item__value" style="color: #67c23a;">夏季</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- ========== 页面3：场景模式控制智能体 ========== -->
+                        <!-- ========== 页面3：场景模式控制智能体 ========== -->
             <div class="page" id="page-scene">
-                <!-- 对话区 -->
                 <div class="chat-area">
                     <div class="chat-header">
                         <div class="chat-header__title">场景模式控制智能体</div>
-                        <div class="chat-header__subtitle">专业的智能场景设计、自动化控制与模式优化专家</div>
                         <div class="chat-header__actions">
-                            <button class="btn btn--primary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                新建对话
-                            </button>
-                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('scene')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                历史记录
-                            </button>
+                            <button class="btn btn--primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新建对话</button>
+                            <button class="btn btn--secondary" onclick="toggleHistoryPanel('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>历史记录</button>
+                            <button class="btn btn--secondary" onclick="toggleVersionModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>版本说明</button>
                         </div>
                     </div>
-
                     <div class="chat-messages" id="chat-messages-scene" style="position:relative;">
-                        <!-- 历史记录面板 -->
-                        <div class="history-panel" id="history-panel-scene" style="display:none;">
-                            <div class="history-panel__header">
-                                <span class="history-panel__title">历史对话</span>
-                                <button class="history-panel__close" onclick="toggleHistoryPanel('scene')">&times;</button>
-                            </div>
-                            <div class="history-panel__list" id="history-list-scene"></div>
-                        </div>
-                        <div class="message message--ai">
-                            <div class="message__avatar">AI</div>
-                            <div class="message__content">
-                                <div class="message__header">
-                                    <span class="message__name">场景模式控制智能体</span>
-                                    <span class="message__time">今天 15:15</span>
-                                </div>
-                                <div class="message__bubble">
-                                    您好！我是场景模式控制智能体。我可以帮助您设计智能场景、设置自动化规则、优化控制模式等工作。请输入您要创建或调整的场景需求，我将为您提供专业的场景设计和控制方案。
-                                </div>
-                            </div>
-                        </div>
-                        <div class="message message--user">
-                            <div class="message__avatar">我</div>
-                            <div class="message__content">
-                                <div class="message__header">
-                                    <span class="message__name">我</span>
-                                    <span class="message__time">今天 15:16</span>
-                                </div>
-                                <div class="message__bubble">
-                                    帮我设计一个工厂的节假日节能模式，需要包含所有区域的设备控制，要最大程度降低能耗。
-                                </div>
-                            </div>
-                        </div>
-                        <div class="message message--ai">
-                            <div class="message__avatar">AI</div>
-                            <div class="message__content">
-                                <div class="message__header">
-                                    <span class="message__name">场景模式控制智能体</span>
-                                    <span class="message__time">今天 15:16</span>
-                                </div>
-                                <div class="message__bubble">
-                                    正在设计节假日节能模式场景，生成控制策略，请稍候...
-                                    <div class="message__loading">
-                                        <div class="message__loading-dot"></div>
-                                        <div class="message__loading-dot"></div>
-                                        <div class="message__loading-dot"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="history-panel" id="history-panel-scene" style="display:none;"><div class="history-panel__header"><span class="history-panel__title">历史对话</span><button class="history-panel__close" onclick="toggleHistoryPanel('scene')">&times;</button></div><div class="history-panel__list" id="history-list-scene"></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:30</span></div><div class="message__bubble">早上好！今日有3个运行计划待执行，暖通夏季模式将在30分钟后启动。</div></div></div>
+                        <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今天有哪些运行安排？有没有异常的？</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今日安排：照明08:00已启动 | 暖通09:00待执行 | 夜间22:00自动切换。昨日空调节能模式未正常执行，建议排查。</div></div></div>
                     </div>
-
-                    <div class="chat-input">
-                        <div class="chat-input__wrapper">
-                            <div class="chat-input__box">
-                                <textarea class="chat-input__field" placeholder="请输入场景相关需求，例如: 创建上班模式、调整空调控制逻辑、设置定时任务等..." rows="1" id="input-scene"></textarea>
-                            <button class="chat-input__send" onclick="sendMessage('scene')" aria-label="发送">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 2L11 13"/>
-                                    <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
-                                </svg>
-                            </button>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;">
-                        <div class="model-selector">
-                            <button class="model-selector__btn" id="model-btn-scene" onclick="toggleModelDropdown('scene')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                <span id="model-label-scene">DeepSeek-V4</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                            </button>
-                            <div class="model-selector__dropdown" id="model-dropdown-scene"></div>
-                        </div>
-                    </div>
-                    <div class="chat-footer">智能体回复仅供参考，场景执行前请进行测试验证</div>
+                    <div class="chat-input"><div class="chat-input__wrapper"><div class="chat-input__box"><textarea class="chat-input__field" placeholder="请输入运行管理需求..." rows="1" id="input-scene"></textarea><button class="chat-input__send" onclick="sendMessage('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg></button></div></div></div>
+                    <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;"><div class="model-selector"><button class="model-selector__btn" id="model-btn-scene" onclick="toggleModelDropdown('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span id="model-label-scene">DeepSeek-V4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="model-selector__dropdown" id="model-dropdown-scene"></div></div></div>
                 </div>
-
-                <!-- 场景模式设计区 -->
                 <div class="detail-area" id="detail-scene">
                     <div class="detail-header">
                         <div class="detail-header__left">
-                            <div class="detail-header__title">场景模式设计</div>
-                        </div>
-                        <div class="detail-header__actions">
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                </svg>
-                                导出配置
-                            </button>
-                            <button class="btn btn--primary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="5 3 19 12 5 21 5 3"/>
-                                </svg>
-                                立即部署
-                            </button>
+                            <div class="detail-header__title">运行日历</div>
+                            <div class="detail-header__subtitle">2026年6月 · 暖通系统</div>
                         </div>
                     </div>
 
-                    <!-- 模式切换标签 -->
-                    <div class="mode-tabs">
-                        <button class="mode-tab">工作日模式</button>
-                        <button class="mode-tab">夜间模式</button>
-                        <button class="mode-tab mode-tab--active">节假日模式</button>
-                        <button class="mode-tab">自定义模式</button>
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-card__label">运行中计划</div><div class="stat-card__value" style="color:#67c23a;">2</div><div class="stat-card__extra">照明/暖通</div></div>
+                        <div class="stat-card"><div class="stat-card__label">待执行</div><div class="stat-card__value">3</div><div class="stat-card__extra">空调/新风/电梯</div></div>
+                        <div class="stat-card"><div class="stat-card__label">昨日异常</div><div class="stat-card__value" style="color:#f5222d;">1</div><div class="stat-card__extra">空调节能模式</div></div>
+                        <div class="stat-card"><div class="stat-card__label">管控设备</div><div class="stat-card__value stat-card__value--primary">48</div><div class="stat-card__extra">3系统·12计划</div></div>
                     </div>
 
-                    <!-- 场景概览 -->
                     <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">节假日节能模式</div>
-                            <div class="card__actions">
-                                <span style="font-size: 12px; color: var(--color-success); background: rgba(82, 196, 26, 0.15); padding: 4px 10px; border-radius: 4px;">● 已启用</span>
-                                <button class="card__btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                    </svg>
-                                    编辑
-                                </button>
+                        <div class="card__header"><div class="card__title">6月运行日历</div><span style="font-size:12px;color:#67c23a;">● 已配置 12天</span></div>
+                        <div style="padding:8px 16px 16px;">
+                            <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--color-text-disabled);margin-bottom:4px;padding:4px 0;"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+                            <div id="scene-cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;">
                             </div>
-                        </div>
-                        <div class="scene-info">
-                            <div class="scene-info__item">
-                                <div class="scene-info__label">适用范围</div>
-                                <div class="scene-info__value">全写字楼</div>
-                            </div>
-                            <div class="scene-info__item">
-                                <div class="scene-info__label">触发条件</div>
-                                <div class="scene-info__value">法定节假日自动触发</div>
-                            </div>
-                            <div class="scene-info__item">
-                                <div class="scene-info__label">预计节能效果</div>
-                                <div class="scene-info__value scene-info__value--highlight">42.3%</div>
-                            </div>
+                            <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--color-text-disabled);"><span><span style="color:#04D700;">■</span> 照明</span><span><span style="color:#FFD705;">■</span> 暖通</span><span><span style="color:#7bdce2;">■</span> 给排水</span></div>
                         </div>
                     </div>
 
-                    <!-- 设备控制列表 -->
                     <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">设备控制策略</div>
-                        </div>
-                        <div class="control-list">
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">照明系统控制</div>
-                                    <div class="control-item__desc">关闭所有非必要照明，保留安全指示灯和应急照明</div>
-                                </div>
-                                <div class="control-item__toggle"></div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">空调系统控制</div>
-                                    <div class="control-item__desc">关闭所有空调主机，仅保留机房精密空调</div>
-                                </div>
-                                <div class="control-item__toggle"></div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">新风系统控制</div>
-                                    <div class="control-item__desc">降低新风换气频率至30%，维持基本空气质量</div>
-                                </div>
-                                <div class="control-item__toggle"></div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">电梯系统控制</div>
-                                    <div class="control-item__desc">仅保留1部电梯运行，其他电梯切换至休眠模式</div>
-                                </div>
-                                <div class="control-item__toggle"></div>
-                            </div>
-                            <div class="control-item">
-                                <div class="control-item__info">
-                                    <div class="control-item__name">办公设备控制</div>
-                                    <div class="control-item__desc">关闭所有非必要办公设备电源</div>
-                                </div>
-                                <div class="control-item__toggle control-item__toggle--off"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 执行记录 -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">最近执行记录</div>
-                        </div>
-                        <div class="record-list">
-                            <div class="record-item">
-                                <span class="record-time">2026-04-05 清明节 00:00</span>
-                                <span class="record-action">节假日模式 → 工作日模式</span>
-                                <span class="record-status record-status--success">成功</span>
-                            </div>
-                            <div class="record-item">
-                                <span class="record-time">2026-04-06 清明节 08:00</span>
-                                <span class="record-action">工作日模式 → 节假日模式</span>
-                                <span class="record-status record-status--success">成功</span>
-                            </div>
-                            <div class="record-item">
-                                <span class="record-time">2026-02-12 春节 00:00</span>
-                                <span class="record-action">节假日模式切换</span>
-                                <span class="record-status record-status--success">成功</span>
-                            </div>
+                        <div class="card__header"><div class="card__title">运行计划</div></div>
+                        <div style="display:flex;flex-direction:column;">
+                            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="width:10px;height:10px;border-radius:3px;background:#FFD705;flex-shrink:0;"></span><div style="flex:1;"><div style="font-size:13px;color:var(--color-text-primary);">空调夏季运行计划</div><div style="font-size:11px;color:var(--color-text-muted);">工作日 8:00-18:00 · 26°C · AHU-001/007</div></div><span style="font-size:11px;color:var(--color-text-disabled);">8天</span></div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="width:10px;height:10px;border-radius:3px;background:#FFD705;flex-shrink:0;"></span><div style="flex:1;"><div style="font-size:13px;color:var(--color-text-primary);">空调节能运行计划</div><div style="font-size:11px;color:var(--color-text-muted);">夜间 18:00-8:00 · 28°C · AHU-001/007</div></div><span style="font-size:11px;color:var(--color-text-disabled);">4天</span></div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;"><span style="width:10px;height:10px;border-radius:3px;background:#FFD705;flex-shrink:0;"></span><div style="flex:1;"><div style="font-size:13px;color:var(--color-text-primary);">新风机组运行计划</div><div style="font-size:11px;color:var(--color-text-muted);">工作日 7:00-19:00 · 新风阀60% · FAHU-001/003</div></div><span style="font-size:11px;color:var(--color-text-disabled);">12天</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ========== 页面4：智能报警分析智能体 ========== -->
+<!-- ========== 页面4：智能报警分析智能体 ========== -->
             <div class="page" id="page-alarm">
                 <!-- 对话区 -->
                 <div class="chat-area">
                     <div class="chat-header">
                         <div class="chat-header__title">智能报警分析智能体</div>
-                        <div class="chat-header__subtitle">专业的报警分析、风险识别、故障预测与根因诊断专家</div>
+
                         <div class="chat-header__actions">
                             <button class="btn btn--primary">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3294,6 +3214,10 @@
                                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 历史记录
+                            </button>
+                            <button class="btn btn--secondary" onclick="toggleVersionModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                版本说明
                             </button>
                         </div>
                     </div>
@@ -3374,7 +3298,7 @@
                             <div class="model-selector__dropdown" id="model-dropdown-alarm"></div>
                         </div>
                     </div>
-                    <div class="chat-footer">智能体回复仅供参考，重要报警请及时核实处理</div>
+
                 </div>
 
                 <!-- 报警分析报告区 -->
@@ -3384,23 +3308,15 @@
                             <div class="detail-header__title">报警分析报告</div>
                             <div class="detail-header__subtitle">统计周期: 2026年4月9日 - 2026年4月16日</div>
                         </div>
-                        <div class="detail-header__actions">
-                            <button class="btn btn--secondary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                </svg>
-                                导出报告
-                            </button>
-                            <button class="btn btn--primary">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                    <polyline points="14 2 14 8 20 8"/>
-                                    <line x1="12" y1="18" x2="12" y2="12"/>
-                                    <line x1="9" y1="15" x2="15" y2="15"/>
-                                </svg>
-                                生成处理工单
-                            </button>
-                        </div>
+                    </div>
+
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-size:11px;color:var(--color-text-disabled);flex-shrink:0;">查询模板:</span>
+                        <span class="query-tpl query-tpl--active" onclick="applyAlarmTemplate(event,'all')">全部报警</span>
+                        <span class="query-tpl" onclick="applyAlarmTemplate(event,'device')">设备报警</span>
+                        <span class="query-tpl" onclick="applyAlarmTemplate(event,'ai')">AI报警</span>
+                        <span class="query-tpl" onclick="applyAlarmTemplate(event,'space')">空间分析</span>
+                        <span class="query-tpl" onclick="applyAlarmTemplate(event,'trend')">趋势预测</span>
                     </div>
 
                     <!-- 时间范围选择 -->
@@ -3478,70 +3394,62 @@
                         <table class="alarm-table">
                             <thead>
                                 <tr>
-                                    <th>时间</th>
-                                    <th>设备</th>
-                                    <th>报警级别</th>
-                                    <th>报警内容</th>
-                                    <th>状态</th>
+                                    <th>报警等级</th>
+                                    <th>报警设备</th>
+                                    <th>报警位置</th>
+                                    <th>报警描述</th>
+                                    <th>报警时间</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>04-16 14:28</td>
+                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
+                                    <td>2TA高压柜2AAA1</td>
+                                    <td>B1F配电房</td>
+                                    <td>C相过流报警，电流超过额定值120%</td>
+                                    <td>06-02 07:57</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
+                                    <td>1TA高压柜1AAA1</td>
+                                    <td>B1F配电房</td>
+                                    <td>电压波动超限，波动幅度±8%</td>
+                                    <td>06-01 22:10</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
                                     <td>AHU-007</td>
-                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
-                                    <td>送风温度超过上限</td>
-                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
-                                    <td>
-                                        <button class="alarm-action alarm-action--primary">转工单</button>
-                                        <button class="alarm-action">关闭</button>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>3F空调机房</td>
+                                    <td>送风温度超过上限(28.5°C > 24°C)</td>
+                                    <td>06-02 06:30</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
                                 </tr>
                                 <tr>
-                                    <td>04-16 13:45</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
                                     <td>CHILLER-02</td>
-                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
-                                    <td>冷机效率下降</td>
-                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
-                                    <td>
-                                        <button class="alarm-action alarm-action--primary">转工单</button>
-                                        <button class="alarm-action">关闭</button>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>B1冷冻站</td>
+                                    <td>冷机效率下降(COP<4.0)，回水温度偏高</td>
+                                    <td>06-02 04:15</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
                                 </tr>
                                 <tr>
-                                    <td>04-16 11:20</td>
+                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
                                     <td>AHU-012</td>
-                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
-                                    <td>过滤网压差偏高</td>
-                                    <td><span class="alarm-status alarm-status--handled">已处理</span></td>
-                                    <td>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>5F新风机房</td>
+                                    <td>过滤网压差偏高(150Pa > 100Pa)</td>
+                                    <td>06-01 15:45</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
                                 </tr>
                                 <tr>
-                                    <td>04-16 09:15</td>
-                                    <td>Power-001</td>
-                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
-                                    <td>电压波动超限</td>
-                                    <td><span class="alarm-status alarm-status--pending">待处理</span></td>
-                                    <td>
-                                        <button class="alarm-action alarm-action--primary">转工单</button>
-                                        <button class="alarm-action">关闭</button>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>04-15 16:30</td>
-                                    <td>HVAC-003</td>
                                     <td><span class="alarm-level alarm-level--info">提示</span></td>
-                                    <td>设备定期维护提醒</td>
-                                    <td><span class="alarm-status alarm-status--handled">已处理</span></td>
-                                    <td>
-                                        <button class="alarm-action">详情</button>
-                                    </td>
+                                    <td>HVAC-003</td>
+                                    <td>5F空调机房</td>
+                                    <td>设备定期维护提醒，距上次维护已超30天</td>
+                                    <td>06-01 09:00</td>
+                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -3634,6 +3542,105 @@
             });
         });
 
+        // 能耗报告周期切换
+        var currentEnergyPeriod = 'year';
+        function switchEnergyPeriod(period) {
+            currentEnergyPeriod = period;
+            var subtitle = document.querySelector('#detail-energy .detail-header__subtitle');
+            var periodLabel = period === 'month' ? '本月' : period === 'quarter' ? '本季度' : '本年度';
+            if (subtitle) subtitle.textContent = '全厂区 · 2026年 ' + periodLabel;
+
+            // 更新统计卡片数据
+            var data = {
+                month:  { power: '128,560', cost: '¥96,420', water: '1,856', pubPct: '42.6%', pubPower: '54,780' },
+                quarter:{ power: '385,680', cost: '¥289,260', water: '5,568', pubPct: '41.2%', pubPower: '158,900' },
+                year:   { power: '1,542,720', cost: '¥1,157,040', water: '22,272', pubPct: '42.6%', pubPower: '657,360' }
+            }[period];
+
+            var cards = document.querySelectorAll('#detail-energy .stat-card');
+            if (cards.length >= 4) {
+                cards[0].querySelector('.stat-card__value').textContent = data.power;
+                cards[1].querySelector('.stat-card__value').textContent = data.cost;
+                cards[2].querySelector('.stat-card__value').textContent = data.water;
+                cards[3].querySelector('.stat-card__value').textContent = data.pubPct;
+                cards[3].querySelector('.stat-card__extra').textContent = '公区: ' + data.pubPower + ' kWh';
+            }
+
+            // 更新周期标签
+            document.querySelectorAll('.period-badge').forEach(function(b) { b.classList.remove('period-badge--active'); });
+            var badge = document.getElementById('period-badge-' + period);
+            if (badge) badge.classList.add('period-badge--active');
+
+            // 更新用电趋势图
+            var chartData = {
+                day:    { xData: ['0时','2时','4时','6时','8时','10时','12时','14时','16时','18时','20时','22时'], series: [120,110,105,130,180,210,195,220,205,190,160,140] },
+                month:  { xData: ['1日','3日','5日','7日','9日','11日','13日','15日','17日','19日','21日','23日','25日','27日','29日','31日'], series: [4200,4100,4350,4250,4400,4300,4150,4280,4450,4380,4220,4400,4320,4180,4350,4280] },
+                quarter:{ xData: ['1月','2月','3月'], series: [130200,128500,126980] },
+                year:   { xData: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'], series: [130200,128500,126980,132100,134500,131200,128900,135600,133400,129800,127500,130600] }
+            }[period];
+            if (chartEnergyTrend) { chartEnergyTrend.dispose(); chartEnergyTrend = null; }
+            var el = document.getElementById('chart-energy-trend');
+            if (el && el.offsetWidth > 0) {
+                chartEnergyTrend = echarts.init(el, null, { renderer: 'svg' });
+                chartEnergyTrend.setOption({
+                    backgroundColor: 'transparent',
+                    tooltip: { trigger: 'axis', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 12 } },
+                    grid: { top: 16, right: 20, bottom: 32, left: 60, containLabel: false },
+                    xAxis: { type: 'category', data: chartData.xData, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }, axisTick: { show: false }, axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 } },
+                    yAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)', type: 'dashed' } }, axisLabel: { color: 'rgba(255,255,255,0.35)', fontSize: 11 } },
+                    series: [{ name: '能耗', type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, data: chartData.series, lineStyle: { color: '#00D9FF', width: 2 }, itemStyle: { color: '#00D9FF', borderWidth: 2, borderColor: '#1E2530' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(0,217,255,0.4)' }, { offset: 1, color: 'rgba(0,217,255,0)' }] } } }]
+                });
+            }
+        }
+
+        // 查询模板切换
+        var templateData = {
+            'day':       { period:'day',   labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['4,285','¥3,214','62','43.1%'], extras:['kWh','元','m³','公区: 1,847 kWh'] },
+            'month':     { period:'month', labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['128,560','¥96,420','1,856','42.6%'], extras:['kWh','元','m³','公区: 54,780 kWh'] },
+            'quarter':   { period:'quarter',labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['385,680','¥289,260','5,568','41.2%'], extras:['kWh','元','m³','公区: 158,900 kWh'] },
+            'year':      { period:'year',  labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['1,542,720','¥1,157,040','22,272','42.6%'], extras:['kWh','元','m³','公区: 657,360 kWh'] },
+            'compare':   { period:'year',  labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['1,542,720','¥1,157,040','22,272','42.6%'], extras:['kWh','元','m³','公区: 657,360 kWh'] },
+            'alarm':     { period:'month', labels:['总用电量','电费成本','总用水量','公区用电占比'], values:['128,560','¥96,420','1,856','42.6%'], extras:['kWh','元','m³','公区: 54,780 kWh'] },
+            'ac-day':    { period:'day',   labels:['空调用电','空调电费','运行时长','空调占比'], values:['2,056','¥1,542','18.5h','48%'], extras:['kWh','元','今日','占总用电'] },
+            'light-year':{ period:'year',  labels:['照明用电','照明电费','节电率','照明占比'], values:['339,398','¥254,549','-5.2%','22%'], extras:['kWh','元','同比','占总用电'] },
+            'power-month':{period:'month', labels:['动力用电','动力电费','同比变化','动力占比'], values:['23,141','¥17,356','+3.1%','18%'], extras:['kWh','元','较上月','占总用电'] },
+        };
+        function applyTemplate(e, tpl) {
+            document.querySelectorAll('.query-tpl').forEach(function(el) { el.classList.remove('query-tpl--active'); });
+            if (e && e.target) e.target.classList.add('query-tpl--active');
+            document.querySelectorAll('#detail-energy .card').forEach(function(c) { c.style.boxShadow = ''; c.style.borderColor = ''; });
+            var cfg = templateData[tpl] || templateData['year'];
+            var isSubitem = (tpl === 'ac-day' || tpl === 'light-year' || tpl === 'power-month');
+            switchEnergyPeriod(cfg.period);
+            setTimeout(function() {
+                var cards = document.querySelectorAll('#detail-energy .stat-card');
+                for (var i = 0; i < Math.min(cards.length, cfg.labels.length); i++) {
+                    cards[i].querySelector('.stat-card__label').textContent = cfg.labels[i];
+                    cards[i].querySelector('.stat-card__value').textContent = cfg.values[i];
+                    var extEl = cards[i].querySelector('.stat-card__extra');
+                    if (extEl) extEl.textContent = cfg.extras[i];
+                }
+                if (isSubitem) { if (cards[2]) cards[2].style.opacity = '0.25'; if (cards[3]) cards[3].style.opacity = '0.25'; }
+                else { if (cards[2]) cards[2].style.opacity = ''; if (cards[3]) cards[3].style.opacity = ''; }
+            }, 50);
+            if (tpl === 'compare') {
+                setTimeout(function() { var c = document.querySelector('#detail-energy .card:nth-of-type(5)'); if (c) { c.style.boxShadow = '0 0 20px rgba(0,217,255,0.3)'; c.style.borderColor = 'var(--color-primary)'; } }, 100);
+            } else if (tpl === 'alarm') {
+                setTimeout(function() { var c = document.querySelector('#detail-energy .card:last-of-type'); if (c) { c.style.boxShadow = '0 0 20px rgba(255,77,79,0.3)'; c.style.borderColor = 'var(--color-danger)'; } }, 100);
+            } else if (isSubitem) {
+                var subIdx = tpl === 'ac-day' ? 0 : tpl === 'light-year' ? 1 : 2;
+                setTimeout(function() {
+                    var c3 = document.querySelector('#detail-energy .card:nth-of-type(3)'); if (c3) { c3.style.boxShadow = '0 0 20px rgba(0,217,255,0.25)'; c3.style.borderColor = 'var(--color-primary)'; }
+                    if (chartEnergyPie) { chartEnergyPie.dispatchAction({ type: 'downplay', seriesIndex: 0 }); chartEnergyPie.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: subIdx }); }
+                }, 200);
+            }
+        }
+
+        function getEnergyResponsePrefix() {
+            var labels = { day: '【今日报告】', month: '【月度报告】', quarter: '【季度报告】', year: '【年度报告】' };
+            return labels[currentEnergyPeriod] || '【年度报告】';
+        }
+
         // 发送消息功能
         function sendMessage(type) {
             const input = document.getElementById('input-' + type);
@@ -3663,14 +3670,24 @@
             // 滚动到底部
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             
+            // 能耗报告：根据对话内容自动切换报告周期
+            if (type === 'energy') {
+                var period = 'year';
+                if (/月|本月|这个月|上月|1个月|30天|一月/.test(message)) period = 'month';
+                else if (/季|本季|这个季度|上季度|3个月|一季度/.test(message)) period = 'quarter';
+                else if (/年|本年|今年|去年|年度|12个月|一年/.test(message)) period = 'year';
+                switchEnergyPeriod(period);
+            }
+
             // 模拟AI回复
             setTimeout(() => {
                 const aiMessage = document.createElement('div');
                 aiMessage.className = 'message message--ai';
-                
+
+                const prefix = type === 'energy' ? getEnergyResponsePrefix() : '';
                 const responses = {
                     'device': '正在分析AHU-007的运行数据，请稍候...',
-                    'energy': '正在分析厂区能耗数据，生成优化方案，请稍候...',
+                    'energy': prefix + '正在分析能耗数据，生成报告，请稍候...',
                     'scene': '正在设计节假日节能模式场景，生成控制策略，请稍候...',
                     'alarm': '正在分析报警数据，识别潜在风险，请稍候...'
                 };
@@ -3789,6 +3806,46 @@
             });
         });
 
+        // 报警分析查询模板
+        function applyAlarmTemplate(e, tpl) {
+            document.querySelectorAll('#detail-alarm .query-tpl').forEach(function(el) { el.classList.remove('query-tpl--active'); });
+            if (e && e.target) e.target.classList.add('query-tpl--active');
+            var cards = document.querySelectorAll('#detail-alarm .card');
+            cards.forEach(function(c) { c.style.boxShadow = ''; c.style.borderColor = ''; });
+            if (tpl === 'space') { var c = document.querySelector('#page-alarm .card:nth-of-type(3)'); if (c) c.style.boxShadow = '0 0 20px rgba(0,217,255,0.3)'; }
+            if (tpl === 'trend') { var c = document.querySelector('#page-alarm .card:nth-of-type(1)'); if (c) c.style.boxShadow = '0 0 20px rgba(0,217,255,0.3)'; }
+        }
+
+        // 渲染IOC风格运行日历
+        function renderSceneCalendar() {
+            var grid = document.getElementById('scene-cal-grid');
+            if (!grid) return;
+            var year = 2026, month = 6;
+            var firstDay = new Date(year, month-1, 1).getDay(); // 0=Sun
+            firstDay = firstDay === 0 ? 6 : firstDay - 1; // Mon=0
+            var daysInMonth = new Date(year, month, 0).getDate();
+            var markedDays = [4,5,8,9,12,13,15,16,19,20,22,23]; // 已配置日期
+            var today = 2; // 6月2日
+            var sysColors = { light: '#04D700', hvac: '#FFD705', water: '#7bdce2' };
+            var currentSys = 'hvac';
+            var color = sysColors[currentSys];
+
+            var html = '';
+            for (var i = 0; i < firstDay; i++) html += '<span style="aspect-ratio:1;background:transparent;"></span>';
+            for (var d = 1; d <= daysInMonth; d++) {
+                var isMarked = markedDays.indexOf(d) >= 0;
+                var isToday = d === today;
+                var bg = isMarked ? 'rgba(255,215,5,0.12)' : 'rgba(255,255,255,0.02)';
+                var fg = isMarked ? '#FFD705' : 'var(--color-text-secondary)';
+                var bd = isToday ? '2px solid var(--color-primary)' : (isMarked ? '1px solid rgba(255,215,5,0.2)' : '1px solid transparent');
+                var fw = isToday ? '700' : (isMarked ? '600' : '400');
+                var stripe = isMarked ? 'linear-gradient(to bottom right, transparent 48%, rgba(255,215,5,0.25) 48%, rgba(255,215,5,0.25) 52%, transparent 52%)' : 'none';
+                html += '<span style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:2px;color:' + fg + ';background:' + bg + ';background:' + (isMarked ? stripe + ',' + bg : bg) + ';border:' + bd + ';font-weight:' + fw + ';position:relative;">' + d + '</span>';
+            }
+            grid.innerHTML = html;
+        }
+        setTimeout(renderSceneCalendar, 100);
+
         // 回车发送消息
         document.querySelectorAll('.chat-input__field').forEach(input => {
             input.addEventListener('keypress', function(e) {
@@ -3810,6 +3867,123 @@
             }
         }, 5000);
     
+        // === 版本说明功能（每个模块独立版本） ===
+        var VERSION_DATA = {
+            device: [
+                { id: 'v1.0', date: '2026-05-26', title: '设备监测运维智能体',
+                    desc: '<b>主要功能</b><br>通过对话查找设备查看设备详情（只查后海单项目数据）<br><br>' +
+                        '<b>对话</b><br>' +
+                        '· 新建对话：新打开对话框<br>' +
+                        '· 历史记录：打开历史记录列表，选择对应记录点击后进入该记录继续对话<br>' +
+                        '· 对话内容：通过询问楼栋、楼层、设备类型等对话方式找到具体设备；多个设备场景下列出设备列表（5条后用...代替），再次询问具体设备<br>' +
+                        '· 模型切换：当前仅一个模型<br><br>' +
+                        '<b>设备详情</b><br>' +
+                        '· 设备图：点击切换展示，数据来源在IOC运营管理后台绑定<br>' +
+                        '· 设备参数详情：展示设备当前运行状态（运行状态/故障状态/在线状态）；设备参数与控制根据IOC运营管理后台内配置的重要参数呈现显示，数据实时变动<br>' +
+                        '· 报警事件列表：与IOC设备详情内报警列表一致，点击去报单根据对应工单系统弹框显示报单内容' },
+            ],
+            energy: [
+                { id: 'v1.0', date: '2026-06-01', title: '能耗智能管控智能体',
+                    desc: '<b>主要功能</b><br>通过对话查询能耗数据进行总结并在右侧生成报告，根据询问维度不同呈现页面不同<br><br>' +
+                        '<b>操作</b><br>· 在年度电能统计时可调整公区能耗管控值<br>· 可在对话使用智能体调整<br><br>' +
+                        '<b>对话示例</b><br>' +
+                        '<b>按时间维度：</b><br>' +
+                        '· "今天用电多少" → 日报告<br>' +
+                        '· "这个月电费多少" → 月度报告<br>' +
+                        '· "第一季度能耗怎么样" → 季度报告<br>' +
+                        '· "今年用电比去年多还是少" → 年度同比对比<br><br>' +
+                        '<b>按分类维度：</b><br>' +
+                        '· "空调系统用了多少电"<br>' +
+                        '· "照明能耗占比多少"<br>' +
+                        '· "动力设备这个月用电趋势"<br><br>' +
+                        '<b>按区域维度：</b><br>' +
+                        '· "公区用电占比"<br>' +
+                        '· "哪个楼栋用电最多"<br><br>' +
+                        '<b>按对比维度：</b><br>' +
+                        '· "这个月和上个月比用电多了吗"<br>' +
+                        '· "今年比去年省了多少电"<br>' +
+                        '· "实际用电超过管控值了吗"<br><br>' +
+                        '<b>复合查询：</b><br>' +
+                        '· "给我看3月份各分项用电占比"<br>' +
+                        '· "今年公区用电趋势，跟去年对比一下"<br>' +
+                        '· "哪些设备用电超标了"' },
+            ],
+            scene: [
+                { id: 'v1.0', date: '2026-05-26', title: '初始原型', desc: '场景模式控制智能体页面框架；节假日模式/工作日模式/夜间模式切换；设备控制策略列表；执行记录' },
+            ],
+            alarm: [
+                { id: 'v1.0', date: '2026-05-26', title: '初始原型', desc: '智能报警分析智能体页面框架；报警概览统计；实时报警列表(紧急/警告/提示)；报警趋势图；风险分析与预防建议' },
+            ]
+        };
+
+        var currentVersionModule = 'device';
+        var currentVersionList = VERSION_DATA.device;
+
+        function toggleVersionModal() {
+            var modal = document.getElementById('version-modal');
+            if (!modal) return;
+            var activePage = document.querySelector('.page--active');
+            if (activePage) {
+                if (activePage.id === 'page-device-monitor') currentVersionModule = 'device';
+                else if (activePage.id === 'page-energy') currentVersionModule = 'energy';
+                else if (activePage.id === 'page-scene') currentVersionModule = 'scene';
+                else if (activePage.id === 'page-alarm') currentVersionModule = 'alarm';
+            }
+            currentVersionList = VERSION_DATA[currentVersionModule] || VERSION_DATA.device;
+            modal.style.display = 'flex';
+            renderVersionList();
+            if (currentVersionList.length > 0) showVersionDetail(currentVersionList[0].id);
+        }
+
+        function closeVersionModal() {
+            var modal = document.getElementById('version-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // === PRD文档弹窗 ===
+        function togglePRD() {
+            var modal = document.getElementById('prd-modal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            var content = document.getElementById('prd-content');
+            if (!content || content.innerHTML) return;
+            content.innerHTML = '<div style="text-align:center;padding:20px 0 16px;"><h2 style="font-size:20px;color:var(--color-text-primary);">物联智能体 IoT Agent Platform</h2><p style="color:var(--color-text-disabled);">产品设计文档 v1.0 | 2026-06-01</p></div>'+
+'<div style="background:rgba(0,217,255,0.05);padding:14px 16px;border-radius:8px;margin-bottom:16px;"><b style="color:var(--color-primary);">总述篇</b><br>深色科技风主题 | 左侧220px导航栏 | 对话区(flex:1)+详情区(flex:2) | 4个全局共享组件</div>'+
+'<div style="margin-bottom:12px;"><b style="color:var(--color-warning);">页面A · 设备监测运维</b><br>设备3D可视化(4视图+缩放+全屏) → 设备参数详情(18个控件卡片，3列Grid，横向值+控制布局) → 报警事件列表(筛选+分页+去报单) → 运维建议(置灰)</div>'+
+'<div style="margin-bottom:12px;"><b style="color:var(--color-warning);">页面B · 能耗智能管控</b><br>查询模板(9个预设场景) → 统计卡片(4张) → 用电趋势图(ECharts，日/月/季/年X轴切换，dispose+rebuild) → 分项能耗占比(饼图)+同期对比(2列grid) → 能耗管控指标(本月管控值只读) → AI建议(置灰)</div>'+
+'<div style="margin-bottom:12px;"><b style="color:var(--color-warning);">页面C · 场景模式控制</b><br>系统切换(照明#04D700/暖通#FFD705/给排水#7bdce2) → 运行日历(5月月历，已配置日色标高亮) → 运行计划列表(3条) → 执行记录(4条)</div>'+
+'<div style="margin-bottom:12px;"><b style="color:var(--color-warning);">页面D · 智能报警分析</b><br>报警概览(4卡片) → ECharts趋势图(近7天3线) → 实时报警列表(筛选+表格+转工单) → 风险分析(高/中风险)+预防建议</div>'+
+'<div style="margin-top:20px;padding:12px 16px;background:rgba(255,77,79,0.08);border-radius:8px;border:1px solid rgba(255,77,79,0.15);"><b style="color:var(--color-danger);">⚠ 待确认清单</b><br><span style="font-size:12px;">1. IOC后端API base URL和鉴权方式<br>2. 设备参数"确定"按钮是否改为统一保存<br>3. 本月管控值设定方式<br>4. 运行日历编辑交互<br>5. 工单系统对接方式<br>6. 模型选择器对接真实API<br>7. 移动端响应式适配<br>8. 角色权限控制</span></div>'+
+'<p style="text-align:center;font-size:11px;color:var(--color-text-disabled);margin-top:16px;">完整文档: docs/prototypes/2026-06-01-iot-agent-platform-design.md</p>';
+        }
+
+        function renderVersionList() {
+            var list = document.getElementById('version-list');
+            if (!list) return;
+            list.innerHTML = currentVersionList.map(function(v) {
+                return '<div class="version-list-item" id="ver-item-' + v.id + '" onclick="showVersionDetail(\'' + v.id + '\')" style="padding:12px 16px;cursor:pointer;border-radius:6px;margin:0 8px 4px;transition:all 0.2s;font-size:13px;color:var(--color-text-secondary);">' +
+                    '<div style="font-weight:600;margin-bottom:2px;">' + v.id + '</div>' +
+                    '<div style="font-size:11px;color:var(--color-text-disabled);">' + v.date + '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function showVersionDetail(verId) {
+            var v = currentVersionList.find(function(item) { return item.id === verId; });
+            if (!v) return;
+            document.querySelectorAll('.version-list-item').forEach(function(el) { el.style.background = 'transparent'; el.style.color = 'var(--color-text-secondary)'; });
+            var item = document.getElementById('ver-item-' + verId);
+            if (item) { item.style.background = 'rgba(0,217,255,0.1)'; item.style.color = 'var(--color-primary)'; }
+            var detail = document.getElementById('version-detail');
+            if (!detail) return;
+            var moduleNames = { device: '设备监测运维', energy: '能耗智能管控', scene: '场景模式控制', alarm: '智能报警分析' };
+            detail.innerHTML = '<div style="margin-bottom:16px;"><span style="font-size:11px;color:var(--color-text-disabled);background:rgba(0,217,255,0.1);padding:2px 8px;border-radius:4px;">' + (moduleNames[currentVersionModule] || '') + '</span></div>' +
+                '<h3 style="font-size:18px;font-weight:600;margin:0 0 4px 0;color:var(--color-text-primary);">' + v.id + '</h3>' +
+                '<p style="font-size:12px;color:var(--color-text-disabled);margin:0 0 16px 0;">' + v.date + ' 发布</p>' +
+                '<h4 style="font-size:14px;font-weight:600;margin:0 0 8px 0;color:var(--color-text-primary);">' + v.title + '</h4>' +
+                '<p style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;">' + v.desc + '</p>';
+        }
+
         // === 模型切换功能 ===
         const MODEL_LIST = [
             { id: 'deepseek-v4', name: 'DeepSeek-V4', desc: '默认' },
