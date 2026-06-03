@@ -1667,14 +1667,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .alarm-table td:last-child { white-space: normal; overflow: visible; text-overflow: clip; }
 
-        .alarm-table th:nth-child(1) { width: 70px; }
-        .alarm-table th:nth-child(2) { width: 130px; }
-        .alarm-table th:nth-child(3) { width: 100px; }
+        .alarm-table { table-layout: auto; }
+        .alarm-table th, .alarm-table td { padding: 6px 6px; font-size: 11px; }
+        .alarm-table th:nth-child(1) { width: 50px; }
+        .alarm-table th:nth-child(2) { width: 55px; }
+        .alarm-table th:nth-child(3) { width: 90px; }
         .alarm-table th:nth-child(4) { width: auto; }
-        .alarm-table th:nth-child(5) { width: 100px; }
-        .alarm-table th:nth-child(6) { width: 210px; }
+        .alarm-table th:nth-child(5) { width: 80px; }
+        .alarm-table th:nth-child(6) { width: 60px; }
+        .alarm-table th:nth-child(7) { width: 195px; }
+        .alarm-table td:last-child { white-space: nowrap; overflow: visible; text-overflow: clip; display: flex; gap: 4px; }
 
         .alarm-table td:nth-child(2) {
             white-space: normal;
@@ -2040,6 +2043,12 @@
         .plan-item__info { flex: 1; min-width: 0; }
         .plan-item__name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
         .plan-item__desc { font-size: 11px; color: var(--color-text-muted); }
+        #detail-scene .stats-grid { grid-template-columns: repeat(3, 1fr); }
+        #detail-scene .stat-card { padding: 10px 14px; }
+        #detail-scene .stat-card__label { font-size: 11px; margin-bottom: 0; }
+        #detail-scene .stat-card__value { font-size: 18px; }
+        #detail-scene .stat-card__extra { font-size: 10px; margin-top: 1px; }
+        #detail-scene .stat-card__change { font-size: 10px; }
         .period-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; background: rgba(255,77,79,0.15); color: var(--color-danger); border: 1px solid rgba(255,77,79,0.25); cursor: pointer; }
         .period-badge:hover { background: rgba(255,77,79,0.3); }
         .period-badge--active { background: rgba(255,77,79,0.25); border-color: rgba(255,77,79,0.4); }
@@ -3174,10 +3183,21 @@
                     </div>
 
                     <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-card__label">运行中计划</div><div class="stat-card__value" style="color:#67c23a;">2</div><div class="stat-card__extra">照明/暖通</div></div>
-                        <div class="stat-card"><div class="stat-card__label">待执行</div><div class="stat-card__value">3</div><div class="stat-card__extra">空调/新风/电梯</div></div>
-                        <div class="stat-card"><div class="stat-card__label">昨日异常</div><div class="stat-card__value" style="color:#f5222d;">1</div><div class="stat-card__extra">空调节能模式</div></div>
-                        <div class="stat-card"><div class="stat-card__label">管控设备</div><div class="stat-card__value stat-card__value--primary">48</div><div class="stat-card__extra">3系统·12计划</div></div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">今日计划</div>
+                            <div class="stat-card__value" style="color:#67c23a;">2</div>
+                            <div class="stat-card__extra">照明08:00已启动 · 暖通09:00待执行</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">本月配置天数</div>
+                            <div class="stat-card__value" style="color:#FFD705;">12天</div>
+                            <div class="stat-card__extra">已配置 · 含照明/暖通/给排水</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__label">覆盖系统</div>
+                            <div class="stat-card__value" style="color:var(--color-primary);">3</div>
+                            <div class="stat-card__extra">照明 · 暖通 · 给排水</div>
+                        </div>
                     </div>
 
                     <div class="card">
@@ -3187,7 +3207,6 @@
                                 <span id="cal-title" style="font-size:15px;font-weight:600;min-width:100px;text-align:center;">2026年6月</span>
                                 <button onclick="changeCalendarMonth(1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">▶</button>
                             </div>
-                            <span style="font-size:11px;color:#67c23a;background:rgba(82,196,26,0.1);padding:4px 10px;border-radius:12px;font-weight:500;">已配置 12天</span>
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 200px;gap:20px;padding:16px;">
                             <div>
@@ -3387,93 +3406,60 @@
                         </div>
                     </div>
 
-                    <!-- 报警列表 -->
-                    <div class="card">
-                        <div class="card__header">
-                            <div class="card__title">实时报警列表</div>
-                            <div class="card__actions">
-                                <button class="card__btn">筛选</button>
-                                <button class="card__btn">导出</button>
-                            </div>
-                        </div>
-                        <div class="alarm-filters">
-                            <button class="alarm-filter alarm-filter--active">全部</button>
-                            <button class="alarm-filter">紧急</button>
-                            <button class="alarm-filter">警告</button>
-                            <button class="alarm-filter">提示</button>
-                            <button class="alarm-filter">未处理</button>
-                        </div>
-                        <table class="alarm-table">
-                            <thead>
-                                <tr>
-                                    <th>报警等级</th>
-                                    <th>报警设备</th>
-                                    <th>报警位置</th>
-                                    <th>报警描述</th>
-                                    <th>报警时间</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
-                                    <td>2TA高压柜2AAA1</td>
-                                    <td>B1F配电房</td>
-                                    <td>C相过流报警，电流超过额定值120%</td>
-                                    <td>06-02 07:57</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--urgent">紧急</span></td>
-                                    <td>1TA高压柜1AAA1</td>
-                                    <td>B1F配电房</td>
-                                    <td>电压波动超限，波动幅度±8%</td>
-                                    <td>06-01 22:10</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
-                                    <td>AHU-007</td>
-                                    <td>3F空调机房</td>
-                                    <td>送风温度超过上限(28.5°C > 24°C)</td>
-                                    <td>06-02 06:30</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
-                                    <td>CHILLER-02</td>
-                                    <td>B1冷冻站</td>
-                                    <td>冷机效率下降(COP<4.0)，回水温度偏高</td>
-                                    <td>06-02 04:15</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--warning">警告</span></td>
-                                    <td>AHU-012</td>
-                                    <td>5F新风机房</td>
-                                    <td>过滤网压差偏高(150Pa > 100Pa)</td>
-                                    <td>06-01 15:45</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="alarm-level alarm-level--info">提示</span></td>
-                                    <td>HVAC-003</td>
-                                    <td>5F空调机房</td>
-                                    <td>设备定期维护提醒，距上次维护已超30天</td>
-                                    <td>06-01 09:00</td>
-                                    <td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 报警趋势图 -->
+<!-- 报警趋势图 -->
                     <div class="card">
                         <div class="card__header">
                             <div class="card__title">近7天报警趋势</div>
                         </div>
                         <div id="chart-alarm-trend" style="width:100%;min-width:300px;height:200px;min-height:200px;"></div>
                     </div>
+                    <!-- 报警列表 -->
+                    <div class="card">
+                        <div class="card__header">
+                            <div class="card__title">报警列表</div>
+                        </div>
+                        <div style="display:flex;gap:8px;padding:0 16px 8px;">
+                            <span class="query-tpl query-tpl--active" onclick="switchAlarmTab('device')">设备报警</span>
+                            <span class="query-tpl" onclick="switchAlarmTab('metric')">指标报警</span>
+                            <span class="query-tpl" onclick="switchAlarmTab('ai')">AI报警</span>
+                        </div>
+                        <div id="alarm-tab-device">
+                            <table class="alarm-table">
+                                <thead><tr><th>报警等级</th><th>报警类型</th><th>报警设备</th><th>报警位置</th><th>报警描述</th><th>报警时间</th><th>操作</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="alarm-level alarm-level--urgent">紧急</span></td><td>设备故障</td><td>2TA高压柜2AAA1</td><td>B1F配电房</td><td>C相过流报警，电流超额定值120%</td><td>06-02 07:57</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--urgent">紧急</span></td><td>设备故障</td><td>1TA高压柜1AAA1</td><td>B1F配电房</td><td>电压波动超限±8%</td><td>06-01 22:10</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>设备异常</td><td>AHU-007</td><td>3F空调机房</td><td>送风温度超过上限(28.5°C>24°C)</td><td>06-02 06:30</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>设备异常</td><td>CHILLER-02</td><td>B1冷冻站</td><td>冷机效率下降(COP<4.0)</td><td>06-02 04:15</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--info">提示</span></td><td>设备异常</td><td>AHU-012</td><td>5F新风机房</td><td>过滤网压差偏高(150Pa>100Pa)</td><td>06-01 15:45</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--info">提示</span></td><td>设备故障</td><td>HVAC-003</td><td>5F空调机房</td><td>设备定期维护提醒，距上次维护已超30天</td><td>06-01 09:00</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="alarm-tab-metric" style="display:none;">
+                            <table class="alarm-table">
+                                <thead><tr><th>报警等级</th><th>指标名称</th><th>当前值</th><th>阈值</th><th>触发时间</th><th>所属区域</th><th>操作</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="alarm-level alarm-level--urgent">紧急</span></td><td>总用电量</td><td style="color:#f5222d;">158,200 kWh</td><td>135,000 kWh</td><td>06-02 08:30</td><td>全厂区</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>公区能耗占比</td><td style="color:#FAAD14;">48.5%</td><td>45%</td><td>06-02 07:00</td><td>公区</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>服务响应指数</td><td style="color:#FAAD14;">82.3分</td><td>85分</td><td>06-01 18:00</td><td>物业中心</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--info">提示</span></td><td>用水量</td><td style="color:#FAAD14;">2,150 m³</td><td>2,000 m³</td><td>06-01 12:00</td><td>全厂区</td><td><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="alarm-tab-ai" style="display:none;">
+                            <table class="alarm-table">
+                                <thead><tr><th>报警等级</th><th>事件类型</th><th>位置</th><th>描述</th><th>触发时间</th><th>截图</th><th>操作</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="alarm-level alarm-level--urgent">紧急</span></td><td>黑名单报警</td><td>1F大厅入口</td><td>识别到黑名单人员进入，ID:BL-0032</td><td>06-02 09:12</td><td><span style="font-size:11px;color:var(--color-primary);cursor:pointer;">查看截图</span></td><td><button class="alarm-action alarm-action--primary">上报</button><button class="alarm-action">转发</button><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>消防通道占用</td><td>29F前室</td><td>消防通道被物品占用超30分钟</td><td>06-02 08:45</td><td><span style="font-size:11px;color:var(--color-primary);cursor:pointer;">查看截图</span></td><td><button class="alarm-action alarm-action--primary">上报</button><button class="alarm-action">转发</button><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--warning">警告</span></td><td>人员聚集</td><td>B1停车场</td><td>非营业时段检测到人员聚集(>5人)</td><td>06-02 03:45</td><td><span style="font-size:11px;color:var(--color-primary);cursor:pointer;">查看截图</span></td><td><button class="alarm-action">转发</button><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                    <tr><td><span class="alarm-level alarm-level--urgent">紧急</span></td><td>消防预警</td><td>3F走廊</td><td>烟雾探测器触发(浓度0.08%)</td><td>06-01 13:40</td><td><span style="font-size:11px;color:var(--color-primary);cursor:pointer;">查看截图</span></td><td><button class="alarm-action alarm-action--primary">上报</button><button class="alarm-action">转发</button><button class="alarm-action alarm-action--primary">转工单</button><button class="alarm-action">关闭</button><button class="alarm-action">详情</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
                     <!-- 风险分析 -->
                     <div class="card">
@@ -3502,24 +3488,6 @@
                                 </div>
                                 <button class="alarm-action">查看详情</button>
                             </div>
-                        </div>
-                        <div style="margin-top: 16px;">
-                            <div class="card__title" style="font-size: 14px; margin-bottom: 12px;">建议预防措施</div>
-                            <div class="suggestion-list">
-                                <div class="suggestion-item">
-                                    <div class="suggestion-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                                            <polyline points="22 4 12 14.01 9 11.01"/>
-                                        </svg>
-                                    </div>
-                                    <div class="suggestion-content">
-                                        <div class="suggestion-title">安排AHU-007定期维护</div>
-                                        <div class="suggestion-desc">建议本周内对送风温度传感器进行校准，并检查制冷系统运行状态。</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -3818,6 +3786,17 @@
             });
         });
 
+        // 报警Tab切换
+        function switchAlarmTab(tab) {
+            document.getElementById('alarm-tab-device').style.display = tab === 'device' ? '' : 'none';
+            document.getElementById('alarm-tab-metric').style.display = tab === 'metric' ? '' : 'none';
+            document.getElementById('alarm-tab-ai').style.display = tab === 'ai' ? '' : 'none';
+            var tags = document.querySelectorAll('#page-alarm .query-tpl');
+            tags.forEach(function(t) { t.classList.remove('query-tpl--active'); });
+            var idx = tab === 'device' ? 0 : tab === 'metric' ? 1 : 2;
+            if (tags[idx]) tags[idx].classList.add('query-tpl--active');
+        }
+
         // 报警分析查询模板
         function applyAlarmTemplate(e, tpl) {
             document.querySelectorAll('#detail-alarm .query-tpl').forEach(function(el) { el.classList.remove('query-tpl--active'); });
@@ -3983,7 +3962,16 @@
                         '· "哪些设备用电超标了"' },
             ],
             scene: [
-                { id: 'v1.0', date: '2026-05-26', title: '初始原型', desc: '场景模式控制智能体页面框架；节假日模式/工作日模式/夜间模式切换；设备控制策略列表；执行记录' },
+                { id: 'v1.0', date: '2026-06-02', title: '场景模式控制智能体',
+                    desc: '<b>主要功能</b><br>基于已配置的控制模式进行调控，右侧默认显示当月日历<br><br>' +
+                        '<b>对话示例</b><br>' +
+                        '· 查看今日："今天有什么运行安排" → 日历高亮今天，显示今日计划<br>' +
+                        '· 查看指定日："6月5日有什么计划" → 日历选中该日，显示当天计划<br>' +
+                        '· 查看月度："这个月配置了多少天" → 日历全览，统计卡片更新<br>' +
+                        '· 切换系统："暖通系统有哪些计划" → 日历色标切换，计划过滤<br>' +
+                        '· 下月预览："7月有什么安排" → 日历切换到7月<br>' +
+                        '· 季度切换："夏季模式什么时候开始" → 计划列表过滤夏季<br>' +
+                        '· 节假配置："端午节那天跑什么计划" → 选中节假日日期' },
             ],
             alarm: [
                 { id: 'v1.0', date: '2026-05-26', title: '初始原型', desc: '智能报警分析智能体页面框架；报警概览统计；实时报警列表(紧急/警告/提示)；报警趋势图；风险分析与预防建议' },
