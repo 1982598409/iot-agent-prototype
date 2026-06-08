@@ -3355,56 +3355,288 @@
                     <div class="detail-header">
                         <div class="detail-header__left">
                             <div class="detail-header__title">运行日历</div>
+                            <div class="detail-header__subtitle" style="font-size:12px;color:#FAAD14;">⚠ 调整后会对现场设备运行产生影响，请慎重操作</div>
                         </div>
                     </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
-                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(82,196,26,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52C41A" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-                            <div>
-                                <div class="stat-card__value" style="color:#52C41A;font-size:28px;margin-bottom:0;line-height:1;">2</div>
-                                <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">今日计划</div>
-                            </div>
-                        </div>
-                        <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
-                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(0,217,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-                            <div>
-                                <div class="stat-card__value" style="color:var(--color-primary);font-size:28px;margin-bottom:0;line-height:1;">3</div>
-                                <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">今日计划覆盖系统</div>
-                                <div style="font-size:10px;color:var(--color-text-disabled);margin-top:2px;">照明 · 暖通 · 给排水</div>
-                            </div>
-                        </div>
-                        <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
-                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,215,5,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD705" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg></div>
-                            <div>
-                                <div class="stat-card__value" style="color:#FFD705;font-size:28px;margin-bottom:0;line-height:1;">12天</div>
-                                <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">本月配置天数</div>
-                            </div>
-                        </div>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.04);">
+                        <span style="font-size:11px;color:var(--color-text-disabled);font-weight:600;letter-spacing:0.5px;">查询模板</span>
+                        <span style="color:rgba(255,255,255,0.08);">|</span>
+                        <span class="query-tpl query-tpl--active" onclick="sceneSwitch('month')">按月</span>
+                        <span class="query-tpl" onclick="sceneSwitch('week')">本周</span>
                     </div>
 
-                    <div class="card">
-                        <div class="card__header" style="padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);">
-                            <div class="card__title" style="display:flex;align-items:center;gap:12px;">
-                                <button onclick="changeCalendarMonth(-1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">◀</button>
-                                <span id="cal-title" style="font-size:15px;font-weight:600;min-width:100px;text-align:center;">2026年6月</span>
-                                <button onclick="changeCalendarMonth(1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">▶</button>
-                            </div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 200px;gap:20px;padding:16px;">
-                            <div>
-                                <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;font-weight:500;color:var(--color-text-disabled);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
-                                <div id="scene-cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:rgba(255,255,255,0.02);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.08);"></div>
-                                <div style="display:flex;gap:20px;margin-top:10px;font-size:10px;color:var(--color-text-disabled);justify-content:center;">
-                                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#04D700;display:inline-block;"></span>照明</span>
-                                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#FFD705;display:inline-block;"></span>暖通</span>
-                                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#7bdce2;display:inline-block;"></span>给排水</span>
+                    <!-- 按月视图 -->
+                    <div id="scene-view-month">
+                        <div class="stats-grid" id="scene-stats">
+                            <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
+                                <div style="width:48px;height:48px;border-radius:12px;background:rgba(82,196,26,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52C41A" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                                <div>
+                                    <div class="stat-card__value" style="color:#52C41A;font-size:28px;margin-bottom:0;line-height:1;">2</div>
+                                    <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">今日计划</div>
                                 </div>
                             </div>
-                            <div id="cal-plan-list" style="display:flex;flex-direction:column;gap:6px;padding-left:4px;">
-                                <div style="font-size:11px;color:var(--color-text-disabled);padding:20px 0;text-align:center;">点击日历日期<br>查看当天运行计划</div>
+                            <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
+                                <div style="width:48px;height:48px;border-radius:12px;background:rgba(0,217,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+                                <div>
+                                    <div class="stat-card__value" style="color:var(--color-primary);font-size:28px;margin-bottom:0;line-height:1;">3</div>
+                                    <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">今日计划覆盖系统</div>
+                                    <div style="font-size:10px;color:var(--color-text-disabled);margin-top:2px;">照明 · 暖通 · 给排水</div>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
+                                <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,215,5,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD705" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg></div>
+                                <div>
+                                    <div class="stat-card__value" style="color:#FFD705;font-size:28px;margin-bottom:0;line-height:1;">12天</div>
+                                    <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">本月配置天数</div>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="card">
+                            <div class="card__header" style="padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                                <div class="card__title" style="display:flex;align-items:center;gap:12px;">
+                                    <button onclick="changeCalendarMonth(-1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">◀</button>
+                                    <span id="cal-title" style="font-size:15px;font-weight:600;min-width:100px;text-align:center;">2026年6月</span>
+                                    <button onclick="changeCalendarMonth(1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">▶</button>
+                                </div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 200px;gap:20px;padding:16px;">
+                                <div>
+                                    <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;font-weight:500;color:var(--color-text-disabled);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+                                    <div id="scene-cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:rgba(255,255,255,0.02);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.08);"></div>
+                                    <div style="display:flex;gap:20px;margin-top:10px;font-size:10px;color:var(--color-text-disabled);justify-content:center;">
+                                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#04D700;display:inline-block;"></span>照明</span>
+                                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#FFD705;display:inline-block;"></span>暖通</span>
+                                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:#7bdce2;display:inline-block;"></span>给排水</span>
+                                    </div>
+                                </div>
+                                <div id="cal-plan-list" style="display:flex;flex-direction:column;gap:6px;padding-left:4px;">
+                                    <div style="font-size:11px;color:var(--color-text-disabled);padding:20px 0;text-align:center;">点击日历日期<br>查看当天运行计划</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 近7日视图 -->
+                    <div id="scene-view-week" style="display:none;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+                            <button onclick="changeWeek(-1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">◀</button>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-disabled)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span id="week-range-label" style="font-size:12px;color:var(--color-text-primary);font-weight:600;">本周 06-01 ~ 06-07</span>
+                            <button onclick="changeWeek(1)" style="width:28px;height:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--color-text-secondary);cursor:pointer;font-size:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.color='var(--color-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--color-text-secondary)'">▶</button>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <!-- 06-01 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,var(--color-primary),rgba(0,217,255,0.3));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">01</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周一</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(82,196,26,0.1);color:#52C41A;">1系统 · 1模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">空调节能运行</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-02 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,var(--color-primary),rgba(0,217,255,0.3));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">02</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周二</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(82,196,26,0.1);color:#52C41A;">3系统 · 3模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(4,215,0,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#04D700;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#04D700;min-width:36px;">照明</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">照明工作日</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">新风机组运行</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(123,220,226,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#7bdce2;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#7bdce2;min-width:36px;">给排水</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">定时巡检</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-03 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,var(--color-primary),rgba(0,217,255,0.3));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">03</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周三</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(82,196,26,0.1);color:#52C41A;">2系统 · 2模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(4,215,0,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#04D700;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#04D700;min-width:36px;">照明</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">照明工作日</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">空调夏季运行</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-04 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,var(--color-primary),rgba(0,217,255,0.3));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">04</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周四</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(250,173,20,0.1);color:#FAAD14;">2系统 · 3模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(123,220,226,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#7bdce2;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#7bdce2;min-width:36px;">给排水</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">定时巡检</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">新风机组运行</span>
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,77,79,0.08);color:#FF4D4F;">空调节能运行</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-05 今天(Fri) -->
+                            <div class="card" style="padding:0;overflow:hidden;border-color:rgba(0,217,255,0.2);box-shadow:0 0 16px rgba(0,217,255,0.06);">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:var(--color-primary);flex-shrink:0;box-shadow:0 0 8px rgba(0,217,255,0.3);"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-primary);line-height:1;">05</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周五</span>
+                                            <span style="font-size:10px;padding:2px 6px;border-radius:6px;background:rgba(0,217,255,0.15);color:var(--color-primary);font-weight:600;">今天</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(82,196,26,0.1);color:#52C41A;">2系统 · 2模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">空调夏季运行</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(4,215,0,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#04D700;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#04D700;min-width:36px;">照明</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">照明工作日</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-06 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,rgba(0,217,255,0.5),rgba(0,217,255,0.1));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">06</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周六</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.04);color:var(--color-text-disabled);">1系统 · 1模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">空调节能运行</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!-- 06-07 -->
+                            <div class="card" style="padding:0;overflow:hidden;">
+                                <div style="display:flex;align-items:stretch;">
+                                    <div style="width:4px;background:linear-gradient(180deg,rgba(0,217,255,0.4),rgba(0,217,255,0.05));flex-shrink:0;"></div>
+                                    <div style="flex:1;padding:16px 20px;">
+                                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                            <span style="font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1;">07</span>
+                                            <span style="font-size:11px;color:var(--color-text-disabled);">周日</span>
+                                            <span style="margin-left:auto;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.04);color:var(--color-text-disabled);">2系统 · 2模式</span>
+                                        </div>
+                                        <div style="display:flex;flex-direction:column;gap:6px;">
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(4,215,0,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#04D700;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#04D700;min-width:36px;">照明</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">照明工作日</span>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,215,5,0.04);border-radius:6px;">
+                                                <span style="width:8px;height:8px;border-radius:2px;background:#FFD705;flex-shrink:0;"></span>
+                                                <span style="font-size:11px;font-weight:600;color:#FFD705;min-width:36px;">暖通</span>
+                                                <span style="width:1px;height:16px;background:rgba(255,255,255,0.06);"></span>
+                                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                                    <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">新风机组运行</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        </div>
                     </div>
                 </div>
             </div>
@@ -4601,6 +4833,40 @@
             updateCalPlans();
         }
 
+        // 场景模式查询模板切换
+        function sceneSwitch(tpl) {
+            var allQ = document.querySelectorAll('#detail-scene .query-tpl');
+            allQ.forEach(function(el) { el.classList.remove('query-tpl--active'); });
+            var btns = document.querySelectorAll('#detail-scene .query-tpl');
+            btns.forEach(function(el) {
+                var oc = el.getAttribute('onclick') || '';
+                if (oc.indexOf("'" + tpl + "'") >= 0) el.classList.add('query-tpl--active');
+            });
+            var monthView = document.getElementById('scene-view-month');
+            var weekView = document.getElementById('scene-view-week');
+            if (monthView) monthView.style.display = tpl === 'month' ? '' : 'none';
+            if (weekView) weekView.style.display = tpl === 'week' ? '' : 'none';
+            if (tpl === 'month') { setTimeout(function() { renderSceneCalendar(); updateCalPlans(); }, 100); }
+        }
+
+        // 本周视图 — 周切换
+        var weekOffset = 0;
+        var weekBaseRange = { start: '05-30', end: '06-05' };
+        function changeWeek(delta) {
+            weekOffset += delta;
+            var label = document.getElementById('week-range-label');
+            var dir = weekOffset === 0 ? '本周' : weekOffset > 0 ? '下' + (weekOffset === 1 ? '' : Math.abs(weekOffset)) + '周' : '上' + (weekOffset === -1 ? '' : Math.abs(weekOffset)) + '周';
+            // Simplified: just update the label
+            var weekLabels = {
+                '-1': '上周 05-25 ~ 05-31',
+                '0': '本周 06-01 ~ 06-07',
+                '1': '下周 06-08 ~ 06-14',
+                '2': '下下周 06-15 ~ 06-21',
+                '-2': '上上周 05-18 ~ 05-24'
+            };
+            if (label) label.textContent = weekLabels[weekOffset] || (dir + ' ' + weekBaseRange.start + ' ~ ' + weekBaseRange.end);
+        }
+
         function renderSceneCalendar() {
             var grid = document.getElementById('scene-cal-grid');
             var title = document.getElementById('cal-title');
@@ -4740,26 +5006,30 @@
                         '<b>主要引用数据</b><br>' +
                         '1、系统类型及模式<br>' +
                         '2、日历数据<br>' +
-                        '3、模式新增、修改、删除<br><br>' +
-                        '· 右侧默认显示当月日历<br>' +
-                        '· 上方统计数据跟随变化<br>' +
-                        '· 点击某日显示当日配置计划数据<br><br>' +
-                        '<b>对话示例</b><br>' +
+                        '3、配置日历模式的新增、修改、删除<br><br>' +
+                        '· 右侧默认显示本周数据，通过对话切换到日历模式<br><br>' +
+                        '<b>查询对话示例</b><br>' +
                         '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.8;">' +
-                        '<span style="color:#52C41A;">我：</span>"今天有什么运行安排"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>日历高亮今天，右侧显示今日计划列表<br>' +
-                        '<span style="color:#52C41A;">我：</span>"6月5日有什么计划"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>日历选中该日，显示当天计划<br>' +
-                        '<span style="color:#52C41A;">我：</span>"这个月配置了多少天"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>日历全览，统计卡片更新<br>' +
-                        '<span style="color:#52C41A;">我：</span>"暖通系统有哪些计划"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>列出该系统所有计划，日历色标切换<br>' +
-                        '<span style="color:#52C41A;">我：</span>"7月有什么安排"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>日历切换到7月<br>' +
-                        '<span style="color:#52C41A;">我：</span>"夏季模式什么时候开始"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>计划列表过滤夏季相关<br>' +
-                        '<span style="color:#52C41A;">我：</span>"端午节那天跑什么计划"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>选中节假日日期</div>' },
+                        '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 查看今日/某日</div>' +
+                        '<span style="color:#52C41A;">我：</span>"今天有什么运行安排" / "6月2号运行什么计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>已为您查到对应日期数据，AI分析当日配置是否合理，不合理提出修改建议 → <b>日历高亮</b>，右侧显示今日计划列表<br><br>' +
+                        '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 查看本周/某周</div>' +
+                        '<span style="color:#52C41A;">我：</span>"本周有什么运行安排" / "下周运行什么计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>已为您查到对应周期数据，AI分析配置是否合理 → 切换到对应<b>周的列表</b>展示模式<br><br>' +
+                        '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 查看本月/某月</div>' +
+                        '<span style="color:#52C41A;">我：</span>"本月有什么运行安排" / "6月运行什么计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>已为您查到对应月份数据，AI分析配置是否合理 → 切换到对应月的<b>日历</b><br><br>' +
+                        '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 切换系统查看</div>' +
+                        '<span style="color:#52C41A;">我：</span>"暖通系统有哪些计划" / "看照明系统的"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>已为您查询本月对应系统运行日历，AI分析配置是否合理 → <b>日历色标切换</b>，计划过滤</div><br>' +
+                        '<b>涉及修改模式对话</b><br>' +
+                        '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.8;">' +
+                        '当对话回复修改建议后可进行模式调整<br><br>' +
+                        '<span style="color:#52C41A;">我：</span>"把暖通系统6月5日~7日的模式调整为空调节能运行"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>是否确认调整？<b style="color:#FAAD14;">⚠ 调整后会对现场设备运行产生影响，请慎重操作</b>（需二次确认）<br>' +
+                        '<span style="color:#52C41A;">我：</span>"确认调整"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>已修改模式（二次确认后执行调整）<br><br>' +
+                        '<b>冲突检测：</b>如多个账号同时修改，系统判断对话发起后运行日历是否变动过。有变动回复：<b>"这些日期的运行模式有变动，是否继续调整？"</b></div>' },
             ],
             alarm: [
                 { id: 'v1.0', date: '2026-06-04', title: '智能报警分析',
