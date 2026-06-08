@@ -3367,17 +3367,18 @@
                             </div>
                         </div>
                         <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
+                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(0,217,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+                            <div>
+                                <div class="stat-card__value" style="color:var(--color-primary);font-size:28px;margin-bottom:0;line-height:1;">3</div>
+                                <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">今日计划覆盖系统</div>
+                                <div style="font-size:10px;color:var(--color-text-disabled);margin-top:2px;">照明 · 暖通 · 给排水</div>
+                            </div>
+                        </div>
+                        <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
                             <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,215,5,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD705" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg></div>
                             <div>
                                 <div class="stat-card__value" style="color:#FFD705;font-size:28px;margin-bottom:0;line-height:1;">12天</div>
                                 <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">本月配置天数</div>
-                            </div>
-                        </div>
-                        <div class="stat-card" style="padding:18px 20px;display:flex;align-items:center;gap:16px;">
-                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(0,217,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-                            <div>
-                                <div class="stat-card__value" style="color:var(--color-primary);font-size:28px;margin-bottom:0;line-height:1;">3</div>
-                                <div class="stat-card__label" style="margin-bottom:0;font-size:12px;">覆盖系统</div>
                             </div>
                         </div>
                     </div>
@@ -4504,7 +4505,80 @@
             if (tpl === 'trend') { var c = document.querySelector('#page-alarm .card:nth-of-type(1)'); if (c) c.style.boxShadow = '0 0 20px rgba(0,217,255,0.3)'; }
         }
 
-        // IOC风格运行日历
+        // 报警查询模板 — 切换视图
+        function alarmSwitch(tpl) {
+            var allQ = document.querySelectorAll('#detail-alarm .query-tpl');
+            allQ.forEach(function(el) { el.classList.remove('query-tpl--active'); });
+            var btns = document.querySelectorAll('#detail-alarm .query-tpl');
+            btns.forEach(function(el) {
+                var oc = el.getAttribute('onclick') || '';
+                if (oc.indexOf("'" + tpl + "'") >= 0 && el.textContent.indexOf('能耗') < 0) {
+                    el.classList.add('query-tpl--active');
+                }
+            });
+            if (tpl === 'energy') {
+                var energyBtn = document.querySelector('#detail-alarm .query-tpl[onclick*="energy"]');
+                if (energyBtn) energyBtn.classList.add('query-tpl--active');
+            }
+            var viewIds = ['all','device','metric','ai','summary','space','trend'];
+            for (var i = 0; i < viewIds.length; i++) {
+                var v = document.getElementById('alarm-view-' + viewIds[i]);
+                if (v) v.style.display = 'none';
+            }
+            var targetId = tpl;
+            if (tpl === 'energy' || tpl.indexOf('metric-') === 0) targetId = 'metric';
+            var targetView = document.getElementById('alarm-view-' + targetId);
+            if (targetView) targetView.style.display = '';
+            if (tpl === 'all') { setTimeout(function() { initAlarmTrendChart(); }, 100); }
+            if (tpl === 'trend') { setTimeout(function() { initAlarmTrendChart2(); }, 100); }
+        }
+        function initAlarmTrendChart() {
+            var dom = document.getElementById('chart-alarm-trend');
+            if (!dom || dom.offsetWidth === 0) return;
+            if (typeof echarts === 'undefined') return;
+            var existInstance = echarts.getInstanceByDom(dom);
+            if (existInstance) existInstance.dispose();
+            var chart = echarts.init(dom);
+            var days = ['05-27','05-28','05-29','05-30','05-31','06-01','06-02'];
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['设备','指标','AI'], textStyle: { color: '#889' }, top: 0 },
+                grid: { left: 40, right: 20, top: 40, bottom: 30 },
+                xAxis: { type: 'category', data: days, axisLabel: { color: '#889', fontSize: 10 } },
+                yAxis: { type: 'value', axisLabel: { color: '#889', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+                series: [
+                    { name: '设备', type: 'line', data: [18,22,24,23,26,28,20], lineStyle: { color: '#f5222d' }, itemStyle: { color: '#f5222d' }, smooth: true },
+                    { name: '指标', type: 'line', data: [2,1,3,2,4,1,2], lineStyle: { color: '#FAAD14' }, itemStyle: { color: '#FAAD14' }, smooth: true },
+                    { name: 'AI', type: 'line', data: [8,7,9,8,12,9,9], lineStyle: { color: '#1890FF' }, itemStyle: { color: '#1890FF' }, smooth: true }
+                ]
+            });
+            window._chartAlarmTrend = chart;
+        }
+        function initAlarmTrendChart2() {
+            var dom = document.getElementById('chart-alarm-trend2');
+            if (!dom || dom.offsetWidth === 0) return;
+            if (typeof echarts === 'undefined') return;
+            var existInstance = echarts.getInstanceByDom(dom);
+            if (existInstance) existInstance.dispose();
+            var chart = echarts.init(dom);
+            var days = ['05-27','05-28','05-29','05-30','05-31','06-01','06-02'];
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['设备','指标','AI'], textStyle: { color: '#889' }, top: 0 },
+                grid: { left: 40, right: 20, top: 40, bottom: 30 },
+                xAxis: { type: 'category', data: days, axisLabel: { color: '#889', fontSize: 10 } },
+                yAxis: { type: 'value', axisLabel: { color: '#889', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+                series: [
+                    { name: '设备', type: 'line', data: [18,22,24,23,26,28,20], lineStyle: { color: '#f5222d' }, itemStyle: { color: '#f5222d' }, smooth: true },
+                    { name: '指标', type: 'line', data: [2,1,3,2,4,1,2], lineStyle: { color: '#FAAD14' }, itemStyle: { color: '#FAAD14' }, smooth: true },
+                    { name: 'AI', type: 'line', data: [8,7,9,8,12,9,9], lineStyle: { color: '#1890FF' }, itemStyle: { color: '#1890FF' }, smooth: true }
+                ]
+            });
+            window._chartAlarmTrend2 = chart;
+        }
+        function applyAlarmView(e, tpl) { alarmSwitch(tpl); }
+
+// IOC风格运行日历
         var calYear = 2026, calMonth = 6, calSelected = null;
         var calDayPlans = {
             4: [{sys:'hvac',name:'空调夏季运行',time:'8:00-18:00',temp:'26°C',dev:'AHU-001/007'}],
@@ -4659,19 +4733,33 @@
                         '· "哪些设备用电超标了"' },
             ],
             scene: [
-                { id: 'v1.0', date: '2026-06-03', title: '场景模式控制智能体',
-                    desc: '<b>主要功能</b><br>基于已配置的控制模式进行调控<br>' +
+                { id: 'v1.0', date: '2026-06-05', title: '场景模式控制智能体',
+                    desc: '<b>主要功能</b><br>' +
+                        '1、查询日历配置的模式<br>' +
+                        '2、通过对话进行模式切换<br><br>' +
+                        '<b>主要引用数据</b><br>' +
+                        '1、系统类型及模式<br>' +
+                        '2、日历数据<br>' +
+                        '3、模式新增、修改、删除<br><br>' +
                         '· 右侧默认显示当月日历<br>' +
                         '· 上方统计数据跟随变化<br>' +
                         '· 点击某日显示当日配置计划数据<br><br>' +
                         '<b>对话示例</b><br>' +
-                        '· 查看今日："今天有什么运行安排" → 日历高亮今天，显示今日计划列表<br>' +
-                        '· 查看指定日："6月5日有什么计划" → 日历选中该日，显示当天计划<br>' +
-                        '· 查看月度："这个月配置了多少天" → 日历全览，统计卡片更新<br>' +
-                        '· 切换系统："暖通系统有哪些计划" → 对话中列出该系统所有计划，日历色标切换，计划过滤<br>' +
-                        '· 下月预览："7月有什么安排" → 日历切换到7月<br>' +
-                        '· 季度切换："夏季模式什么时候开始" → 计划列表过滤夏季相关<br>' +
-                        '· 节假配置："端午节那天跑什么计划" → 选中节假日日期' },
+                        '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.8;">' +
+                        '<span style="color:#52C41A;">我：</span>"今天有什么运行安排"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>日历高亮今天，右侧显示今日计划列表<br>' +
+                        '<span style="color:#52C41A;">我：</span>"6月5日有什么计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>日历选中该日，显示当天计划<br>' +
+                        '<span style="color:#52C41A;">我：</span>"这个月配置了多少天"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>日历全览，统计卡片更新<br>' +
+                        '<span style="color:#52C41A;">我：</span>"暖通系统有哪些计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>列出该系统所有计划，日历色标切换<br>' +
+                        '<span style="color:#52C41A;">我：</span>"7月有什么安排"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>日历切换到7月<br>' +
+                        '<span style="color:#52C41A;">我：</span>"夏季模式什么时候开始"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>计划列表过滤夏季相关<br>' +
+                        '<span style="color:#52C41A;">我：</span>"端午节那天跑什么计划"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>选中节假日日期</div>' },
             ],
             alarm: [
                 { id: 'v1.0', date: '2026-06-04', title: '智能报警分析',
