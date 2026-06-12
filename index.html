@@ -2456,7 +2456,7 @@
                                     <span class="message__time">今天 14:45</span>
                                 </div>
                                 <div class="message__bubble">
-                                    您好！我是设备监测运维智能体。我可以为您提供设备故障诊断、运维建议、参数分析等服务。请输入设备名称或描述您的问题。
+                                    您好！我是设备监测运维智能体。我可以帮您查询设备运行状态、参数详情、故障报警及运维建议。支持按楼栋/楼层/系统类型查找设备。如需查询能耗、场景模式、报警分析，请切换到对应智能体。
                                 </div>
                             </div>
                         </div>
@@ -2917,7 +2917,7 @@
                                     <span class="message__time">今天 15:02</span>
                                 </div>
                                 <div class="message__bubble">
-                                    您好！我是能耗智能管控智能体。我可以为您提供能耗分析、节能优化、成本测算、碳排放计算等服务。请输入您要查询的能耗相关问题，我将为您提供专业的分析结果与建议。
+                                    您好！我是能耗智能管控智能体。我可以帮您查询电耗/水耗数据、同比环比趋势、尖峰平谷占比、公区及分区用电分析。支持日/月/年及多月多日查询。如需设备运维、场景模式、报警分析，请切换到对应智能体。
                                 </div>
                             </div>
                         </div>
@@ -3458,11 +3458,15 @@
                     </div>
                     <div class="chat-messages" id="chat-messages-scene" style="position:relative;">
                         <div class="history-panel" id="history-panel-scene" style="display:none;"><div class="history-panel__header"><span class="history-panel__title">历史对话</span><button class="history-panel__close" onclick="toggleHistoryPanel('scene')">&times;</button></div><div class="history-panel__list" id="history-list-scene"></div></div>
-                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:30</span></div><div class="message__bubble">早上好！今日有3个运行计划待执行，暖通夏季模式将在30分钟后启动。</div></div></div>
-                        <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今天有哪些运行安排？有没有异常的？</div></div></div>
-                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今日安排：照明08:00已启动 | 暖通09:00待执行 | 夜间22:00自动切换。昨日空调节能模式未正常执行，建议排查。</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:30</span></div><div class="message__bubble">您好！我是场景模式控制智能体，主要功能是查询运行日历。
+
+· 查看今日/本周/本月/指定日期的运行计划
+· 按照明/暖通/给排水系统筛选计划
+· 查看各系统运行模式</div></div></div>
+                        <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今天有什么运行安排？</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">已为您查到今日（6月10日）运行计划：照明系统·工作日模式（08:00-22:00 已启动）、暖通系统·夏季运行模式（09:00-18:00 待执行，26°C·AHU-001/007）。右侧显示今日详细计划列表。</div></div></div>
                     </div>
-                    <div class="chat-input"><div class="chat-input__wrapper"><div class="chat-input__box"><textarea class="chat-input__field" placeholder="请输入运行管理需求..." rows="1" id="input-scene"></textarea><button class="chat-input__send" onclick="sendMessage('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg></button></div></div></div>
+                    <div class="chat-input"><div class="chat-input__wrapper"><div class="chat-input__box"><textarea class="chat-input__field" placeholder="请输入查询需求，例如：今天有什么计划、本周暖通安排、6月运行日历..." rows="1" id="input-scene"></textarea><button class="chat-input__send" onclick="sendMessage('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg></button></div></div></div>
                     <div class="chat-input" style="border-top:none;padding-top:0;padding-bottom:4px;"><div class="model-selector"><button class="model-selector__btn" id="model-btn-scene" onclick="toggleModelDropdown('scene')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span id="model-label-scene">DeepSeek-V4</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="model-selector__dropdown" id="model-dropdown-scene"></div></div></div>
                 </div>
                 <div class="detail-area" id="detail-scene">
@@ -3769,7 +3773,7 @@
                     </div>
                     <div class="chat-messages" id="chat-messages-alarm" style="position:relative;">
                         <div class="history-panel" id="history-panel-alarm" style="display:none;"><div class="history-panel__header"><span class="history-panel__title">历史对话</span><button class="history-panel__close" onclick="toggleHistoryPanel('alarm')">&times;</button></div><div class="history-panel__list" id="history-list-alarm"></div></div>
-                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:30</span></div><div class="message__bubble">您好！我可以帮您分析报警数据。本周共248次报警：设备156、指标12、AI 62。</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:30</span></div><div class="message__bubble">您好！我是智能报警分析智能体。可以帮您分析报警数据：按设备系统/指标分类/AI类型查询，支持等级/状态筛选。本周共248次报警（设备156、指标12、AI 62）。如需设备运维、能耗分析、场景模式，请切换到对应智能体。</div></div></div>
                         <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 15:31</span></div><div class="message__bubble">最近一周报警情况怎么样</div></div></div>
                         <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:31</span></div><div class="message__bubble">正在分析报警数据...<div class="message__loading"><div class="message__loading-dot"></div><div class="message__loading-dot"></div><div class="message__loading-dot"></div></div></div></div></div>
                     </div>
@@ -5262,7 +5266,13 @@
                         '<span style="color:#1890FF;">AI：</span>已为您查到对应月份数据，AI分析配置是否合理 → 切换到对应月的<b>日历</b><br><br>' +
                         '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 切换系统查看</div>' +
                         '<span style="color:#52C41A;">我：</span>"暖通系统有哪些计划" / "看照明系统的"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>已为您查询本月对应系统运行日历，AI分析配置是否合理 → <b>日历色标切换</b>，计划过滤</div><br>' +
+                        '<span style="color:#1890FF;">AI：</span>已为您查询本月对应系统运行日历，AI分析配置是否合理 → <b>日历色标切换</b>，计划过滤<br><br>' +
+                        '<div style="color:var(--color-text-disabled);margin-bottom:4px;">▸ 询问系统模式内容</div>' +
+                        '询问系统模式内容时应返回数据<br>' +
+                        '<span style="color:#52C41A;">我：</span>"查询室内照明系统的夏季模式是什么"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>室内照明系统的夏季模式有20台设备，大多数启停时间为8:00~10:00<br>' +
+                        '<span style="color:var(--color-text-disabled);">（一个模式内设备的启停时间可能出现不一样，合并成一个大概范围输出）</span><br>' +
+                        '</div><br>' +
                         '<b>涉及修改模式对话</b><br>' +
                         '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.8;">' +
                         '当对话回复修改建议后可进行模式调整<br><br>' +
