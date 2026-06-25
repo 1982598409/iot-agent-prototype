@@ -2991,11 +2991,8 @@
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
                         <span style="font-size:11px;color:var(--color-text-disabled);flex-shrink:0;">查询模板:</span>
                         <span class="query-tpl query-tpl--active" onclick="applyTemplate(event,'year')">日/月/年能耗</span>
-                        <span class="query-tpl" onclick="applyTemplate(event,'day')">今日用电</span>
-                        <span class="query-tpl" onclick="applyTemplate(event,'elec')">日/月/年电耗</span>
-                        <span class="query-tpl" onclick="applyTemplate(event,'water')">日/月/年水耗</span>
-                        <span class="query-tpl" onclick="applyTemplate(event,'compare')">同比对比</span>
-                        <span class="query-tpl" onclick="applyTemplate(event,'area-public')">公区用电</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'subitem')">用电分项</span>
+                        <span class="query-tpl" onclick="applyTemplate(event,'wateritem')">用水分项</span>
                         <span class="query-tpl" onclick="applyTemplate(event,'building-rank')">分区用水/电</span>
                     </div>
 
@@ -3378,6 +3375,62 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- 【用电分项面板】 -->
+                    <div class="report-panel" id="report-subitem" style="display:none;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="card">
+                                <div class="card__header"><div class="card__title">分项占比</div></div>
+                                <div style="display:flex;gap:16px;align-items:center;">
+                                    <div id="chart-subitem-pie" style="width:150px;height:150px;flex-shrink:0;"></div>
+                                    <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+                                        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:8px;height:8px;border-radius:2px;background:#FAAD14;flex-shrink:0;"></span><span style="font-size:11px;color:var(--color-text-secondary);">公区用电</span></div><div style="font-size:18px;font-weight:700;">16,960.4<span style="font-size:13px;"> kWh</span></div><div style="font-size:11px;color:#FF7875;">与上一日对比 37.1% ↑</div></div>
+                                        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:8px;height:8px;border-radius:2px;background:#5A6A7A;flex-shrink:0;"></span><span style="font-size:11px;color:var(--color-text-secondary);">客户用电</span></div><div style="font-size:18px;font-weight:700;">9,493.78<span style="font-size:13px;"> kWh</span></div><div style="font-size:11px;color:#FF7875;">与上一日对比 1.85% ↑</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card__header"><div class="card__title">用电分析</div></div>
+                                <div style="display:flex;gap:20px;align-items:center;">
+                                    <div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,rgba(250,173,20,0.2),rgba(250,173,20,0.05));display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;"><div style="font-size:24px;font-weight:700;">26,454.18</div><div style="font-size:10px;color:var(--color-text-disabled);margin-top:2px;">当日用量 (kWh)</div></div>
+                                    <div style="flex:1;"><div style="font-size:10px;color:var(--color-text-disabled);margin-bottom:2px;">上一日同时段用量</div><div style="font-size:16px;font-weight:600;">21,692.56<span style="font-size:12px;"> kWh</span></div><div style="font-size:11px;color:#FF7875;margin-top:4px;">与上一日对比：21.95% ↑</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:16px;">
+                            <div class="card__header"><div class="card__title">同期用量对比</div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;padding:2px 10px;border-radius:10px;background:rgba(250,173,20,0.15);color:#FAAD14;font-weight:600;">30min</span><span style="font-size:10px;padding:2px 10px;border-radius:10px;background:rgba(255,255,255,0.04);color:var(--color-text-secondary);">1h</span></div></div>
+                            <div style="display:flex;gap:16px;font-size:10px;margin-bottom:8px;flex-wrap:wrap;"><span style="display:flex;align-items:center;gap:4px;color:var(--color-text-disabled);"><span style="width:10px;height:10px;border-radius:2px;background:#8A9AAA;"></span>上一日用量</span><span style="display:flex;align-items:center;gap:4px;color:var(--color-text-disabled);"><span style="width:10px;height:10px;border-radius:2px;background:#52C41A;"></span>谷时电耗</span><span style="display:flex;align-items:center;gap:4px;color:var(--color-text-disabled);"><span style="width:10px;height:10px;border-radius:2px;background:#1890FF;"></span>平时电耗</span><span style="display:flex;align-items:center;gap:4px;color:var(--color-text-disabled);"><span style="width:10px;height:10px;border-radius:2px;background:#FAAD14;"></span>峰时电耗</span><span style="display:flex;align-items:center;gap:4px;color:var(--color-text-disabled);"><span style="width:10px;height:10px;border-radius:2px;background:#FF4D4F;"></span>尖峰电耗</span></div>
+                            <div id="chart-subitem-bar" style="width:100%;height:260px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- 【用水分项面板】 -->
+                    <div class="report-panel" id="report-wateritem" style="display:none;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="card">
+                                <div class="card__header"><div class="card__title">分项占比</div></div>
+                                <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--color-text-secondary);">总用水 <b style="color:var(--color-text-primary);">7,322.42</b> m³</div>
+                                <div style="display:flex;gap:16px;align-items:center;">
+                                    <div id="chart-wateritem-pie" style="width:160px;height:160px;flex-shrink:0;"></div>
+                                    <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+                                        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:8px;height:8px;border-radius:2px;background:#5A6268;flex-shrink:0;"></span><span style="font-size:11px;color:var(--color-text-secondary);">公共总用水</span></div><div style="font-size:18px;font-weight:700;">4,137.89<span style="font-size:13px;"> m³</span></div><div style="font-size:11px;color:var(--color-text-disabled);">占比 56.51%</div></div>
+                                        <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><span style="width:8px;height:8px;border-radius:2px;background:#C0C4CC;flex-shrink:0;"></span><span style="font-size:11px;color:var(--color-text-secondary);">空调总用水</span></div><div style="font-size:18px;font-weight:700;">3,184.53<span style="font-size:13px;"> m³</span></div><div style="font-size:11px;color:var(--color-text-disabled);">占比 43.49%</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card__header"><div class="card__title">用水分析</div></div>
+                                <div style="display:flex;gap:20px;align-items:center;">
+                                    <div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,rgba(255,169,64,0.2),rgba(255,169,64,0.05));display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:3px solid rgba(255,169,64,0.3);"><div style="font-size:24px;font-weight:700;">4,213.42</div><div style="font-size:10px;color:var(--color-text-disabled);margin-top:2px;">当月用量 (m³)</div></div>
+                                    <div style="flex:1;"><div style="font-size:10px;color:var(--color-text-disabled);margin-bottom:2px;">上月同时段用量</div><div style="font-size:16px;font-weight:600;">2,409.98<span style="font-size:12px;"> m³</span></div><div style="font-size:11px;color:#FF7875;margin-top:4px;">与上月对比：74.83% ↑</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:16px;">
+                            <div class="card__header"><div class="card__title">同期用量对比</div></div>
+                            <div id="chart-wateritem-bar" style="width:100%;height:260px;"></div>
                         </div>
                     </div>
 
@@ -4262,7 +4315,9 @@
             'area-public':{ period:'year',  title:'公区用电分析',   subtitle:'公区 · 2026年度',          labels:['公区总用电','公区单位能耗','公区照明用电','同比 / 环比'], values:['657,360','18.5','230,076','+3.2% / +0.8%'], extras:['kWh','kWh/m²','kWh (35%)',''], changes:[{cls:'stat-card__change--up',txt:'占比42.6%'},{cls:'stat-card__change--up',txt:'高于均值'},{cls:'',txt:'最大分项'},{cls:'',txt:''}] },
             'building-rank':{ period:'year',title:'分区用水/电',   subtitle:'全厂区5栋 · 2026年度',    labels:['用电最高','用电最低','分区均值','A-D差距'], values:['A栋 385,680','D栋 218,900','308,544','1.76倍'], extras:['kWh','kWh','kWh','需关注'], changes:[{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''}] },
             'elec':       { period:'year',  title:'日/月/年电耗',   subtitle:'全厂区 · 2026年度',       labels:['总用电量','电费成本','尖峰平谷占比',''], values:['1,542,720','¥1,157,040','',''], extras:['kWh','元','<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;padding:4px 0;"><div style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#FF4D4F;flex-shrink:0;"></span><span style="font-size:13px;font-weight:600;">尖</span><span style="font-size:12px;color:#FF7875;">25%</span><span style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-left:auto;">38.6万</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#FAAD14;flex-shrink:0;"></span><span style="font-size:13px;font-weight:600;">峰</span><span style="font-size:12px;color:#FFD666;">30%</span><span style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-left:auto;">46.3万</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#1890FF;flex-shrink:0;"></span><span style="font-size:13px;font-weight:600;">平</span><span style="font-size:12px;color:#69C0FF;">28%</span><span style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-left:auto;">43.2万</span></div><div style="display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#52C41A;flex-shrink:0;"></span><span style="font-size:13px;font-weight:600;">谷</span><span style="font-size:12px;color:#95DE64;">17%</span><span style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-left:auto;">26.2万</span></div></div>',''], changes:[{cls:'stat-card__change--up',txt:'+2.3% 同比'},{cls:'stat-card__change--up',txt:'+3.1% 同比'},{cls:'',txt:''},{cls:'',txt:''}] },
-            'water':      { period:'year',  title:'日/月/年水耗',   subtitle:'全厂区 · 2026年度',       labels:['','','',''], values:['','','',''], extras:['','','',''], changes:[{cls:'stat-card__change--down',txt:'-1.8% 同比'},{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''}] }
+            'water':      { period:'year',  title:'日/月/年水耗',   subtitle:'全厂区 · 2026年度',       labels:['','','',''], values:['','','',''], extras:['','','',''], changes:[{cls:'stat-card__change--down',txt:'-1.8% 同比'},{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''}] },
+            'subitem':    { period:'day', title:'用电分项',   subtitle:'全厂区 · 今日',       labels:['','','',''], values:['','','',''], extras:['','','',''], changes:[{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''}] },
+            'wateritem':  { period:'day', title:'用水分项',   subtitle:'全厂区 · 今日',       labels:['','','',''], values:['','','',''], extras:['','','',''], changes:[{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''},{cls:'',txt:''}] }
         };
 
         var currentTemplate = 'year';
@@ -4274,7 +4329,7 @@
             if (e && e.target) { e.target.classList.add('query-tpl--active'); }
             else {
                 // 从 sendMessage 调用时，根据模板名高亮对应标签
-                var tplMap = { 'year':0,'day':1,'elec':2,'water':3,'compare':4,'area-public':5,'building-rank':6 };
+                var tplMap = { 'year':0,'subitem':1,'wateritem':2,'building-rank':3 };
                 var tags = document.querySelectorAll('#detail-energy .query-tpl');
                 if (tplMap[tpl] !== undefined && tags[tplMap[tpl]]) tags[tplMap[tpl]].classList.add('query-tpl--active');
             }
@@ -4312,6 +4367,14 @@
                     cards[i].style.opacity = cfg.labels[i] ? '' : '0';
                     cards[i].style.pointerEvents = cfg.labels[i] ? '' : 'none';
                 }
+                // subitem/wateritem模板：隐藏统计卡片区域
+                if (tpl === 'subitem' || tpl === 'wateritem') {
+                    var statsGrid = document.querySelector('#detail-energy .stats-grid');
+                    if (statsGrid) statsGrid.style.display = 'none';
+                } else {
+                    var statsGrid = document.querySelector('#detail-energy .stats-grid');
+                    if (statsGrid) statsGrid.style.display = '';
+                }
                 // elec模板：第3卡片跨2列，第4卡片隐藏
                 if (tpl === 'elec') {
                     if (cards[2]) { cards[2].style.gridColumn = 'span 2'; cards[2].style.opacity = ''; cards[2].style.pointerEvents = ''; }
@@ -4344,6 +4407,8 @@
                 case 'year': initYearCharts(); break;
                 case 'elec': initElecCharts(); break;
                 case 'water': initWaterCharts(); break;
+                case 'subitem': initSubitemCharts(); break;
+                case 'wateritem': initWateritemCharts(); break;
                 case 'compare': initCompareCharts(); break;
                 case 'area-public': initAreaPublicCharts(); break;
                 case 'building-rank': initBuildingRankCharts(); break;
@@ -4351,7 +4416,7 @@
         }
 
         function resizeReportCharts(tpl) {
-            var chartIds = { 'day':['chart-day-trend','chart-day-gauge','chart-day-ratio'], 'month':['chart-month-trend','chart-month-pie','chart-month-ratio'], 'quarter':['chart-quarter-trend','chart-quarter-pie','chart-quarter-ratio'], 'year':['chart-energy-trend','chart-water-trend','chart-water-pie','chart-public-pie','chart-usage-ratio'], 'elec':['chart-elec-trend','chart-elec-public-pie'], 'water':['chart-water-only-trend','chart-water-only-pie'], 'compare':['chart-compare-trend'], 'area-public':['chart-area-trend','chart-area-pie'], 'building-rank':['chart-building-bar'] };
+            var chartIds = { 'day':['chart-day-trend','chart-day-gauge','chart-day-ratio'], 'month':['chart-month-trend','chart-month-pie','chart-month-ratio'], 'quarter':['chart-quarter-trend','chart-quarter-pie','chart-quarter-ratio'], 'year':['chart-energy-trend','chart-water-trend','chart-water-pie','chart-public-pie','chart-usage-ratio'], 'elec':['chart-elec-trend','chart-elec-public-pie'], 'water':['chart-water-only-trend','chart-water-only-pie'], 'subitem':['chart-subitem-pie','chart-subitem-bar'], 'wateritem':['chart-wateritem-pie','chart-wateritem-bar'], 'compare':['chart-compare-trend'], 'area-public':['chart-area-trend','chart-area-pie'], 'building-rank':['chart-building-bar'] };
             var ids = chartIds[tpl] || [];
             ids.forEach(function(id) { if (reportCharts[id]) reportCharts[id].resize(); });
         }
@@ -4678,6 +4743,90 @@
                 var wpc = echarts.init(wp, null, { renderer: 'svg' });
                 wpc.setOption({ backgroundColor: 'transparent', tooltip: { trigger: 'item', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 12 }, formatter: '{b}: {c}m³ ({d}%)' }, series: [{ type: 'pie', radius: ['55%','80%'], center: ['50%','50%'], label: { show: false }, data: [{ value: 8910, name: '冷却塔补水', itemStyle: { color: '#00D9FF' } }, { value: 6682, name: '生活用水', itemStyle: { color: '#52C41A' } }, { value: 3341, name: '景观灌溉', itemStyle: { color: '#FAAD14' } }, { value: 2227, name: '消防补水', itemStyle: { color: '#1890FF' } }, { value: 1112, name: '其他用水', itemStyle: { color: '#FF4D4F' } }] }] });
                 reportCharts['chart-water-only-pie'] = wpc;
+            }
+        }
+
+        // -- 用水分项 --
+        function initWateritemCharts() {
+            var wp = document.getElementById('chart-wateritem-pie');
+            if (wp && wp.offsetWidth > 0) {
+                if (reportCharts['chart-wateritem-pie']) reportCharts['chart-wateritem-pie'].dispose();
+                var wc = echarts.init(wp, null, { renderer: 'svg' });
+                wc.setOption({
+                    backgroundColor: 'transparent',
+                    tooltip: { trigger: 'item', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 12 }, formatter: '{b}: {c}m³ ({d}%)' },
+                    series: [{ type: 'pie', radius: ['60%','85%'], center: ['50%','50%'], label: { show: true, position: 'outside', formatter: '{b}\\n{d}%', color: 'rgba(255,255,255,0.6)', fontSize: 10, lineHeight: 16 },
+                        data: [{ value: 4138, name: '公共总用水', itemStyle: { color: '#5A6268' } }, { value: 3185, name: '空调总用水', itemStyle: { color: '#C0C4CC' } }],
+                        labelLine: { lineStyle: { color: 'rgba(255,255,255,0.3)' } }
+                    }]
+                });
+                reportCharts['chart-wateritem-pie'] = wc;
+            }
+            var wb = document.getElementById('chart-wateritem-bar');
+            if (wb && wb.offsetWidth > 0) {
+                if (reportCharts['chart-wateritem-bar']) reportCharts['chart-wateritem-bar'].dispose();
+                var bc = echarts.init(wb, null, { renderer: 'svg' });
+                var xDays = [];
+                for (var d = 1; d <= 31; d++) xDays.push(d + '日');
+                var lastMonth = [80,75,78,82,85,90,88,85,80,78,82,86,90,88,92,95,90,85,80,78,75,80,85,88,90,85,80,78,75,80,85];
+                var thisMonth = [90,85,88,92,95,100,105,130,180,220,280,160,140,120,110,100,95,105,150,200,250,240,180,150,130,200,280,210,190,260,270];
+                bc.setOption({
+                    backgroundColor: 'transparent',
+                    tooltip: { trigger: 'axis', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 11 } },
+                    legend: { show: false },
+                    grid: { top: 10, right: 20, bottom: 30, left: 55, containLabel: false },
+                    xAxis: { type: 'category', data: xDays, axisLabel: { color: 'rgba(255,255,255,0.3)', fontSize: 9, interval: 2 }, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } } },
+                    yAxis: { type: 'value', name: 'm³', nameTextStyle: { color: 'rgba(255,255,255,0.35)', fontSize: 10 }, axisLabel: { color: 'rgba(255,255,255,0.3)', fontSize: 9 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } } },
+                    series: [
+                        { name: '上月用量', type: 'bar', data: lastMonth, barWidth: '50%', itemStyle: { color: '#8A9AAA' }, barGap: '20%' },
+                        { name: '本月用量', type: 'bar', data: thisMonth, itemStyle: { color: '#1890FF' } }
+                    ]
+                });
+                reportCharts['chart-wateritem-bar'] = bc;
+            }
+        }
+
+        // -- 用电分项 --
+        function initSubitemCharts() {
+            var sp = document.getElementById('chart-subitem-pie');
+            if (sp && sp.offsetWidth > 0) {
+                if (reportCharts['chart-subitem-pie']) reportCharts['chart-subitem-pie'].dispose();
+                var sc = echarts.init(sp, null, { renderer: 'svg' });
+                sc.setOption({
+                    backgroundColor: 'transparent',
+                    tooltip: { trigger: 'item', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 12 }, formatter: '{b}: {c}kWh ({d}%)' },
+                    series: [{ type: 'pie', radius: ['60%','85%'], center: ['50%','50%'], label: { show: false },
+                        data: [{ value: 16960, name: '公区用电', itemStyle: { color: '#FAAD14' } }, { value: 9494, name: '客户用电', itemStyle: { color: '#5A6A7A' } }] }]
+                });
+                reportCharts['chart-subitem-pie'] = sc;
+            }
+            var sb = document.getElementById('chart-subitem-bar');
+            if (sb && sb.offsetWidth > 0) {
+                if (reportCharts['chart-subitem-bar']) reportCharts['chart-subitem-bar'].dispose();
+                var bc = echarts.init(sb, null, { renderer: 'svg' });
+                var xData = [];
+                for (var h = 0; h < 24; h++) { xData.push(h + ':00-0:30'); xData.push(h + ':30-' + (h+1) + ':00'); }
+                var lastDay = [80,70,60,55,50,48,52,65,100,150,200,280,350,420,480,520,550,580,600,620,580,500,400,300,220,160,120,100,90,85,80,75,70,65,60,55,50,48,52,65,110,180,300,420,500,520,500,450];
+                var valley = [30,25,20,18,15,12,15,25,40,55,65,80,90,100,110,120,130,140,150,155,145,130,110,90,70,50,35,25,20,18,15,12,15,25,40,55,65,80,90,100,110,120,130,135,130,120,100,80];
+                var flat =   [60,50,45,40,35,30,35,50,75,100,130,170,200,220,240,260,280,300,320,330,310,280,240,200,160,120,90,70,55,50,45,40,35,30,35,50,75,100,130,170,200,220,240,250,240,220,200,170];
+                var peak =   [90,80,70,60,55,50,55,80,120,180,250,350,450,550,600,650,700,750,780,800,750,650,530,400,280,200,150,120,100,90,80,70,60,55,50,55,80,120,180,250,350,450,550,600,620,580,500,420];
+                var tip =    [120,100,90,80,70,60,70,100,160,250,350,480,620,750,820,880,950,1000,1050,1080,1000,850,700,520,380,280,200,160,140,120,100,90,80,70,60,70,100,160,250,350,480,620,750,800,780,700,600];
+                bc.setOption({
+                    backgroundColor: 'transparent',
+                    tooltip: { trigger: 'axis', backgroundColor: '#252D3A', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#fff', fontSize: 11 } },
+                    legend: { data: ['上一日','谷时','平时','峰时','尖峰'], top: 0, textStyle: { color: 'rgba(255,255,255,0.5)', fontSize: 10 }, itemWidth: 12, itemHeight: 8 },
+                    grid: { top: 30, right: 20, bottom: 40, left: 55, containLabel: false },
+                    xAxis: { type: 'category', data: xData, axisLabel: { color: 'rgba(255,255,255,0.3)', fontSize: 9, interval: 5 }, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } } },
+                    yAxis: { type: 'value', name: 'kWh', nameTextStyle: { color: 'rgba(255,255,255,0.35)', fontSize: 10 }, axisLabel: { color: 'rgba(255,255,255,0.3)', fontSize: 9 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } } },
+                    series: [
+                        { name: '上一日', type: 'bar', data: lastDay, barWidth: '60%', itemStyle: { color: '#8A9AAA' }, barGap: '10%' },
+                        { name: '谷时', type: 'bar', data: valley, itemStyle: { color: '#52C41A' } },
+                        { name: '平时', type: 'bar', data: flat, itemStyle: { color: '#1890FF' } },
+                        { name: '峰时', type: 'bar', data: peak, itemStyle: { color: '#FAAD14' } },
+                        { name: '尖峰', type: 'bar', data: tip, itemStyle: { color: '#FF4D4F' } }
+                    ]
+                });
+                reportCharts['chart-subitem-bar'] = bc;
             }
         }
 
