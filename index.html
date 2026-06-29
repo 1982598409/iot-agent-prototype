@@ -2456,7 +2456,7 @@
                                     <span class="message__time">今天 14:45</span>
                                 </div>
                                 <div class="message__bubble">
-                                    您好！我是设备监测运维智能体。我可以帮您查询设备运行状态、参数详情、故障报警及运维建议。支持按楼栋/楼层/系统类型查找设备。如需查询能耗、场景模式、报警分析，请切换到对应智能体。
+                                    您好！我是设备监测运维智能体。您可以通过楼栋、系统类型、运行状态、报警状态来查找设备。<br><br>👉 示例：<br><br>• 查1栋所有消防设备<br>• 报警的暖通设备<br>• A栋3楼运行中的设备有哪些<br>• 40楼所有设备<br><br>请告诉我您想查什么？
                                 </div>
                             </div>
                         </div>
@@ -2917,7 +2917,7 @@
                                     <span class="message__time">今天 15:02</span>
                                 </div>
                                 <div class="message__bubble">
-                                    您好！我是能耗智能管控智能体。我可以帮您查询电耗/水耗数据、同比环比趋势、尖峰平谷占比、公区及分区用电分析。支持日/月/年及多月多日查询。如需设备运维、场景模式、报警分析，请切换到对应智能体。
+                                    您好！我是能耗智能管控智能体。您可以通过电耗/水耗、同比环比趋势、尖峰平谷占比、公区及分区用电来进行能耗分析。<br><br>👉 示例：<br><br>• 查看本月能耗数据<br>• 今年水耗趋势<br>• 上个月的电耗<br>• 各区域本月用电情况<br><br>请告诉我您想查什么？
                                 </div>
                             </div>
                         </div>
@@ -3511,11 +3511,7 @@
                     </div>
                     <div class="chat-messages" id="chat-messages-scene" style="position:relative;">
                         <div class="history-panel" id="history-panel-scene" style="display:none;"><div class="history-panel__header"><span class="history-panel__title">历史对话</span><button class="history-panel__close" onclick="toggleHistoryPanel('scene')">&times;</button></div><div class="history-panel__list" id="history-list-scene"></div></div>
-                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:30</span></div><div class="message__bubble">您好！我是场景模式控制智能体，主要功能是查询运行日历。
-
-· 查看今日/本周/本月/指定日期的运行计划
-· 按照明/暖通/给排水系统筛选计划
-· 查看各系统运行模式</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:30</span></div><div class="message__bubble">您好！我是场景模式控制智能体。您可以通过运行日历，查看今日、本周、本月或指定日期的运行计划，并支持按照明、暖通、给排水等系统筛选运行模式。<br><br>👉 示例：<br><br>• 查看今天的运行计划<br>• 本周暖通系统的运行安排<br>• 查一下5月20日的照明模式<br>• 排水系统的运行模式详情<br><br>请告诉我您想查什么？</div></div></div>
                         <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">今天有什么运行安排？</div></div></div>
                         <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">场景模式控制智能体</span><span class="message__time">今天 08:31</span></div><div class="message__bubble">已为您查到今日（6月10日）运行计划：照明系统·工作日模式（08:00-22:00 已启动）、暖通系统·夏季运行模式（09:00-18:00 待执行，26°C·AHU-001/007）。右侧显示今日详细计划列表。</div></div></div>
                     </div>
@@ -3826,7 +3822,7 @@
                     </div>
                     <div class="chat-messages" id="chat-messages-alarm" style="position:relative;">
                         <div class="history-panel" id="history-panel-alarm" style="display:none;"><div class="history-panel__header"><span class="history-panel__title">历史对话</span><button class="history-panel__close" onclick="toggleHistoryPanel('alarm')">&times;</button></div><div class="history-panel__list" id="history-list-alarm"></div></div>
-                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:30</span></div><div class="message__bubble">您好！我是智能报警分析智能体。可以帮您分析报警数据：按设备系统/指标分类/AI类型查询，支持等级/状态筛选。本周共248次报警（设备156、指标12、AI 62）。如需设备运维、能耗分析、场景模式，请切换到对应智能体。</div></div></div>
+                        <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:30</span></div><div class="message__bubble">您好！我是智能报警分析智能体。您可以通过设备系统、指标分类、AI类型来查询报警数据，并支持按等级和状态进行筛选。<br><br>👉 示例：<br><br>• 当前报警数据<br>• 查一下今天消防系统的报警<br>• 暖通系统最近一周的报警分析<br>• 本周AI报警有哪些<br><br>请告诉我您想查什么？</div></div></div>
                         <div class="message message--user"><div class="message__avatar">我</div><div class="message__content"><div class="message__header"><span class="message__name">我</span><span class="message__time">今天 15:31</span></div><div class="message__bubble">最近一周报警情况怎么样</div></div></div>
                         <div class="message message--ai"><div class="message__avatar">AI</div><div class="message__content"><div class="message__header"><span class="message__name">智能报警分析智能体</span><span class="message__time">今天 15:31</span></div><div class="message__bubble">正在分析报警数据...<div class="message__loading"><div class="message__loading-dot"></div><div class="message__loading-dot"></div><div class="message__loading-dot"></div></div></div></div></div>
                     </div>
