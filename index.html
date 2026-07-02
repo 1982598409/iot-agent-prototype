@@ -5356,31 +5356,22 @@
             energy: [
                 { id: 'v1.0', date: '2026-06-09', title: '能耗智能管控智能体',
                     desc: '<b>主要功能</b><br>通过对话查询能耗数据，右侧按查询模板切换对应报表页面：汇总数据在上、图表列表在下<br><br>' +
-                        '<b>查询模板（7个）</b><br>' +
-                        '· 日/月/年能耗：用电趋势+去年对比 + 公区用量饼图 + 用量占比 + 水耗趋势 + 水耗分项 + 水耗分析<br>' +
-                        '· 今日用电：今日用电趋势 + 仪表盘 + 用电分析 + 用量占比<br>' +
-                        '· 日/月/年电耗：用电趋势+去年对比 + 公区用量饼图 + 用电分析 + 尖峰平谷占比（4维度2×2布局）<br>' +
-                        '· 日/月/年水耗：水耗趋势+去年对比 + 水耗分项占比 + 水耗分析（总用水量/单位面积/公区用水）<br>' +
-                        '· 同比对比：今年vs去年趋势 + 逐月同比环比明细<br>' +
-                        '· 公区用电：公区用电趋势 + 分项占比<br>' +
+                        '<b>查询模板（4个）</b><br>' +
+                        '· 日/月/年能耗：用电分项＋用水分项<br>' +
+                        '· 用电分项：IOC页面电耗分析<br>' +
+                        '· 用水分项：IOC页面水耗分析<br>' +
                         '· 分区用水/电：分区用电排名<br><br>' +
                         '<b>对话示例</b><br>' +
                         '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.8;">' +
                         '<span style="color:#52C41A;">我：</span>"今年能耗情况怎么样/本月能耗用量情况"-可多月多日查询<br>' +
-                        '<span style="color:#1890FF;">AI：</span>正在查询年度用电数据 → <b style="color:var(--color-primary);">日/月/年能耗</b>（不太时间维度下的折线图时间轴不一样）<br><br>' +
+                        '<span style="color:#1890FF;">AI：</span>正在查询年度用电数据 → <b style="color:var(--color-primary);">日/月/年能耗</b>（不同时间维度下的折线图时间轴不一样）<br><br>' +
                         '<span style="color:#52C41A;">我：</span>"今天的电用了多少/今日客户用电情况"<br>' +
-                        '<span style="color:#1890FF;">AI：</span>正在查询今日用电 → <b style="color:var(--color-primary);">今日用电</b>（能耗类型为电耗或者分类在客户用电及其下级）<br><br>' +
-                        '<span style="color:#52C41A;">我：</span>"今年电耗数据/3~6月客户电耗数据"-可多月多日查询<br>' +
-                        '<span style="color:#1890FF;">AI：</span>正在查询电耗数据 → <b style="color:var(--color-primary);">日/月/年电耗</b>（含尖峰平谷分析）<br>' +
-                        '（能耗类型为电耗或者分类在客户用电及其下级）<br>' +
-                        '（不太时间维度下的折线图时间轴不一样）<br><br>' +
-                        '<span style="color:#52C41A;">我：</span>"水耗情况怎么样"-可多月多日查询<br>' +
-                        '<span style="color:#1890FF;">AI：</span>正在查询水耗数据 → <b style="color:var(--color-primary);">日/月/年水耗</b><br><br>' +
-                        '<span style="color:#52C41A;">我：</span>"和去年对比一下"-默认按月对比，可多月多日查询<br>' +
-                        '<span style="color:#1890FF;">AI：</span>正在生成同比对比 → <b style="color:var(--color-primary);">同比对比</b>（含逐月明细表）<br><br>' +
-                        '<span style="color:#52C41A;">我：</span>"公区用电怎么样"-分类在公区用电及其下级，可多月多日查询<br>' +
+                        '<span style="color:#1890FF;">AI：</span>正在查询今日用电 → <b style="color:var(--color-primary);">用电分项页面</b>（能耗类型为电耗）<br><br>' +
+                        '<span style="color:#52C41A;">我：</span>"水耗情况怎么样"<br>' +
+                        '<span style="color:#1890FF;">AI：</span>正在查询水耗数据 → <b style="color:var(--color-primary);">用水分项页面</b>（能耗类型为水耗）<br><br>' +
+                        '<span style="color:#52C41A;">我：</span>"公区用电怎么样"-分类在公区用电及其下级<br>' +
                         '<span style="color:#1890FF;">AI：</span>正在查询公区用电 → <b style="color:var(--color-primary);">公区用电</b><br>' +
-                        '（不太时间维度下的折线图时间轴不一样）<br><br>' +
+                        '（不同时间维度下的折线图时间轴不一样）<br><br>' +
                         '</div><br>' +
                         '<b>所有AI回复，需附带汇总及分析于之前能耗AI助手类似，示例</b><br>' +
                         '<div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:11px;line-height:1.6;color:var(--color-text-secondary);">' +
